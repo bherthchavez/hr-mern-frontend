@@ -24,7 +24,7 @@ const User = ({ userId }) => {
                 <td className={`whitespace-nowrap px-4 py-2 font-medium text-gray-900 ${cellStatus}`}>{userRolesString}</td>
                 <td className={`whitespace-nowrap px-4 py-2 font-medium text-gray-900 ${cellStatus}`}>
                     <button
-                        className="icon-button table__button"
+                        className="text-lg p-1"
                         onClick={handleEdit}
                     >
                         <FontAwesomeIcon icon={faPenToSquare} />

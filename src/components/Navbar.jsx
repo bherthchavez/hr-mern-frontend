@@ -11,6 +11,9 @@ const Navbar = () => {
   const handleNavDash = () => {
     setNav("dash");
   };
+  const handleNavNotes = () => {
+    setNav("notes");
+  };
 
   const content = (
     <div className="flex flex-1 items-center justify-end">
@@ -42,27 +45,20 @@ const Navbar = () => {
           Users
         </span>
         </Link>
-
-        <a
-          href="/news"
-          className="block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-red-700"
+        <Link to="/dash/notes">
+        <span
+          onClick={handleNavNotes}
+          className={
+            nav === "notes"
+              ? "block h-16 border-b-4 leading-[4rem] border-current text-red-700"
+              : "block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-red-700"
+          }
         >
-          News
-        </a>
+          Notes
+        </span>
+        </Link>
 
-        <a
-          href="/products"
-          className="block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-red-700"
-        >
-          Products
-        </a>
-
-        <a
-          href="/contact"
-          className="block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-red-700"
-        >
-          Contact
-        </a>
+     
       </nav>
 
       <div className="ml-8 flex items-center">
