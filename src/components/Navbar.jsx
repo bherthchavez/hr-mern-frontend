@@ -1,6 +1,14 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useNavigate, Link, useLocation } from 'react-router-dom'
+import { useState, useEffect } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons"
+
+import { useSendLogoutMutation } from '../features/auth/authApiSlice'
+
+const DASH_REGEX = /^\/dash(\/)?$/
+const NOTES_REGEX = /^\/dash\/notes(\/)?$/
+const USERS_REGEX = /^\/dash\/users(\/)?$/
 
 const Navbar = () => {
   const [nav, setNav] = useState("dash");
@@ -14,6 +22,40 @@ const Navbar = () => {
   const handleNavNotes = () => {
     setNav("notes");
   };
+
+  const navigate = useNavigate()
+  const { pathname } = useLocation()
+
+
+  const [sendLogout, {
+    isLoading,
+    isSuccess,
+    isError,
+    error
+}] = useSendLogoutMutation()
+
+useEffect(() => {
+  if (isSuccess) navigate('/')
+}, [isSuccess, navigate])
+
+if (isLoading) return <p>Logging Out...</p>
+
+if (isError) return <p>Error: {error.data?.message}</p>
+
+let dashClass = null
+if (!DASH_REGEX.test(pathname) && !NOTES_REGEX.test(pathname) && !USERS_REGEX.test(pathname)) {
+    dashClass = "dash-header__container--small"
+}
+
+  const logoutButton = (
+    <button
+        className="icon-button"
+        title="Logout"
+        onClick={sendLogout}
+    >
+        Logout <FontAwesomeIcon icon={faRightFromBracket} />
+    </button>
+)
 
   const content = (
     <div className="flex flex-1 items-center justify-end">
@@ -58,6 +100,14 @@ const Navbar = () => {
         </span>
         </Link>
 
+        <span
+          onClick={handleNavNotes}
+          className= "block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-red-700"
+          
+        >
+           {logoutButton}
+        </span>
+
      
       </nav>
 
@@ -100,7 +150,7 @@ const Navbar = () => {
                 </button>
               </div>
 
-              <button
+              <span
                 type="button"
                 className="block shrink-0 rounded-lg bg-white p-2.5 text-gray-600 shadow-sm hover:text-gray-700 sm:hidden"
               >
@@ -119,7 +169,7 @@ const Navbar = () => {
                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                   />
                 </svg>
-              </button>
+              </span>
 
               <a
                 href="#"

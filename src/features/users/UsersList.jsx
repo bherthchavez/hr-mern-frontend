@@ -8,8 +8,8 @@ const UsersList = () => {
     isSuccess,
     isError,
     error,
-  } = useGetUsersQuery(undefined, {
-    pollingInterval: 1000, // refresh data every 5 seconds
+  } = useGetUsersQuery('usersList', {
+    pollingInterval: 15000, // refresh data every 15 seconds
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true
 });

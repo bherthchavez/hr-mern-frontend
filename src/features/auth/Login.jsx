@@ -1,8 +1,68 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
-import { Link } from 'react-router-dom'
+import { useRef, useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+import { useDispatch } from 'react-redux'
+import { setCredentials } from './authSlice'
+import { useLoginMutation } from './authApiSlice'
+
+import usePersist from '../../hooks/usePersist'
 
 const Login = () => {
+
+    const userRef = useRef()
+    const errRef = useRef()
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [errMsg, setErrMsg] = useState('')
+    const [persist, setPersist] = usePersist()
+
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+
+    const [login, { isLoading }] = useLoginMutation()
+
+
+    useEffect(() => {
+        userRef.current.focus()
+    }, [])
+
+    useEffect(() => {
+        setErrMsg('');
+    }, [username, password])
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        try {
+            const { accessToken } = await login({ username, password }).unwrap()
+            dispatch(setCredentials({ accessToken }))
+            setUsername('')
+            setPassword('')
+            navigate('/dash')
+        } catch (err) {
+            if (!err.status) {
+                setErrMsg('No Server Response');
+            } else if (err.status === 400) {
+                setErrMsg('Missing Username or Password');
+            } else if (err.status === 401) {
+                setErrMsg('Unauthorized');
+            } else {
+                setErrMsg(err.data?.message);
+            }
+            errRef.current.focus();
+        }
+    }
+
+    const handleUserInput = (e) => setUsername(e.target.value)
+    const handlePwdInput = (e) => setPassword(e.target.value)
+    const handleToggle = () => setPersist(prev => !prev)
+
+    const errClass = errMsg ? "errmsg" : "offscreen"
+
+    if (isLoading) return <p>Loading...</p>
+
 
     const content = (
         <main className="w-full h-screen flex flex-col items-center justify-center px-4">
@@ -11,46 +71,67 @@ const Login = () => {
                     {/* <img src="https://floatui.com/logo.svg" width={150} className="mx-auto" alt="logo"/> */}
                     <div className="mt-5 space-y-2">
                         <h3 className="text-gray-800 text-2xl font-bold sm:text-3xl">Log in to your account</h3>
+                        <p ref={errRef} className={errClass} aria-live="assertive">{errMsg}</p>
                     </div>
                 </div>
                 <form
-                    onSubmit={(e) => e.preventDefault()}
+                    onSubmit={handleSubmit}
                     className="mt-8 space-y-5"
                 >
                     <div>
-                        <label className="font-medium">
+                        <label htmlFor="username" className="font-medium">
                             Email
                         </label>
                         <input
-                            type="email"
-                            
+
                             className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
+                            type="text"
+                            id="username"
+                            ref={userRef}
+                            value={username}
+                            onChange={handleUserInput}
+                            autoComplete="off"
+                            required
+
                         />
                     </div>
                     <div className='pb-3'>
-                        <label className="font-medium">
+                        <label htmlFor="password" className="font-medium" >
                             Password
                         </label>
                         <input
                             type="password"
-                            
+                            id="password"
+                            onChange={handlePwdInput}
+                            value={password}
+                            required
+
                             className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
                         />
                     </div>
-                    <Link to="dash" >
-                    <button
-                        className="w-full px-4 py-2 text-white font-medium bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-600 rounded-lg duration-150"
-                    >
-                    Sign in 
-                        
-                    </button>
-                    </Link>
-                   
+                        <button
+                            className="w-full px-4 py-2 text-white font-medium bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-600 rounded-lg duration-150"
+                        >
+                            Sign in
+
+                        </button>
+
+                        <label htmlFor="persist" className="form__persist">
+                        <input
+                            type="checkbox"
+                            className="form__checkbox"
+                            id="persist"
+                            onChange={handleToggle}
+                            checked={persist}
+                        />
+                        Trust This Device
+                    </label>
+
                 </form>
             </div>
         </main>
     )
-  return content
+    return content
 }
 
 export default Login
