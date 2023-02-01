@@ -1,18 +1,27 @@
-// import {Link} from 'react-router-dom'
+/* eslint-disable jsx-a11y/anchor-is-valid */
+
+import useAuth from "../../hooks/useAuth";
 
 const Welcome = () => {
+
+  const {name, status} = useAuth()
+
+console.log(status)
+
   const content = (
     <div aria-label="Page Header" className="">
       <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mt-2">
           <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
-            Welcome Back, Barry!
+            Welcome Back, {name}!
           </h1>
 
           <p className="mt-1.5 text-sm text-gray-500">
             Your website has seen a 52% increase in traffic in the last month.
             Keep it up!
           </p>
+
+      
 
           {/* <div classNameName="overflow-hidden overflow-x-auto rounded-lg border border-gray-200 mt-8">
               <table classNameName="min-w-full divide-y divide-gray-200 text-sm">

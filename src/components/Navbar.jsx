@@ -1,114 +1,76 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { useNavigate, Link, useLocation } from 'react-router-dom'
-import { useState, useEffect } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons"
+import { Link } from "react-router-dom";
+import  { useState, useEffect, useRef } from "react";
+import useAuth from "../hooks/useAuth";
+import Dropdown from "./Dropdown";
 
-import { useSendLogoutMutation } from '../features/auth/authApiSlice'
-
-const DASH_REGEX = /^\/dash(\/)?$/
-const NOTES_REGEX = /^\/dash\/notes(\/)?$/
-const USERS_REGEX = /^\/dash\/users(\/)?$/
 
 const Navbar = () => {
+
   const [nav, setNav] = useState("dash");
+  const [userNav, setUserNav] = useState(false);
 
-  const handleNavUsers = () => {
-    setNav("users");
-  };
-  const handleNavDash = () => {
-    setNav("dash");
-  };
-  const handleNavNotes = () => {
-    setNav("notes");
-  };
+  const { name, status } = useAuth();
 
-  const navigate = useNavigate()
-  const { pathname } = useLocation()
+  let menuRef=useRef()
 
+  useEffect(()=>{
+    let handle = (e) =>{
+      if(!menuRef.current.contains(e.target)){
+        setUserNav(false)
+      }
+    }
+    document.addEventListener("mousedown",handle)
 
-  const [sendLogout, {
-    isLoading,
-    isSuccess,
-    isError,
-    error
-}] = useSendLogoutMutation()
-
-useEffect(() => {
-  if (isSuccess) navigate('/')
-}, [isSuccess, navigate])
-
-if (isLoading) return <p>Logging Out...</p>
-
-if (isError) return <p>Error: {error.data?.message}</p>
-
-let dashClass = null
-if (!DASH_REGEX.test(pathname) && !NOTES_REGEX.test(pathname) && !USERS_REGEX.test(pathname)) {
-    dashClass = "dash-header__container--small"
-}
-
-  const logoutButton = (
-    <button
-        className="icon-button"
-        title="Logout"
-        onClick={sendLogout}
-    >
-        Logout <FontAwesomeIcon icon={faRightFromBracket} />
-    </button>
-)
+    return() => {
+      document.removeEventListener("mousedown",handle)
+    }
+  })
+  
 
   const content = (
-    <div className="flex flex-1 items-center justify-end">
+    <div className={`flex flex-1 items-center justify-end`}>
       <nav
         aria-label="Site Nav"
         className="hidden lg:flex lg:gap-4 lg:text-xs lg:font-bold lg:uppercase lg:tracking-wide lg:text-gray-500"
       >
-      <Link to="/dash">
-        <span
-          onClick={handleNavDash}
-          className={
-            nav === "dash"
-              ? "block h-16 border-b-4 leading-[4rem] border-current text-red-700"
-              : "block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-red-700"
-          }
-        >
-          Dashboard
-        </span>
-</Link>
+        <Link to="/dash">
+          <span
+            onClick={() => setNav('dash')}
+            className={
+              nav === "dash"
+                ? "block h-16 border-b-4 leading-[4rem] border-current text-red-700"
+                : "block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-red-700"
+            }
+          >
+            Dashboard
+          </span>
+        </Link>
         <Link to="/dash/users">
-        <span
-          onClick={handleNavUsers}
-          className={
-            nav === "users"
-              ? "block h-16 border-b-4 leading-[4rem] border-current text-red-700"
-              : "block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-red-700"
-          }
-        >
-          Users
-        </span>
+          <span
+            onClick={() => setNav('users')}
+            className={
+              nav === "users"
+                ? "block h-16 border-b-4 leading-[4rem] border-current text-red-700"
+                : "block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-red-700"
+            }
+          >
+            Users
+          </span>
         </Link>
         <Link to="/dash/notes">
-        <span
-          onClick={handleNavNotes}
-          className={
-            nav === "notes"
-              ? "block h-16 border-b-4 leading-[4rem] border-current text-red-700"
-              : "block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-red-700"
-          }
-        >
-          Notes
-        </span>
+          <span
+            onClick={() => setNav('notes')}
+            className={
+              nav === "notes"
+                ? "block h-16 border-b-4 leading-[4rem] border-current text-red-700"
+                : "block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-red-700"
+            }
+          >
+            Notes
+          </span>
         </Link>
 
-        <span
-          onClick={handleNavNotes}
-          className= "block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-red-700"
-          
-        >
-           {logoutButton}
-        </span>
-
-     
       </nav>
 
       <div className="ml-8 flex items-center">
@@ -191,36 +153,44 @@ if (!DASH_REGEX.test(pathname) && !NOTES_REGEX.test(pathname) && !USERS_REGEX.te
                   />
                 </svg>
               </a>
-              <button
-                type="button"
-                className="group flex shrink-0 items-center rounded-lg transition"
-              >
-                <span className="sr-only">Menu</span>
-                <img
-                  alt="Man"
-                  src="https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                  className="h-10 w-10 rounded-full object-cover"
-                />
+              <div className="inline-flex bg-white border rounded-md" ref={menuRef}>
+                <div className="relative">
+                  <button
+                    onClick={() => setUserNav(!userNav)}
+                    type="button"
+                    className="group flex shrink-0 items-center rounded-lg transition"
+                  >
+                    <span className="sr-only">Menu</span>
+                    <img
+                      alt="Man"
+                      src="https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+                      className="h-10 w-10 rounded-full object-cover"
+                    />
 
-                <p className="ml-2 hidden text-left text-xs sm:block">
-                  <strong className="block font-medium">Eric Frusciante</strong>
+                    <p className="ml-2 hidden text-left text-xs sm:block">
+                      <strong className="block font-medium">{name}</strong>
 
-                  <span className="text-gray-500"> eric@frusciante.com </span>
-                </p>
+                      <span className="text-gray-500"> {status} </span>
+                    </p>
 
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="ml-4 hidden h-5 w-5 text-gray-500 transition group-hover:text-gray-700 sm:block"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className={`ml-4 hidden h-5 w-5 text-gray-500 transition group-hover:text-gray-700 sm:block ${userNav && "rotate-180"}`}
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </button>
+
+                  {userNav && <Dropdown  />}
+
+                </div>
+              </div>
             </div>
           </span>
         </div>
@@ -231,4 +201,4 @@ if (!DASH_REGEX.test(pathname) && !NOTES_REGEX.test(pathname) && !USERS_REGEX.te
   return content;
 };
 
-export default Navbar;
+export default Navbar
