@@ -25,26 +25,26 @@ const Dropdown = () => {
   const content = (
     <div
    
-    className="absolute right-0 z-10 w-40 mt-4 origin-top-right bg-white border border-gray-300 rounded-md shadow-md
+    className="absolute right-0 z-10 w-40 mt-4 origin-top-right bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-md
      "
     
   >
     <div className="py-1">
       <a
         href="#"
-        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:text-gray-900"
+        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-500 hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-gray-400"
       >
         Account Setting
       </a>
       <a
         href="#"
-        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:text-gray-900"
+        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-500 hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-gray-400"
       >
         System Setup
       </a>
       <span
         onClick={sendLogout}
-        className="cursor-pointer block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:text-gray-900"
+        className="cursor-pointer block px-4 py-2 text-sm text-gray-700 dark:text-gray-500 hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-gray-400"
       >
         Sign out
       </span>

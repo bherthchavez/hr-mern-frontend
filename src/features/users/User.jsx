@@ -19,10 +19,10 @@ const User = ({ userId }) => {
 
         return (
             <tr>
-                <td className={`whitespace-nowrap px-4 py-2 font-medium text-gray-900 ${cellStatus}`}>{user.name}</td>
-                <td className={`whitespace-nowrap px-4 py-2 font-medium text-gray-900 ${cellStatus}`}>{user.username}</td>
-                <td className={`whitespace-nowrap px-4 py-2 font-medium text-gray-900 ${cellStatus}`}>{userRolesString}</td>
-                <td className={`whitespace-nowrap px-4 py-2 font-medium text-gray-900 ${cellStatus}`}>
+                <td className={`whitespace-nowrap px-4 py-2 font-medium text-gray-900 dark:text-gray-300 ${cellStatus}`}> {user.name} </td>
+                <td className={`whitespace-nowrap px-4 py-2 font-medium text-gray-900 dark:text-gray-300 ${cellStatus}`}> {user.username} </td>
+                <td className={`whitespace-nowrap px-4 py-2 font-medium text-gray-900 dark:text-gray-300 ${cellStatus}`}> {userRolesString} </td>
+                <td className={`whitespace-nowrap px-4 py-2 font-medium text-gray-900 dark:text-gray-300 ${cellStatus}`}>
                     <button
                         className="text-lg p-1"
                         onClick={handleEdit}

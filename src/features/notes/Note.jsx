@@ -22,16 +22,16 @@ const Note = ({ noteId }) => {
             <tr >
                 <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
                     {note.completed
-                        ? <span className="text-green-700">Completed</span>
-                        : <span className="text-black">Open</span>
+                        ? <span className="text-green-700 dark:text-green-500">Completed</span>
+                        : <span className="text-black dark:text-gray-300">Open</span>
                     }
                 </td>
-                <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">{created}</td>
-                <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">{updated}</td>
-                <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">{note.title}</td>
-                <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">{note.username}</td>
+                <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900 dark:text-gray-300">{created}</td>
+                <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900 dark:text-gray-300">{updated}</td>
+                <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900 dark:text-gray-300">{note.title}</td>
+                <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900 dark:text-gray-300">{note.username}</td>
 
-                <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900 dark:text-gray-300">
                     <button
                         className="text-lg p-1"
                         onClick={handleEdit}

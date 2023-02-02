@@ -29,7 +29,7 @@ const Navbar = () => {
   
 
   const content = (
-    <div className={`flex flex-1 items-center justify-end`}>
+    <div className={`flex flex-1 items-center justify-end `}>
       <nav
         aria-label="Site Nav"
         className="hidden lg:flex lg:gap-4 lg:text-xs lg:font-bold lg:uppercase lg:tracking-wide lg:text-gray-500"
@@ -39,8 +39,8 @@ const Navbar = () => {
             onClick={() => setNav('dash')}
             className={
               nav === "dash"
-                ? "block h-16 border-b-4 leading-[4rem] border-current text-red-700"
-                : "block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-red-700"
+                ? "block h-16 border-b-4 leading-[4rem] border-current text-slate-700"
+                : "block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-slate-700"
             }
           >
             Dashboard
@@ -51,8 +51,8 @@ const Navbar = () => {
             onClick={() => setNav('users')}
             className={
               nav === "users"
-                ? "block h-16 border-b-4 leading-[4rem] border-current text-red-700"
-                : "block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-red-700"
+                ? "block h-16 border-b-4 leading-[4rem] border-current text-slate-700"
+                : "block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-slate-700"
             }
           >
             Users
@@ -63,8 +63,8 @@ const Navbar = () => {
             onClick={() => setNav('notes')}
             className={
               nav === "notes"
-                ? "block h-16 border-b-4 leading-[4rem] border-current text-red-700"
-                : "block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-red-700"
+                ? "block h-16 border-b-4 leading-[4rem] border-current text-slate-700"
+                : "block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-slate-700"
             }
           >
             Notes
@@ -74,7 +74,7 @@ const Navbar = () => {
       </nav>
 
       <div className="ml-8 flex items-center">
-        <div className="flex items-center divide-x divide-gray-100 border-x border-gray-100">
+        <div className="flex items-center divide-x divide-gray-100 border-x border-gray-200 dark:border-l-gray-900 dark:border-r-gray-900">
           <span>
             <div className="flex gap-4">
               <div className="relative hidden sm:block">
@@ -84,7 +84,7 @@ const Navbar = () => {
                 </label>
 
                 <input
-                  className="h-10 w-full rounded-lg border-none bg-white pl-4 pr-10 text-sm shadow-sm sm:w-56"
+                  className="h-10 w-full outline-none border border-gray-300 dark:text-gray-300 rounded-lg border-none bg-white dark:bg-slate-800 pl-4 pr-10 text-sm shadow-sm sm:w-56"
                   id="search"
                   type="search"
                   placeholder="Search..."
@@ -92,9 +92,9 @@ const Navbar = () => {
 
                 <button
                   type="button"
-                  className="absolute top-1/2 right-1 -translate-y-1/2 rounded-md bg-gray-50 p-2 text-gray-600 transition hover:text-gray-700"
+                  className="absolute top-1/2 right-1 -translate-y-1/2 rounded-md bg-gray-50 dark:bg-slate-900 p-2 text-gray-600 transition hover:text-gray-700"
                 >
-                  <span className="sr-only">Submut Search</span>
+                  <span className="sr-only">Submit Search</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-4 w-4"
@@ -135,7 +135,7 @@ const Navbar = () => {
 
               <a
                 href="#"
-                className="block shrink-0 rounded-lg bg-white p-2.5 text-gray-600 shadow-sm hover:text-gray-700"
+                className="block shrink-0 rounded-lg bg-white dark:bg-slate-800 p-2.5 text-gray-600 shadow-sm hover:text-gray-700"
               >
                 <span className="sr-only">Notifications</span>
                 <svg
@@ -153,7 +153,7 @@ const Navbar = () => {
                   />
                 </svg>
               </a>
-              <div className="inline-flex bg-white border rounded-md" ref={menuRef}>
+              <div className="inline-flex bg-white dark:bg-slate-900 border dark:border-none rounded-md " ref={menuRef}>
                 <div className="relative">
                   <button
                     onClick={() => setUserNav(!userNav)}
@@ -168,7 +168,7 @@ const Navbar = () => {
                     />
 
                     <p className="ml-2 hidden text-left text-xs sm:block">
-                      <strong className="block font-medium">{name}</strong>
+                      <strong className="block font-medium text-gray-500">{name}</strong>
 
                       <span className="text-gray-500"> {status} </span>
                     </p>

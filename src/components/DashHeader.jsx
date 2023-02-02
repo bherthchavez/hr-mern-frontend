@@ -5,7 +5,7 @@ import Navbar from './Navbar'
 const DashHeader = () => {
 
     const content = (
-        <header aria-label="Site Header" className="border-b  bg-gray-50">
+        <header aria-label="Site Header" className="border-b dark:border-gray-600">
         <div
           className="mx-auto flex h-16 max-w-screen-2xl items-center justify-between px-4 sm:px-6 lg:px-8"
         >
@@ -29,7 +29,7 @@ const DashHeader = () => {
       
             <p className="flex">
               <span className="sr-only">Logo</span>
-              <span className="inline-block text-gray-700 text-2xl font-bold">HR</span>
+              <span className="inline-block text-gray-700 dark:text-gray-500  text-2xl font-bold">HR</span>
             </p>
 
           </div>

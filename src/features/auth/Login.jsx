@@ -84,7 +84,7 @@ const Login = () => {
                         </label>
                         <input
 
-                            className="w-full mt-2 px-3 py-2  text-gray-500 dark:text-gray-300 bg-transparent outline-none border border-gray-300 dark:border-gray-600 focus:border-indigo-500 shadow-sm rounded-lg"
+                            className="w-full mt-2 px-3 py-2  text-gray-500 dark:text-gray-300 bg-transparent outline-none border border-gray-300 dark:border-gray-800 focus:border-slate-500 shadow-sm focus:shadow-lg rounded-lg"
                             type="text"
                             id="username"
                             ref={userRef}
@@ -106,13 +106,13 @@ const Login = () => {
                             value={password}
                             required
 
-                            className="w-full mt-2 px-3 py-2 text-gray-500 dark:text-gray-300  bg-transparent outline-none border border-gray-300 dark:border-gray-600 focus:border-indigo-500 shadow-sm rounded-lg"
+                            className="w-full mt-2 px-3 py-2  text-gray-500 dark:text-gray-300 bg-transparent outline-none border border-gray-300 dark:border-gray-800 focus:border-slate-500 shadow-sm focus:shadow-lg rounded-lg"
                         />
                     </div>
                     <div className='pb-3'>
                     <input
                             type="checkbox"
-                            className="form__checkbox"
+                            className="accent-slate-800"
                             id="persist"
                             onChange={handleToggle}
                             checked={persist}
@@ -126,7 +126,7 @@ const Login = () => {
                     
                     
                         <button
-                            className="w-full px-4 py-2 text-white font-medium bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-600 rounded-lg duration-150"
+                            className="w-full px-4 py-2 text-white font-medium bg-slate-600 hover:bg-slate-700 active:bg-slate-800 rounded-lg duration-150"
                         >
                             Sign in
 
