@@ -29,7 +29,7 @@ const DashHeader = () => {
       
             <p className="flex">
               <span className="sr-only">Logo</span>
-              <span className="inline-block text-gray-700 dark:text-gray-500  text-2xl font-bold">HR</span>
+              <span className="inline-block text-gray-700 dark:text-gray-200  text-2xl font-bold">HR</span>
             </p>
 
           </div>

@@ -2,8 +2,16 @@ import { useGetNotesQuery } from "./notesApiSlice";
 import Note from "./Note";
 import Thead from "../../components/Thead";
 import Tbody from "../../components/Tbody";
+import useAuth  from "../../hooks/useAuth";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from "@fortawesome/free-solid-svg-icons"
+
 
 const NotesList = () => {
+
+  const { username, isManager, isAdmin } = useAuth();
+
+
   const {
     data: notes,
     isLoading,
@@ -27,15 +35,34 @@ const NotesList = () => {
   
 
   if (isSuccess) {
-    const { ids } = notes;
+    const { ids, entities } = notes;
+
+    let filteredIds
+
+    if (isManager || isAdmin){
+     filteredIds = [...ids]
+    }else{
+     filteredIds = ids.filter(noteId => entities[noteId].username === username)
+    }
 
 
-    const tableContent = ids?.length
-      ? ids.map((noteId) => <Note key={noteId} noteId={noteId} />)
-      : null;
+    const tableContent = ids?.length && filteredIds.map((noteId) => <Note key={noteId} noteId={noteId} />)
 
     content = (
       <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="flex justify-between">
+          <h1 className="text-2xl font-bold text-gray-900  dark:text-gray-400">
+            Note List
+          </h1>
+
+          <a
+            href="/dash/notes/new"
+            className=" text-[12px] px-4 py-2 text-white dark:text-gray-300 font-medium bg-slate-500 dark:bg-slate-700 hover:bg-slate-700 dark:active:bg-slate-800 rounded-md duration-150"
+          >
+            <FontAwesomeIcon icon={faPlus} className='pr-2' />
+            Add New
+          </a>
+        </div>
         <div className="overflow-hidden overflow-x-auto rounded-md border border-gray-200 mt-8 dark:border-gray-800">
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
             <thead className="bg-gray-100 dark:bg-gray-800">

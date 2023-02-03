@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import  { useState, useEffect, useRef } from "react";
 import useAuth from "../hooks/useAuth";
 import Dropdown from "./Dropdown";
+import Switcher from "./Switcher";
 
 
 const Navbar = () => {
@@ -32,15 +33,15 @@ const Navbar = () => {
     <div className={`flex flex-1 items-center justify-end `}>
       <nav
         aria-label="Site Nav"
-        className="hidden lg:flex lg:gap-4 lg:text-xs lg:font-bold lg:uppercase lg:tracking-wide lg:text-gray-500"
+        className="hidden lg:flex lg:gap-4 lg:text-xs lg:font-bold lg:uppercase lg:tracking-wide lg:text-gray-300"
       >
         <Link to="/dash">
           <span
             onClick={() => setNav('dash')}
             className={
               nav === "dash"
-                ? "block h-16 border-b-4 leading-[4rem] border-current text-slate-700"
-                : "block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-slate-700"
+                ? "block h-16 border-b-4 leading-[4rem] border-current text-slate-400"
+                : "block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-slate-500"
             }
           >
             Dashboard
@@ -51,8 +52,8 @@ const Navbar = () => {
             onClick={() => setNav('users')}
             className={
               nav === "users"
-                ? "block h-16 border-b-4 leading-[4rem] border-current text-slate-700"
-                : "block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-slate-700"
+                ? "block h-16 border-b-4 leading-[4rem] border-current text-slate-400"
+                : "block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-slate-500"
             }
           >
             Users
@@ -63,8 +64,8 @@ const Navbar = () => {
             onClick={() => setNav('notes')}
             className={
               nav === "notes"
-                ? "block h-16 border-b-4 leading-[4rem] border-current text-slate-700"
-                : "block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-slate-700"
+                ? "block h-16 border-b-4 leading-[4rem] border-current text-slate-400"
+                : "block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-slate-500"
             }
           >
             Notes
@@ -133,6 +134,13 @@ const Navbar = () => {
                 </svg>
               </span>
 
+
+             
+              <span className="block shrink-0  rounded-lg bg-white dark:bg-slate-800 p-2.5 shadow-sm">
+              <span className="sr-only">Darkmode Switcher</span>
+              <Switcher />
+              </span>
+
               <a
                 href="#"
                 className="block shrink-0 rounded-lg bg-white dark:bg-slate-800 p-2.5 text-gray-600 shadow-sm hover:text-gray-700"
@@ -153,6 +161,7 @@ const Navbar = () => {
                   />
                 </svg>
               </a>
+
               <div className="inline-flex bg-white dark:bg-slate-900 border dark:border-none rounded-md " ref={menuRef}>
                 <div className="relative">
                   <button
@@ -168,7 +177,7 @@ const Navbar = () => {
                     />
 
                     <p className="ml-2 hidden text-left text-xs sm:block">
-                      <strong className="block font-medium text-gray-500">{name}</strong>
+                      <strong className="block font-medium text-gray-300">{name}</strong>
 
                       <span className="text-gray-500"> {status} </span>
                     </p>

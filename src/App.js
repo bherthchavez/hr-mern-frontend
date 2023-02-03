@@ -15,6 +15,7 @@ import PersistLogin from './features/auth/PersistLogin';
 
 function App() {
   return (
+    <div className="min-h-screen transition duration-200 bg-gray-50 dark:bg-slate-900">
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Public />} />
@@ -44,6 +45,7 @@ function App() {
 
       </Route>
     </Routes>
+      </div>
   );
 }
 
