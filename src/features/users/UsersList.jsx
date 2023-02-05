@@ -4,11 +4,12 @@ import Thead from "../../components/Thead";
 import Tbody from "../../components/Tbody";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
+import { useNavigate } from "react-router-dom";
 
 
 const UsersList = () => {
 
-
+  const navigate = useNavigate();
   const {
     data: users,
     isLoading,
@@ -43,13 +44,13 @@ const UsersList = () => {
             Users List
           </h1>
 
-          <a
-            href="/dash/users/new"
-            className=" text-[12px] px-4 py-2 text-white dark:text-gray-300 font-medium bg-slate-500 dark:bg-slate-700 hover:bg-slate-700 dark:active:bg-slate-800 rounded-md duration-150"
+          <span
+            onClick={()=>  navigate("/dash/users/new")}
+            className="cursor-pointer text-sm px-4 py-2 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
           >
             <FontAwesomeIcon icon={faPlus} className='pr-2' />
             Add New
-          </a>
+          </span>
         </div>
 
         <div className="overflow-hidden overflow-x-auto rounded-md border border-gray-200 mt-8 dark:border-gray-800">

@@ -1,13 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-
 import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { useDispatch } from "react-redux";
 import { setCredentials } from "./authSlice";
 import { useLoginMutation } from "./authApiSlice";
-
 import usePersist from "../../hooks/usePersist";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import Switcher from "../../components/Switcher";
 
 const Login = () => {
   const userRef = useRef();
@@ -21,6 +20,12 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const [login, { isLoading }] = useLoginMutation();
+
+  const [passwordShown, setPasswordShown] = useState(false);
+  const togglePasswordVisiblity = () => {
+    setPasswordShown(passwordShown ? false : true);
+  };
+
 
   useEffect(() => {
     userRef.current.focus();
@@ -61,13 +66,20 @@ const Login = () => {
   if (isLoading) return <p>Loading...</p>;
 
   const content = (
-    <main className="w-full h-screen flex flex-col items-center justify-center px-4">
-      <div className="shadow-md sm:overflow-hidden sm:rounded-md">
-        <div className="space-y-6  bg-white dark:bg-slate-800 px-4 py-5 sm:p-6">
-          <div className="max-w-sm w-full text-gray-600">
+    <div className="w-full h-screen flex flex-col items-center bg-slate-100 dark:bg-slate-900 justify-center px-4">
+      
+      <div className="flex items-center gap-2">
+      <p className="text-sm font-bold text-gray-900 dark:text-gray-400">Darkmode</p>
+        <span className=""><Switcher /></span>
+      </div> 
+
+      <div className="shadow-md sm:overflow-hidden sm:rounded-md mt-7">
+       <div className="space-y-6  bg-white dark:bg-slate-800 px-4 py-5 sm:p-6">
+          <div className="max-w-sm  w-full text-gray-600">
             <div className="text-center">
               {/* <img src="https://floatui.com/logo.svg" width={150} className="mx-auto" alt="logo"/> */}
               <div className="mt-5 space-y-2">
+              
                 <h3 className="text-gray-800 dark:text-gray-300 text-2xl font-bold sm:text-xl ">
                   Log in to your account
                 </h3>
@@ -102,14 +114,34 @@ const Login = () => {
                 >
                   Password
                 </label>
-                <input
-                  type="password"
-                  id="password"
-                  onChange={handlePwdInput}
-                  value={password}
-                  required
-                  className="w-full mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md"
-                />
+                <div className="relative w-full">
+                  <div className="absolute inset-y-0 right-0 flex items-center px-2">
+                    <input
+                      className="hidden js-password-toggle"
+                      id="toggle"
+                      type="checkbox"
+                      onClick={togglePasswordVisiblity}
+                    />
+                    <label
+                      className={`bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800  rounded-xl px-2 py-1 mt-1 text-lg text-gray-400 dark:text-gray-700 font-mono cursor-pointer js-password-label`}
+                      htmlFor="toggle"
+                    >
+                      {passwordShown ? (
+                        <AiOutlineEye />
+                      ) : (
+                        <AiOutlineEyeInvisible />
+                      )}
+                    </label>
+                  </div>
+                  <input
+                    type={passwordShown ? "text" : "password"}
+                    id="password"
+                    onChange={handlePwdInput}
+                    value={password}
+                    required
+                    className="w-full mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md"
+                  />
+                </div>
               </div>
               <div className="pb-3">
                 <input
@@ -131,7 +163,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
   return content;
 };

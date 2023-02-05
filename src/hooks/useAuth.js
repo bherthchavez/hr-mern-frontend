@@ -13,8 +13,8 @@ const useAuth = () => {
         const { name, username, roles } = decoded.UserInfo
 
 
-        isManager = roles.includes('Manager')
-        isAdmin = roles.includes('Admin')
+        isManager = roles === 'Manager' ? true : false
+        isAdmin = roles === 'Admin' ? true : false
 
         if (isManager) status = "Manager"
         if (isAdmin) status = "Admin"
@@ -22,6 +22,6 @@ const useAuth = () => {
         return { name, username, roles, status, isManager, isAdmin }
     }
 
-    return { name:'', username: '', roles: [], isManager, isAdmin, status }
+    return { name:'', username: '', roles: '', isManager, isAdmin, status }
 }
 export default useAuth

@@ -32,7 +32,7 @@ const Welcome = () => {
     refetchOnMountOrArgChange: true,
   });
 
-  
+  console.log(users)
 
   let contentNotes;
   let content

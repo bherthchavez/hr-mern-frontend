@@ -177,7 +177,7 @@ const Navbar = () => {
                     />
 
                     <p className="ml-2 hidden text-left text-xs sm:block">
-                      <strong className="block font-medium text-gray-300">{name}</strong>
+                      <strong className="block font-medium text-gray-800 dark:text-gray-200">{name}</strong>
 
                       <span className="text-gray-500"> {status} </span>
                     </p>
