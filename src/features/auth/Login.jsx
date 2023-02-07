@@ -73,14 +73,14 @@ const Login = () => {
         <span className=""><Switcher /></span>
       </div> 
 
-      <div className="shadow-md sm:overflow-hidden sm:rounded-md mt-7">
-       <div className="space-y-6  bg-white dark:bg-slate-800 px-4 py-5 sm:p-6">
-          <div className="max-w-sm  w-full text-gray-600">
+      <div className="shadow-md overflow-hidden  rounded-sm mt-7">
+       <div className="space-y-6  bg-white dark:bg-slate-800 px-7 py-8 sm:px-12">
+          <div className="max-w-sm x w-full text-gray-600">
             <div className="text-center">
               {/* <img src="https://floatui.com/logo.svg" width={150} className="mx-auto" alt="logo"/> */}
               <div className="mt-5 space-y-2">
               
-                <h3 className="text-gray-800 dark:text-gray-300 text-2xl font-bold sm:text-xl ">
+                <h3 className="text-gray-800 dark:text-gray-300 text-xl font-bold ">
                   Log in to your account
                 </h3>
                 <p ref={errRef} className={errClass} aria-live="assertive">
@@ -94,10 +94,10 @@ const Login = () => {
                   htmlFor="username"
                   className="font-medium dark:text-gray-400"
                 >
-                  Email
+                  Username
                 </label>
                 <input
-                  className="w-full mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md"
+                  className="w-full mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-sm"
                   type="text"
                   id="username"
                   ref={userRef}
@@ -139,7 +139,7 @@ const Login = () => {
                     onChange={handlePwdInput}
                     value={password}
                     required
-                    className="w-full mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md"
+                    className="w-full mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-sm"
                   />
                 </div>
               </div>
@@ -156,7 +156,7 @@ const Login = () => {
                 </label>
               </div>
 
-              <button className="w-full px-4 py-2 text-white font-medium bg-slate-600 hover:bg-slate-700 active:bg-slate-800 rounded-lg duration-150">
+              <button className="w-full px-4 py-2 text-white font-medium bg-slate-600 hover:bg-slate-700 active:bg-slate-800 rounded-sm duration-150">
                 Sign in
               </button>
             </form>
