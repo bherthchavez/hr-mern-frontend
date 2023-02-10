@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { ROLES } from "../../config/roles";
-
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import Image from "../../components/Image";
+import Spenner from "../../components/Spenner";
 
 
 const USER_REGEX = /^[A-z]{3,20}$/;
@@ -30,6 +31,10 @@ const EditUserForm = ({ user }) => {
   const [roles, setRoles] = useState(user.roles);
   const [active, setActive] = useState(user.active);
 
+  const [imageView, setImage] = useState("");
+  const [image, setDataImage] = useState();
+
+  const [spin, setSpin] = useState(false)
 
 
   const [passwordShown, setPasswordShown] = useState(false);
@@ -51,6 +56,8 @@ const EditUserForm = ({ user }) => {
       setUsername("");
       setPassword("");
       setRoles("");
+      setDataImage();
+      setSpin(false)
       navigate("/dash/users");
     }
   }, [isSuccess, isDelSuccess, navigate]);
@@ -58,13 +65,26 @@ const EditUserForm = ({ user }) => {
   const onNameChanged = (e) => setName(e.target.value);
   const onUsernameChanged = (e) => setUsername(e.target.value);
   const onPasswordChanged = (e) => setPassword(e.target.value);
-
- 
-
   const onActiveChanged = () => setActive((prev) => !prev);
+
+  const onImageChanged = (e) => {
+    const file = e.target.files[0]
+    setFileToBase(file);
+  };
+
+  const setFileToBase = (file) =>{
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () =>{
+      setDataImage(reader.result);
+    }
+
+}
+
 
   const onSaveUserClicked = async (e) => {
     if (password) {
+      setSpin(true)
       await updateUser({
         id: user.id,
         name,
@@ -72,13 +92,16 @@ const EditUserForm = ({ user }) => {
         password,
         roles,
         active,
+        image
       });
     } else {
-      await updateUser({ id: user.id, name, username, roles, active });
+      setSpin(true)
+      await updateUser({ id: user.id, name, username, roles, active, image });
     }
   };
 
   const onDeleteUserClicked = async () => {
+    setSpin(true)
     await deleteUser({ id: user.id });
   };
 
@@ -111,22 +134,78 @@ const validPwdClass = !validPassword
   ? "text-red-600 dark:text-red-600"
   : "text-blue-700 dark:text-blue-400";
 
-  // const errContent = (error?.data?.message || delerror?.data?.message) ?? "";
+  async function readImage(e, func) {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      let binaryData = e.target.result;
+      let base64String = window.btoa(binaryData);
+      func(base64String);
+    };
+
+    let image = reader.readAsBinaryString(file);
+  
+    return image;
+  }
 
   const content = (
     <>
+     
     <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8 ">
-        <h1 className="mb-2 text-2xl font-bold text-gray-900 sm:text-2xl dark:text-gray-200">
+        <h1 className="mb-2 text-2xl font-bold text-gray-900 sm:text-2xl dark:text-gray-200 ">
           New User
         </h1>
         <p className={errClass}>{error?.data?.message}</p>
 
-        <div className="mt-5 md:col-span-2 md:mt-0">
+        <div className="mt-5 md:col-span-2 md:mt-0 ">
           <form  onSubmit={(e) => e.preventDefault()}>
             <div className="shadow sm:overflow-hidden sm:rounded-md">
               <div className="space-y-6 bg-white dark:bg-slate-800 px-4 py-5 sm:p-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="col-span-2 sm:col-span-1 ">
+                  <div className="">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                        Photo
+                      </label>
+                      <div className="mt-1 flex items-center">
+                      {imageView 
+                      ? <Image data={imageView} />
+                      :  <span className="inline-block h-12 w-12 overflow-hidden rounded-full bg-gray-100">
+                         
+                          <img
+                      alt="Man"
+                      src={user.avatar}
+                      className="h-12 w-12 rounded-full object-cover border border-slate-300  dark:border-slate-600"
+                    />
+                        </span>
+                      }
+
+                        <label
+                              htmlFor="file-upload"
+                              className="ml-5 cursor-pointer text-[10px]  px-2 py-1 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
+                            >
+
+                              <span>Replace Photo</span>
+
+                              <input
+                                id="file-upload"
+                                name="image"
+                                type="file"
+                                className="sr-only"
+                                accept="image/png, image/jpeg"
+                                onChange={event => {
+                                  readImage(event, setImage)
+                                  onImageChanged(event)
+                                  }}
+                              />
+                            </label>
+                            <p className="text-xs text-gray-500 ml-3">
+                            JPG, JPEG, PNG up to 10MB
+                          </p>
+                      </div>
+                    </div>
+                  <div className="mt-3">
+
                     <label
                       className="block text-sm font-medium text-gray-700 dark:text-gray-200"
                       htmlFor="name"
@@ -142,6 +221,10 @@ const validPwdClass = !validPassword
                       value={name}
                       onChange={onNameChanged}
                     />
+                  </div>
+
+
+
                     <div className="mt-3">
                       <label
                         htmlFor="country"
@@ -259,7 +342,9 @@ const validPwdClass = !validPassword
                   Cancel
                 </p>
               </div>
-              <div>
+              <div className="flex items-center">
+               {!spin || <Spenner />}
+
 
                 <button
                   className={
@@ -284,9 +369,12 @@ const validPwdClass = !validPassword
                       : "text-sm   px-4 py-2 text-white border dark:text-slate-600 font-medium border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
                   }
                 >
+
                   <FontAwesomeIcon icon={faSave} className="pr-2" />
                   Save
+                 
                 </button>
+             
               </div>
                
               </div>

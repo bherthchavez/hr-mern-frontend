@@ -53,14 +53,14 @@ const UsersList = () => {
           </span>
         </div>
 
-        <div className="overflow-hidden overflow-x-auto rounded-md border border-gray-200 mt-8 dark:border-gray-800">
-          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+        <div className=" overflow-x-auto border border-gray-200 mt-8 dark:border-gray-800 min-w-full shadow rounded-lg overflow-hidden">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm leading-normal">
             <thead className="bg-gray-100 dark:bg-gray-800">
               <tr>
-                <Thead thName="NAME" />
-                <Thead thName="USERNAME" />
-                <Thead thName="ROLES" />
-                <Thead thName="EDIT" />
+                <Thead thName="Name" />
+                <Thead thName="Username" />
+                <Thead thName="Roles" />
+                <Thead thName="Edit" />
               </tr>
             </thead>
             <Tbody tbName={tableContent} />

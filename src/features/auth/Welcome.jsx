@@ -32,7 +32,6 @@ const Welcome = () => {
     refetchOnMountOrArgChange: true,
   });
 
-  console.log(users)
 
   let contentNotes;
   let content
@@ -80,7 +79,7 @@ const Welcome = () => {
                     </dt>
 
                     <dd className="text-4xl font-bold  md:text-5xl">
-                     {users.ids?.length}
+                     {users.ids.length}
                     </dd>
                   </div>
                   </Link>

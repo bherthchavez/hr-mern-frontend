@@ -6,6 +6,8 @@ import { faSave } from "@fortawesome/free-solid-svg-icons";
 import { ROLES } from "../../config/roles";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import Image from "../../components/Image";
+import Spenner from "../../components/Spenner";
+
 
 const USER_REGEX = /^[A-z]{3,20}$/;
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
@@ -22,9 +24,10 @@ const NewUserForm = () => {
   const [password, setPassword] = useState("");
   const [validPassword, setValidPassword] = useState(false);
   const [roles, setRoles] = useState("");
-  const [image, setImage] = useState("");
 
-  const [uploadImage, setUploadImage] = useState({image: ""});
+  const [imageView, setImage] = useState("");
+  const [image, setDataImage] = useState();
+  const [spin, setSpin] = useState(false)
 
   const [passwordShown, setPasswordShown] = useState(false);
   const togglePasswordVisiblity = () => {
@@ -46,37 +49,45 @@ const NewUserForm = () => {
       setPassword("");
       setRoles("");
       setImage("");
+      setDataImage();
+      setSpin(false)
       navigate("/dash/users");
     }
   }, [isSuccess, navigate]);
 
-  const onNameChanged = (e) => setName(e.target.value);
-  const onUsernameChanged = (e) => setUsername(e.target.value);
-  const onPasswordChanged = (e) => setPassword(e.target.value);
-  const onImageChanged = (e) => {
-    const value = e.target.files[0]
-    setUploadImage({ ...uploadImage, "image": value })
-  };
+  const onNameChanged = (e) => setName(e.target.value)
+  const onUsernameChanged = (e) => setUsername(e.target.value)
+  const onRolesChanged = (e) => setRoles(e.target.value)
+  const onPasswordChanged = (e) => setPassword(e.target.value)
   
 
+
+  const onImageChanged = (e) => {
+    const file = e.target.files[0]
+    setFileToBase(file);
+  };
+
+  const setFileToBase = (file) =>{
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () =>{
+      setDataImage(reader.result);
+    }
+
+}
 
   const canSave =
     [roles, name, validUsername, validPassword].every(Boolean) && !isLoading;
 
   const onSaveUserClicked = async (e) => {
     e.preventDefault();
-    let formData = new FormData();
-    formData.append('image', uploadImage);
-
-    console.log(formData)
-
+   
     if (canSave) {
-      await addNewUser({ name, username, password, roles, formData })
-     
+      setSpin(true)
+      await addNewUser({name, username, password, roles,  image })
     }
   };
 
-  console.log(uploadImage);
 
   const options = Object.values(ROLES).map((role) => {
     return (
@@ -97,24 +108,20 @@ const NewUserForm = () => {
     ? "text-red-600 dark:text-red-600"
     : "text-blue-700 dark:text-blue-400";
 
+    const spinClass = spin 
+    ? 'mr-3 border-t-transparent border-solid animate-spin  rounded-full border-slate-400 border-2 h-7 w-7'
+    : 'sr-only'
 
-    let imgURL 
     async function readImage(e, func) {
       const file = e.target.files[0];
       const reader = new FileReader();
-      // console.log(file);
       reader.onload = function(e) {
         let binaryData = e.target.result;
         let base64String = window.btoa(binaryData);
-        imgURL = reader.result
-  
         func(base64String);
       };
   
       let image = reader.readAsBinaryString(file);
-   
-      console.log(reader);
-      console.log(imgURL);
     
       return image;
     }
@@ -129,7 +136,7 @@ const NewUserForm = () => {
         <p className={errClass}>{error?.data?.message}</p>
 
         <div className="mt-5 md:col-span-2 md:mt-0">
-          <form className="form" encType='multipart/form-data' onSubmit={onSaveUserClicked} >
+          <form  onSubmit={onSaveUserClicked} >
             <div className="shadow sm:overflow-hidden sm:rounded-md">
               <div className="space-y-6 bg-white dark:bg-slate-800 px-4 py-5 sm:p-6">
                 <div className="grid grid-cols-2 gap-4">
@@ -139,8 +146,8 @@ const NewUserForm = () => {
                         Photo
                       </label>
                       <div className="mt-1 flex items-center">
-                      {image 
-                      ? <Image data={image} />
+                      {imageView 
+                      ? <Image data={imageView} />
                       :  <span className="inline-block h-12 w-12 overflow-hidden rounded-full bg-gray-100">
                           <svg
                             className="h-full w-full text-gray-300"
@@ -157,7 +164,7 @@ const NewUserForm = () => {
                               className="ml-5 cursor-pointer text-[10px]  px-2 py-1 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
                             >
 
-                              <span>Upload File</span>
+                              <span>Upload Photo</span>
 
                               <input
                                 id="file-upload"
@@ -176,8 +183,6 @@ const NewUserForm = () => {
                           </p>
                       </div>
                     </div>
-
-
                     <div className="mt-3">
                       <label
                         className="block text-sm font-medium text-gray-700 dark:text-gray-200"
@@ -207,7 +212,7 @@ const NewUserForm = () => {
                         id="roles"
                         name="roles"
                         value={roles}
-                        onChange={(e) => setRoles(e.target.value)}
+                        onChange={onRolesChanged}
                         className="mt-1 block w-full py-2 px-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md"
                       >
                         <option defaultValue value={""}>
@@ -296,6 +301,9 @@ const NewUserForm = () => {
                     Cancel
                   </p>
                 </div>
+                <div className="flex items-center">
+                {!spin || <Spenner />}
+                  
                 <button
                   title="Save"
                   disabled={!canSave}
@@ -308,6 +316,7 @@ const NewUserForm = () => {
                   <FontAwesomeIcon icon={faSave} className="pr-2" />
                   Save
                 </button>
+                </div>
               </div>
             </div>
           </form>
