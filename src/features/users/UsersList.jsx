@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
 import { useNavigate } from "react-router-dom";
 
-
 const UsersList = () => {
 
   const navigate = useNavigate();
@@ -37,6 +36,9 @@ const UsersList = () => {
       ? ids.map((userId) => <User key={userId} userId={userId} />)
       : null;
 
+
+      
+
     content = (
       <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex justify-between">
@@ -53,9 +55,9 @@ const UsersList = () => {
           </span>
         </div>
 
-        <div className=" overflow-x-auto border border-gray-200 mt-8 dark:border-gray-800 min-w-full shadow rounded-lg overflow-hidden">
+        <div className="overflow-x-auto border border-gray-200 mt-8 dark:border-gray-800 min-w-full shadow rounded-lg ">
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm leading-normal">
-            <thead className="bg-gray-100 dark:bg-gray-800">
+            <thead className="bg-gray-100 dark:bg-gray-800 ">
               <tr>
                 <Thead thName="Name" />
                 <Thead thName="Title" />

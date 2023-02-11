@@ -73,7 +73,7 @@ const Login = () => {
         <span className=""><Switcher /></span>
       </div> 
 
-      <div className="shadow-md overflow-hidden  rounded-sm mt-7">
+      <div className="mt-7 overflow-x-auto border border-gray-200  dark:border-gray-800 shadow rounded-lg overflow-hidden">
        <div className="space-y-6  bg-white dark:bg-slate-800 px-7 py-8 sm:px-12">
           <div className="max-w-sm x w-full text-gray-600">
             <div className="text-center">
@@ -97,7 +97,7 @@ const Login = () => {
                   Username
                 </label>
                 <input
-                  className="w-full mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-sm"
+                  className=" w-full mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md"
                   type="text"
                   id="username"
                   ref={userRef}
@@ -139,7 +139,7 @@ const Login = () => {
                     onChange={handlePwdInput}
                     value={password}
                     required
-                    className="w-full mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-sm"
+                    className="w-full mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md"
                   />
                 </div>
               </div>

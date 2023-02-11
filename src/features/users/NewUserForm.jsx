@@ -272,7 +272,7 @@ const NewUserForm = () => {
                         htmlFor="country"
                         className="block text-sm font-medium text-gray-700 dark:text-gray-200"
                       >
-                        Assigned Roles
+                        Roles
                       </label>
                       <select
                         id="roles"
@@ -360,13 +360,13 @@ const NewUserForm = () => {
               </div>
               <div className="flex justify-between bg-gray-50 dark:bg-slate-800 px-4 py-3 text-right sm:px-6 dark:border-t dark:border-slate-700">
                 <div>
-                  <buton
+                  <button
                     title="Cancel"
                     onClick={() => navigate("/dash/users")}
                     className="cursor-pointer text-sm  px-4 py-2 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
                   >
                     Cancel
-                  </buton>
+                  </button>
                 </div>
                 <div className="flex items-center">
                 {!spin || <Spenner />}

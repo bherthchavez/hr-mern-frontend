@@ -1,33 +1,47 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Link } from "react-router-dom";
-import  { useState, useEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
 import useAuth from "../hooks/useAuth";
-import Dropdown from "./Dropdown";
 import Switcher from "./Switcher";
+import { useSendLogoutMutation } from "../features/auth/authApiSlice";
 
-
-const Navbar = () => {
-
+const Navbar = (props) => {
   const [nav, setNav] = useState("dash");
   const [userNav, setUserNav] = useState(false);
 
   const { name, status, avatar } = useAuth();
 
-  let menuRef=useRef()
+  let menuRef = useRef();
+  const navigate = useNavigate();
 
-  useEffect(()=>{
-    let handle = (e) =>{
-      if(!menuRef.current.contains(e.target)){
-        setUserNav(false)
+  useEffect(() => {
+    let handle = (e) => {
+      if (!menuRef.current.contains(e.target)) {
+        setUserNav(false);
       }
-    }
-    document.addEventListener("mousedown",handle)
+    };
+    document.addEventListener("mousedown", handle);
 
-    return() => {
-      document.removeEventListener("mousedown",handle)
+    return () => {
+      document.removeEventListener("mousedown", handle);
+    };
+  });
+
+  const [sendLogout, { isLoading, isSuccess, isError, error }] =
+    useSendLogoutMutation();
+
+    const clickSettings = () => {
+      navigate("/dash/users/settings")
+      setUserNav(!userNav)
     }
-  })
-  
+
+    useEffect(() => {
+      if (isSuccess) navigate("/");
+    }, [isSuccess, navigate]);
+    
+    if (isLoading) return <p>Logging Out...</p>;
+
+    if (isError) return <p>Error: {error.data?.message}</p>;
 
   const content = (
     <div className={`flex flex-1 items-center justify-end `}>
@@ -37,7 +51,7 @@ const Navbar = () => {
       >
         <Link to="/dash">
           <span
-            onClick={() => setNav('dash')}
+            onClick={() => setNav("dash")}
             className={
               nav === "dash"
                 ? "block h-16 border-b-4 leading-[4rem] border-current text-slate-400"
@@ -49,7 +63,7 @@ const Navbar = () => {
         </Link>
         <Link to="/dash/users">
           <span
-            onClick={() => setNav('users')}
+            onClick={() => setNav("users")}
             className={
               nav === "users"
                 ? "block h-16 border-b-4 leading-[4rem] border-current text-slate-400"
@@ -61,7 +75,7 @@ const Navbar = () => {
         </Link>
         <Link to="/dash/notes">
           <span
-            onClick={() => setNav('notes')}
+            onClick={() => setNav("notes")}
             className={
               nav === "notes"
                 ? "block h-16 border-b-4 leading-[4rem] border-current text-slate-400"
@@ -71,7 +85,6 @@ const Navbar = () => {
             Notes
           </span>
         </Link>
-
       </nav>
 
       <div className="ml-8 flex items-center">
@@ -134,11 +147,9 @@ const Navbar = () => {
                 </svg>
               </span>
 
-
-             
               <span className="block shrink-0  rounded-lg bg-white dark:bg-slate-800 p-2.5 shadow-sm">
-              <span className="sr-only">Darkmode Switcher</span>
-              <Switcher />
+                <span className="sr-only">Darkmode Switcher</span>
+                <Switcher />
               </span>
 
               <a
@@ -162,7 +173,10 @@ const Navbar = () => {
                 </svg>
               </a>
 
-              <div className="inline-flex bg-white dark:bg-slate-900 border dark:border-none rounded-md " ref={menuRef}>
+              <div
+                className="inline-flex bg-white dark:bg-slate-900 border dark:border-none rounded-md "
+                ref={menuRef}
+              >
                 <div className="relative">
                   <button
                     onClick={() => setUserNav(!userNav)}
@@ -172,19 +186,27 @@ const Navbar = () => {
                     <span className="sr-only">Menu</span>
                     <img
                       alt="Man"
-                      src={avatar ? avatar : `https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80`}
+                      src={
+                        avatar
+                          ? avatar
+                          : `https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80`
+                      }
                       className="h-10 w-10 rounded-full object-cover border border-slate-300  dark:border-slate-600"
                     />
 
                     <p className="ml-2 hidden text-left text-xs sm:block">
-                      <strong className="block font-medium text-gray-800 dark:text-gray-200">{name}</strong>
+                      <strong className="block font-medium text-gray-800 dark:text-gray-200">
+                        {name}
+                      </strong>
 
                       <span className="text-gray-500"> {status} </span>
                     </p>
 
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className={`ml-4 hidden h-5 w-5 text-gray-500 transition group-hover:text-gray-700 sm:block ${userNav && "rotate-180"}`}
+                      className={`ml-4 hidden h-5 w-5 text-gray-500 transition group-hover:text-gray-700 sm:block ${
+                        userNav && "rotate-180"
+                      }`}
                       viewBox="0 0 20 20"
                       fill="currentColor"
                     >
@@ -196,8 +218,27 @@ const Navbar = () => {
                     </svg>
                   </button>
 
-                  {userNav && <Dropdown  />}
-
+                  {userNav && (
+                    <div
+                      className={` absolute right-0 z-10 w-40 mt-4 origin-top-right bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-md
+    `}
+                    >
+                      <div className="py-1">
+                          <span
+                            onClick={clickSettings}
+                            className="cursor-pointer block px-4 py-2 text-sm text-gray-700 dark:text-gray-500 hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-gray-400"
+                          >
+                            Account Setting
+                          </span>
+                        <span
+                          onClick={sendLogout}
+                          className="cursor-pointer block px-4 py-2 text-sm text-gray-700 dark:text-gray-500 hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-gray-400"
+                        >
+                          Sign out
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -210,4 +251,4 @@ const Navbar = () => {
   return content;
 };
 
-export default Navbar
+export default Navbar;
