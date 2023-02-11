@@ -58,7 +58,8 @@ const UsersList = () => {
             <thead className="bg-gray-100 dark:bg-gray-800">
               <tr>
                 <Thead thName="Name" />
-                <Thead thName="Username" />
+                <Thead thName="Title" />
+                <Thead thName="Status" />
                 <Thead thName="Roles" />
                 <Thead thName="Edit" />
               </tr>

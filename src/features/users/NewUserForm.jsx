@@ -19,6 +19,9 @@ const NewUserForm = () => {
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [department, setDepartment] = useState("");
+  const [position, setPosition] = useState("");
   const [username, setUsername] = useState("");
   const [validUsername, setValidUsername] = useState(false);
   const [password, setPassword] = useState("");
@@ -45,6 +48,9 @@ const NewUserForm = () => {
   useEffect(() => {
     if (isSuccess) {
       setName("");
+      setEmail("");
+      setDepartment("");
+      setPosition("");
       setUsername("");
       setPassword("");
       setRoles("");
@@ -56,6 +62,9 @@ const NewUserForm = () => {
   }, [isSuccess, navigate]);
 
   const onNameChanged = (e) => setName(e.target.value)
+  const onEmailChanged = (e) => setEmail(e.target.value)
+  const onDepartmentChanged = (e) => setDepartment(e.target.value)
+  const onPositionChanged = (e) => setPosition(e.target.value)
   const onUsernameChanged = (e) => setUsername(e.target.value)
   const onRolesChanged = (e) => setRoles(e.target.value)
   const onPasswordChanged = (e) => setPassword(e.target.value)
@@ -84,7 +93,7 @@ const NewUserForm = () => {
    
     if (canSave) {
       setSpin(true)
-      await addNewUser({name, username, password, roles,  image })
+      await addNewUser({name, email, department, position, username, password, roles,  image })
     }
   };
 
@@ -107,10 +116,6 @@ const NewUserForm = () => {
   const validPwdClass = !validPassword
     ? "text-red-600 dark:text-red-600"
     : "text-blue-700 dark:text-blue-400";
-
-    const spinClass = spin 
-    ? 'mr-3 border-t-transparent border-solid animate-spin  rounded-full border-slate-400 border-2 h-7 w-7'
-    : 'sr-only'
 
     async function readImage(e, func) {
       const file = e.target.files[0];
@@ -141,14 +146,72 @@ const NewUserForm = () => {
               <div className="space-y-6 bg-white dark:bg-slate-800 px-4 py-5 sm:p-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="col-span-2 sm:col-span-1 ">
+                    
                     <div className="">
+                      <label
+                        className="block text-sm font-medium text-gray-700 dark:text-gray-200"
+                        htmlFor="name"
+                      >
+                        Name
+                      </label>
+                      <input
+                        className={`w-full mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
+                        id="name"
+                        name="name"
+                        type="text"
+                        autoComplete="off"
+                        required
+                        value={name}
+                        onChange={onNameChanged}
+                      />
+                    </div>
+                   
+                    <div className="mt-3">
+                      <label
+                        className="block text-sm font-medium text-gray-700 dark:text-gray-200"
+                        htmlFor="email"
+                      >
+                        Email
+                      </label>
+                      <input
+                        className={`w-full mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
+                        id="email"
+                        name="email"
+                        type="email"
+                        autoComplete="off"
+                        required
+                        value={email}
+                        onChange={onEmailChanged}
+                      />
+                    </div>
+                    <div className="mt-3">
+                      <label
+                        className="block text-sm font-medium text-gray-700 dark:text-gray-200"
+                        htmlFor="department"
+                      >
+                        Department
+                      </label>
+                      <input
+                        className={`w-full mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
+                        id="department"
+                        name="department"
+                        type="text"
+                        autoComplete="off"
+                        required
+                        value={department}
+                        onChange={onDepartmentChanged}
+                      />
+                    </div>
+                   
+
+                    <div className="mt-4">
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
                         Photo
                       </label>
                       <div className="mt-1 flex items-center">
                       {imageView 
-                      ? <Image data={imageView} />
-                      :  <span className="inline-block h-12 w-12 overflow-hidden rounded-full bg-gray-100">
+                      ? <Image data={imageView} size="h-16 w-16" rounded="rounded-md"  />
+                      :  <span className="inline-block h-16 w-16 overflow-hidden rounded-md bg-gray-100">
                           <svg
                             className="h-full w-full text-gray-300"
                             fill="currentColor"
@@ -183,22 +246,25 @@ const NewUserForm = () => {
                           </p>
                       </div>
                     </div>
-                    <div className="mt-3">
+                  </div>
+                  <div className=" col-span-2 sm:col-span-1">
+
+                  <div className="">
                       <label
                         className="block text-sm font-medium text-gray-700 dark:text-gray-200"
-                        htmlFor="name"
+                        htmlFor="position"
                       >
-                        Name
+                        Position
                       </label>
                       <input
                         className={`w-full mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
-                        id="name"
-                        name="name"
+                        id="position"
+                        name="position"
                         type="text"
                         autoComplete="off"
                         required
-                        value={name}
-                        onChange={onNameChanged}
+                        value={position}
+                        onChange={onPositionChanged}
                       />
                     </div>
                     <div className="mt-3">
@@ -221,8 +287,8 @@ const NewUserForm = () => {
                         {options}
                       </select>
                     </div>
-                  </div>
-                  <div className=" col-span-2 sm:col-span-1">
+                  
+                  <div className="mt-3">
                     <label
                       htmlFor="username"
                       className={`block text-sm font-medium text-gray-700 dark:text-gray-200`}
@@ -242,6 +308,7 @@ const NewUserForm = () => {
                       value={username}
                       onChange={onUsernameChanged}
                     />
+                  </div>
 
                     <div className="mt-3">
                       <label
@@ -293,13 +360,13 @@ const NewUserForm = () => {
               </div>
               <div className="flex justify-between bg-gray-50 dark:bg-slate-800 px-4 py-3 text-right sm:px-6 dark:border-t dark:border-slate-700">
                 <div>
-                  <p
+                  <buton
                     title="Cancel"
                     onClick={() => navigate("/dash/users")}
                     className="cursor-pointer text-sm  px-4 py-2 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
                   >
                     Cancel
-                  </p>
+                  </buton>
                 </div>
                 <div className="flex items-center">
                 {!spin || <Spenner />}
