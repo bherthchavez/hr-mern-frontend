@@ -17,6 +17,8 @@ const User = ({ userId }) => {
     const handleEdit = () => navigate(`/dash/users/${userId}`);
 
 
+
+
     return (
       <tr>
         <td
@@ -34,7 +36,7 @@ const User = ({ userId }) => {
             className="flex-nowrap h-12 w-12 rounded-full border border-slate-300  dark:border-slate-600 object-cover"
           />
           <div className="flex-nowrap">
-            <p className="uppercase">{user.name} </p>
+            <p className="capitalize">{user.name} </p>
             <p className="font-normal text-gray-700 dark:text-gray-500">
               {user.email}
             </p>
@@ -45,7 +47,7 @@ const User = ({ userId }) => {
           className={`whitespace-nowrap px-4 py-4 font-medium text-gray-900 dark:text-gray-300`}
         >
           <div className="flex-nowrap">
-            <p className="uppercase">{user.position} </p>
+            <p className="capitalize">{user.position} </p>
             <p className="font-normal text-gray-700 dark:text-gray-500">
               {user.department}
             </p>

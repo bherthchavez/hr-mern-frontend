@@ -7,11 +7,17 @@ import { ROLES } from "../../config/roles";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import Image from "../../components/Image";
 import Spenner from "../../components/Spenner";
+import useAuth from "../../hooks/useAuth";
+
 
 const USER_REGEX = /^[A-z]{3,20}$/;
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
 
 const EditUserForm = ({ user }) => {
+
+  const { id } = useAuth(); //current user id
+
+
   const [updateUser, { isLoading, isSuccess, isError, error }] =
     useUpdateUserMutation();
 
@@ -158,11 +164,14 @@ const EditUserForm = ({ user }) => {
     <>
       <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8 ">
         <h1 className="mb-2 text-2xl font-bold text-gray-900 sm:text-2xl dark:text-gray-200 ">
-          New User
+         {id === user._id 
+         ? 'Accounting Setting'
+          : 'Edit User'
+         } 
         </h1>
         <p className={errClass}>{error?.data?.message}</p>
 
-        <div className="mt-5 md:col-span-2 md:mt-0 ">
+        <div className="mt-5 md:col-span-2 ">
           <form onSubmit={(e) => e.preventDefault()}>
             <div className="shadow sm:overflow-hidden sm:rounded-md">
               <div className="space-y-6 bg-white dark:bg-slate-800 px-4 py-5 sm:p-6">
@@ -371,7 +380,8 @@ const EditUserForm = ({ user }) => {
                         />
                       </div>
                     </div>
-                    <div className="mt-4 space-y-4">
+                    { id !== user._id
+                    && <div className="mt-4 space-y-4">
                       <div className="flex items-start">
                         <div className="mr-2 text-sm">
                           <label
@@ -393,27 +403,21 @@ const EditUserForm = ({ user }) => {
                         </div>
                       </div>
                     </div>
+                    }
+
+
                   </div>
                 </div>
               </div>
               <div className="flex justify-between bg-gray-50 dark:bg-slate-800 px-4 py-3 text-right sm:px-6 dark:border-t dark:border-slate-700">
-                <div>
-                  <p
-                    title="Cancel"
-                    onClick={() => navigate("/dash/users")}
-                    className="cursor-pointer text-sm  px-4 py-2 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
-                  >
-                    Cancel
-                  </p>
-                </div>
-                <div className="flex items-center">
-                  {!spin || <Spenner />}
-
-                  <button
+              
+                  {spin && <Spenner />}
+                   { id !== user._id
+                    &&  <button
                     className={
                       canSave
-                        ? `text-sm mr-6 px-4 py-2 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
-                        : "text-sm mr-6 px-4 py-2 text-white border dark:text-slate-600 font-medium border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
+                        ? `text-sm px-4 py-2 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
+                        : "text-sm px-4 py-2 text-white border dark:text-slate-600 font-medium border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
                     }
                     title="Delete User"
                     disabled={!canSave}
@@ -422,6 +426,20 @@ const EditUserForm = ({ user }) => {
                     <FontAwesomeIcon icon={faTrashCan} className="pr-2" />
                     Delete
                   </button>
+                   }           
+
+                <div className="flex items-center">
+                 
+                   <div>
+                  <p
+                    title="Cancel"
+                    onClick={() => navigate("/dash/users")}
+                    className="mr-6 cursor-pointer text-sm  px-4 py-2 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
+                  >
+                    Cancel
+                  </p>
+                </div>
+
                   <button
                     title="Save"
                     disabled={!canSave}

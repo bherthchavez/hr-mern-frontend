@@ -86,7 +86,7 @@ const NewUserForm = () => {
 }
 
   const canSave =
-    [roles, name, validUsername, validPassword].every(Boolean) && !isLoading;
+    [roles, name, validUsername, validPassword, image].every(Boolean) && !isLoading;
 
   const onSaveUserClicked = async (e) => {
     e.preventDefault();
@@ -140,7 +140,7 @@ const NewUserForm = () => {
         </h1>
         <p className={errClass}>{error?.data?.message}</p>
 
-        <div className="mt-5 md:col-span-2 md:mt-0">
+        <div className="mt-5 md:col-span-2">
           <form  onSubmit={onSaveUserClicked} >
             <div className="shadow sm:overflow-hidden sm:rounded-md">
               <div className="space-y-6 bg-white dark:bg-slate-800 px-4 py-5 sm:p-6">
@@ -369,7 +369,7 @@ const NewUserForm = () => {
                   </button>
                 </div>
                 <div className="flex items-center">
-                {!spin || <Spenner />}
+                {spin && <Spenner />}
                   
                 <button
                   title="Save"

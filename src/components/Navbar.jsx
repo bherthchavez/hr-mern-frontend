@@ -9,7 +9,10 @@ const Navbar = (props) => {
   const [nav, setNav] = useState("dash");
   const [userNav, setUserNav] = useState(false);
 
-  const { name, status, avatar } = useAuth();
+  const { id, name, status, avatar } = useAuth();
+
+  
+
 
   let menuRef = useRef();
   const navigate = useNavigate();
@@ -31,7 +34,7 @@ const Navbar = (props) => {
     useSendLogoutMutation();
 
     const clickSettings = () => {
-      navigate("/dash/users/settings")
+      navigate(`/dash/users/${id}`)
       setUserNav(!userNav)
     }
 
@@ -91,7 +94,8 @@ const Navbar = (props) => {
         <div className="flex items-center divide-x divide-gray-100 border-x border-gray-200 dark:border-l-gray-900 dark:border-r-gray-900">
           <span>
             <div className="flex gap-4">
-              <div className="relative hidden sm:block">
+            
+              {/* <div className="relative hidden sm:block">
                 <label className="sr-only" htmlFor="search">
                   {" "}
                   Search{" "}
@@ -125,7 +129,6 @@ const Navbar = (props) => {
                   </svg>
                 </button>
               </div>
-
               <span
                 type="button"
                 className="block shrink-0 rounded-lg bg-white p-2.5 text-gray-600 shadow-sm hover:text-gray-700 sm:hidden"
@@ -145,7 +148,7 @@ const Navbar = (props) => {
                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                   />
                 </svg>
-              </span>
+              </span> */}
 
               <span className="block shrink-0  rounded-lg bg-white dark:bg-slate-800 p-2.5 shadow-sm">
                 <span className="sr-only">Darkmode Switcher</span>
@@ -185,17 +188,13 @@ const Navbar = (props) => {
                   >
                     <span className="sr-only">Menu</span>
                     <img
-                      alt="Man"
-                      src={
-                        avatar
-                          ? avatar
-                          : `https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80`
-                      }
+                      alt="Profile"
+                      src={avatar}
                       className="h-10 w-10 rounded-full object-cover border border-slate-300  dark:border-slate-600"
                     />
 
                     <p className="ml-2 hidden text-left text-xs sm:block">
-                      <strong className="block font-medium text-gray-800 dark:text-gray-200">
+                      <strong className="block font-medium text-gray-800 dark:text-gray-200 capitalize">
                         {name}
                       </strong>
 

@@ -12,7 +12,6 @@ import EditNote from "./features/notes/EditNote";
 import NewNote from "./features/notes/NewNote";
 import Prefetch from "./features/auth/Prefetch";
 import PersistLogin from './features/auth/PersistLogin';
-import AccSettings from "./features/users/AccSettings";
 
 function App() {
   return (
@@ -32,7 +31,6 @@ function App() {
                 <Route index element={<UsersList />} />
                 <Route path=":id" element={<EditUser />} />
                 <Route path="new" element={<NewUserForm />} />
-                <Route path="settings" element={<AccSettings />} />
               </Route>
 
               <Route path="notes">
