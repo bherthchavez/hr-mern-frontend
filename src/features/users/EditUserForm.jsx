@@ -160,6 +160,9 @@ const EditUserForm = ({ user }) => {
     return image;
   }
 
+  const btnClass = id !== user._id ? 'flex justify-between' : null;
+
+
   const content = (
     <>
       <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8 ">
@@ -409,9 +412,9 @@ const EditUserForm = ({ user }) => {
                   </div>
                 </div>
               </div>
-              <div className="flex justify-between bg-gray-50 dark:bg-slate-800 px-4 py-3 text-right sm:px-6 dark:border-t dark:border-slate-700">
+              <div className={ `bg-gray-50 dark:bg-slate-800 px-4 py-3 text-right sm:px-6 dark:border-t dark:border-slate-700 ${btnClass}`}>
               
-                  {spin && <Spenner />}
+                
                    { id !== user._id
                     &&  <button
                     className={
@@ -428,8 +431,8 @@ const EditUserForm = ({ user }) => {
                   </button>
                    }           
 
-                <div className="flex items-center">
-                 
+                <div className="flex justify-end">
+                {spin && <Spenner />}
                    <div>
                   <p
                     title="Cancel"

@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
+
 const UsersList = () => {
 
 
@@ -38,13 +39,20 @@ const UsersList = () => {
       ? ids.map((userId) => <User key={userId} userId={userId} />)
       : null;
 
+
+      
+
     content = (
+      <>
+        
       <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="sm:flex justify-between">
           <div className="flex">
             <h1 className="text-2xl font-bold text-gray-900  dark:text-gray-400">
               Users List
             </h1>
+
+           
 
             <span
               onClick={() => navigate("/dash/users/new")}
@@ -114,6 +122,8 @@ const UsersList = () => {
           </table>
         </div>
       </div>
+     
+      </>
     );
   }
 
