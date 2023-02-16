@@ -11,6 +11,8 @@ const User = ({ userId }) => {
 
   const user = useSelector((state) => selectUserById(state, userId));
 
+  // console.log(user)
+
   const navigate = useNavigate();
 
   if (user && user.username !== username) {
@@ -43,6 +45,7 @@ const User = ({ userId }) => {
           </div>
 
         </td>
+
         <td
           className={`whitespace-nowrap px-4 py-4 font-medium text-gray-900 dark:text-gray-300`}
         >
@@ -53,6 +56,7 @@ const User = ({ userId }) => {
             </p>
           </div>
         </td>
+
         <td
           className={`whitespace-nowrap px-4 py-4 font-medium text-gray-900 dark:text-gray-300 `}
         >
@@ -66,11 +70,13 @@ const User = ({ userId }) => {
             {user.active ? "Active" : "Inactive"}
           </span>
         </td>
+
         <td
           className={`whitespace-nowrap px-4 py-4 font-medium text-gray-600 dark:text-gray-500 `}
         >
           {user.roles}
         </td>
+
         <td
           className={`whitespace-nowrap px-2 py-4 font-medium text-gray-900 dark:text-gray-300 `}
         >
@@ -83,6 +89,7 @@ const User = ({ userId }) => {
           </button>
       
         </td>
+        
       </tr>
     );
   } else return null;
