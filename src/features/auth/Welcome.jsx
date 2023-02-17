@@ -4,9 +4,18 @@ import { useGetUsersQuery } from "../users/usersApiSlice";
 import { Link } from "react-router-dom";
 
 import useAuth from "../../hooks/useAuth";
+import { useState } from "react";
 
 const Welcome = () => {
+  let [time, getTime] = useState(new Date().toLocaleTimeString());
+  function refreshTime() {
+    getTime((time = new Date().toLocaleTimeString()));
+  }
+  setInterval(refreshTime, 1000);
   const { name } = useAuth();
+
+  const dateToday = (new Date().toLocaleDateString("en-US", {year: 'numeric' , day: 'numeric' ,
+  month: 'long' }))
 
   const {
     data: notes,
@@ -59,13 +68,12 @@ const Welcome = () => {
         <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
           <div className="mt-2">
         
-            <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl dark:text-gray-200">
+            <p className="text-xl font-bold text-gray-900 sm:text-2xl dark:text-gray-200">
               Welcome Back, {name}!
-            </h1>
+            </p>
 
             <p className="mt-1.5 text-sm text-gray-500">
-              Your website has seen a 52% increase in traffic in the last month.
-              Keep it up!
+               {`Today is  ${dateToday} - ${time} `}
             </p>
 
             <div className="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 md:py-16 lg:px-8">

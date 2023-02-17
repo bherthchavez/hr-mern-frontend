@@ -1,21 +1,19 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import useAuth from "../hooks/useAuth";
 import Switcher from "./Switcher";
 import { useSendLogoutMutation } from "../features/auth/authApiSlice";
 
 const Navbar = (props) => {
-  const [nav, setNav] = useState("dash");
   const [userNav, setUserNav] = useState(false);
-
   const { id, name, status, avatar } = useAuth();
-
-  
-
-
+ 
+  const currentURL = window.location.pathname
+ 
   let menuRef = useRef();
   const navigate = useNavigate();
+
 
   useEffect(() => {
     let handle = (e) => {
@@ -30,6 +28,8 @@ const Navbar = (props) => {
     };
   });
 
+ 
+
   const [sendLogout, { isLoading, isSuccess, isError, error }] =
     useSendLogoutMutation();
 
@@ -40,6 +40,7 @@ const Navbar = (props) => {
 
     useEffect(() => {
       if (isSuccess) navigate("/");
+      
     }, [isSuccess, navigate]);
     
     if (isLoading) return <p>Logging Out...</p>;
@@ -52,42 +53,39 @@ const Navbar = (props) => {
         aria-label="Site Nav"
         className="hidden lg:flex lg:gap-4 lg:text-xs lg:font-bold lg:uppercase lg:tracking-wide lg:text-gray-300"
       >
-        <Link to="/dash">
+      
           <span
-            onClick={() => setNav("dash")}
+            onClick={() => navigate("/dash")}
             className={
-              nav === "dash"
-                ? "block h-16 border-b-4 leading-[4rem] border-current text-slate-400"
-                : "block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-slate-500"
+             currentURL === '/dash'
+                ? "cursor-pointer block h-16 border-b-4 leading-[4rem] border-current text-slate-700 dark:text-slate-400 "
+                : "cursor-pointer block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current text-slate-700 dark:text-slate-400 hover:text-slate-500"
             }
           >
-            Dashboard
+           My Dashboard
           </span>
-        </Link>
-        <Link to="/dash/users">
+       
           <span
-            onClick={() => setNav("users")}
+            onClick={() => navigate("/dash/users")}
             className={
-              nav === "users"
-                ? "block h-16 border-b-4 leading-[4rem] border-current text-slate-400"
-                : "block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-slate-500"
+             currentURL === '/dash/users' || currentURL === '/dash/users/new'
+                ? "cursor-pointer block h-16 border-b-4 leading-[4rem] border-current text-slate-700 dark:text-slate-400"
+                : "cursor-pointer block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current text-slate-700 dark:text-slate-400 hover:text-slate-500"
             }
           >
             Users
           </span>
-        </Link>
-        <Link to="/dash/notes">
+        
           <span
-            onClick={() => setNav("notes")}
+            onClick={() => navigate("/dash/notes")}
             className={
-              nav === "notes"
-                ? "block h-16 border-b-4 leading-[4rem] border-current text-slate-400"
-                : "block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current hover:text-slate-500"
+             currentURL === '/dash/notes'
+                ? "cursor-pointer block h-16 border-b-4 leading-[4rem] border-current text-slate-700 dark:text-slate-400"
+                : "cursor-pointer block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current text-slate-700 dark:text-slate-400 hover:text-slate-500"
             }
           >
             Notes
           </span>
-        </Link>
       </nav>
 
       <div className="ml-8 flex items-center">
@@ -157,7 +155,7 @@ const Navbar = (props) => {
 
               <a
                 href="#"
-                className="block shrink-0 rounded-lg bg-white dark:bg-slate-800 p-2.5 text-gray-600 shadow-sm hover:text-gray-700"
+                className="block shrink-0 rounded-lg bg-white dark:bg-slate-800 p-2.5 text-gray-800 dark:text-gray-300 shadow-sm hover:text-gray-700"
               >
                 <span className="sr-only">Notifications</span>
                 <svg

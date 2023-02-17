@@ -7,7 +7,6 @@ import { ROLES } from "../../config/roles";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import Image from "../../components/Image";
 import Spenner from "../../components/Spenner";
-import { DatePicker } from 'antd';
 
 
 const USER_REGEX = /^[A-z]{3,20}$/;

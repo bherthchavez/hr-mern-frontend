@@ -1,27 +1,17 @@
 // eslint-disable-next-line array-callback-return
-import { useGetUsersQuery, selectAllUsers } from "./usersApiSlice";
+import { useGetUsersQuery } from "./usersApiSlice";
 import User from "./User";
 import Thead from "../../components/Thead";
 import Tbody from "../../components/Tbody";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {  faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import useAuth from "../../hooks/useAuth";
-import { useState } from "react";
-import { useCallback } from "react";
-import { debounce } from "lodash";
+import {  useState } from "react";
 
 const UsersList = () => {
 
   const [search, setsearch] = useState("");
-  const [searchData, setsearchData] = useState([]);
-
-  const { id } = useAuth(); //current user id
-
-  const allUsers = useSelector((state) => selectAllUsers(state)).filter((user) => user._id !== id);
-
-
+  
 
   const navigate = useNavigate();
   const {
@@ -35,6 +25,8 @@ const UsersList = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
+  
+ 
 
   let content;
 
@@ -44,35 +36,21 @@ const UsersList = () => {
     content = <p className="errmsg">{error?.data?.message}</p>;
   }
 
-  const changeSearchData = (text) => {
-    setsearchData(
-      allUsers.filter((el) => {
-        return (
-          el.name.toLowerCase().indexOf(text.toLowerCase()) > -1 ||
-          el.roles.toLowerCase().indexOf(text.toLowerCase()) > -1 ||
-          el.department.toLowerCase().indexOf(text.toLowerCase()) > -1 ||
-          el.position.toLowerCase().indexOf(text.toLowerCase()) > -1
-          )
-      })
-    );
-  };
-
-  const debounceLoadData = useCallback(debounce(changeSearchData, 100), []);
   
   const handleSearch = (text) => {
      setsearch(text);
-     debounceLoadData(text);
    };
-
 
 
   if (isSuccess) {
     const { ids } = users;
-    // console.log(users)
-    // const tableContent = ids?.length
-    //   ? ids.map((userId) => <User key={userId} userId={userId} />)
-    //   : null;
 
+    
+    const tableContent = ids?.length
+    ? ids.map((userId) => <User key={userId} userId={userId} search={search} />)
+    : null;
+    
+    console.log(ids)
 
 
 
@@ -154,154 +132,7 @@ const UsersList = () => {
                   <Thead thName="Edit" />
                 </tr>
               </thead>
-              {/* <Tbody tbName={tableContent} /> */}
-
-              <tbody className="divide-y dark:bg-slate-800 divide-gray-200 dark:divide-gray-700 ">
-
-              {search 
-              ?   searchData.map((data) => (
-                <tr key={data._id}>
-                  <td
-                    className={`sm:flex gap-4 whitespace-nowrap px-4 py-4 font-medium text-gray-900 dark:text-gray-300`}
-                  >
-
-
-                    <img
-                      alt="Man"
-                      src={
-                        data.avatar
-                          ? data.avatar
-                          : `https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80`
-                      }
-                      className="flex-nowrap h-12 w-12 rounded-full border border-slate-300  dark:border-slate-600 object-cover"
-                    />
-                    <div className="flex-nowrap">
-                      <p className="capitalize">{data.name} </p>
-                      <p className="font-normal text-gray-700 dark:text-gray-500">
-                        {data.email}
-                      </p>
-                    </div>
-
-                  </td>
-
-                  <td
-                    className={`whitespace-nowrap px-4 py-4 font-medium text-gray-900 dark:text-gray-300`}
-                  >
-                    <div className="flex-nowrap">
-                      <p className="capitalize">{data.position} </p>
-                      <p className="font-normal text-gray-700 dark:text-gray-500">
-                        {data.department}
-                      </p>
-                    </div>
-                  </td>
-
-                  <td
-                    className={`whitespace-nowrap px-4 py-4 font-medium text-gray-900 dark:text-gray-300 `}
-                  >
-                    <span
-                      className={` ${data.active
-                          ? "bg-green-200 text-green-900 font-semibold dark:bg-green-900 dark:text-green-200"
-                          : "bg-red-200 text-red-900 font-semibold dark:bg-red-900 dark:text-red-200"
-                        }  inline-flex items-center justify-center px-2 py-1 mr-2 text-xs font-normal leading-none  rounded-full`}
-                    >
-                      {data.active ? "Active" : "Inactive"}
-                    </span>
-                  </td>
-
-                  <td
-                    className={`whitespace-nowrap px-4 py-4 font-medium text-gray-600 dark:text-gray-500 `}
-                  >
-                    {data.roles}
-                  </td>
-
-                  <td
-                    className={`whitespace-nowrap px-2 py-4 font-medium text-gray-900 dark:text-gray-300 `}
-                  >
-                    <span
-                      title="Edit User"
-                      className="text-lg p-1 hover:text-slate-500"
-                      onClick={()=>navigate(`/dash/users/${data._id}`)}
-                    >
-                      <FontAwesomeIcon icon={faPenToSquare} />
-                    </span>
-
-                  </td>
-
-                </tr>
-                ))
-                : allUsers.map((data) => (
-                <tr key={data._id}>
-                  <td
-                    className={`sm:flex gap-4 whitespace-nowrap px-4 py-4 font-medium text-gray-900 dark:text-gray-300`}
-                  >
-
-
-                    <img
-                      alt="Man"
-                      src={
-                        data.avatar
-                          ? data.avatar
-                          : `https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80`
-                      }
-                      className="flex-nowrap h-12 w-12 rounded-full border border-slate-300  dark:border-slate-600 object-cover"
-                    />
-                    <div className="flex-nowrap">
-                      <p className="capitalize">{data.name} </p>
-                      <p className="font-normal text-gray-700 dark:text-gray-500">
-                        {data.email}
-                      </p>
-                    </div>
-
-                  </td>
-
-                  <td
-                    className={`whitespace-nowrap px-4 py-4 font-medium text-gray-900 dark:text-gray-300`}
-                  >
-                    <div className="flex-nowrap">
-                      <p className="capitalize">{data.position} </p>
-                      <p className="font-normal text-gray-700 dark:text-gray-500">
-                        {data.department}
-                      </p>
-                    </div>
-                  </td>
-
-                  <td
-                    className={`whitespace-nowrap px-4 py-4 font-medium text-gray-900 dark:text-gray-300 `}
-                  >
-                    <span
-                      className={` ${data.active
-                          ? "bg-green-200 text-green-900 font-semibold dark:bg-green-900 dark:text-green-200"
-                          : "bg-red-200 text-red-900 font-semibold dark:bg-red-900 dark:text-red-200"
-                        }  inline-flex items-center justify-center px-2 py-1 mr-2 text-xs font-normal leading-none  rounded-full`}
-                    >
-                      {data.active ? "Active" : "Inactive"}
-                    </span>
-                  </td>
-
-                  <td
-                    className={`whitespace-nowrap px-4 py-4 font-medium text-gray-600 dark:text-gray-500 `}
-                  >
-                    {data.roles}
-                  </td>
-
-                  <td
-                    className={`whitespace-nowrap px-2 py-4 font-medium text-gray-900 dark:text-gray-300 `}
-                  >
-                    <span
-                      title="Edit User"
-                      className="text-lg p-1 hover:text-slate-500"
-                      onClick={()=>navigate(`/dash/users/${data._id}`)}
-                    >
-                      <FontAwesomeIcon icon={faPenToSquare} />
-                    </span>
-
-                  </td>
-
-                </tr>
-                ))
-                }
-              </tbody>
-
+              <Tbody tbName={tableContent} />
 
             </table>
           </div>
