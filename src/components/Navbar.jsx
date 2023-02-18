@@ -10,6 +10,8 @@ const Navbar = (props) => {
   const { id, name, status, avatar } = useAuth();
  
   const currentURL = window.location.pathname
+
+  console.log(currentURL)
  
   let menuRef = useRef();
   const navigate = useNavigate();

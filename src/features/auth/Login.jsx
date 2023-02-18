@@ -138,6 +138,7 @@ const Login = () => {
                     id="password"
                     onChange={handlePwdInput}
                     value={password}
+                    autoComplete="off"
                     required
                     className="w-full mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md"
                   />
