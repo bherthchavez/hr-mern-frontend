@@ -4,8 +4,9 @@ import { useState, useEffect, useRef } from "react";
 import useAuth from "../hooks/useAuth";
 import Switcher from "./Switcher";
 import { useSendLogoutMutation } from "../features/auth/authApiSlice";
+import Spenner from "./Spenner";
 
-const Navbar = (props) => {
+const Navbar = () => {
   const [userNav, setUserNav] = useState(false);
   const { id, isAdmin, name, status, avatar } = useAuth();
 
@@ -45,7 +46,12 @@ const Navbar = (props) => {
 
   }, [isSuccess, navigate]);
 
-  if (isLoading) return <p>Logging Out...</p>;
+  if (isLoading) return (
+    <div className="flex text-gray-800 dark:text-gray-300 text-sm">
+    <Spenner />
+    <p>Logging Out...</p>
+  </div>
+  )
 
   if (isError) return <p>Error: {error.data?.message}</p>;
 
