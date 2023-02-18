@@ -7,6 +7,7 @@ import { useLoginMutation } from "./authApiSlice";
 import usePersist from "../../hooks/usePersist";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import Switcher from "../../components/Switcher";
+import PageLoader from "../../components/PageLoader";
 
 const Login = () => {
   const userRef = useRef();
@@ -63,7 +64,7 @@ const Login = () => {
 
   const errClass = errMsg ? "errmsg" : "offscreen";
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <PageLoader />
 
   const content = (
     <div className="w-full h-screen flex flex-col items-center bg-slate-100 dark:bg-slate-900 justify-center px-4">
