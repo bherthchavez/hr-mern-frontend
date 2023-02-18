@@ -103,8 +103,8 @@ const Login = () => {
                   ref={userRef}
                   value={username}
                   onChange={handleUserInput}
-                  autoComplete="off"
-                  required
+                  autoComplete="current-password"
+                  required={true}
                 />
               </div>
               <div>
