@@ -1,4 +1,4 @@
-// eslint-disable-next-line array-callback-return
+
 import { useGetUsersQuery } from "./usersApiSlice";
 import User from "./User";
 import Thead from "../../components/Thead";
@@ -21,7 +21,7 @@ const UsersList = () => {
     isError,
     error,
   } = useGetUsersQuery("usersList", {
-    pollingInterval: 15000, // refresh data every 15 seconds
+    pollingInterval: 20000, // refresh data every 15 seconds
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
@@ -44,15 +44,8 @@ const UsersList = () => {
 
   if (isSuccess) {
     const { ids } = users;
-
-    
-    const tableContent = ids?.length
-    ? ids.map((userId) => <User key={userId} userId={userId} search={search} />)
-    : null;
-    
-    console.log(ids)
-
-
+    const tableContent = ids?.length && ids.map((userId) => <User key={userId} userId={userId} search={search} />)
+  
 
     content = (
       <>
