@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
-import Public from "./components/Public";
+// import Public from "./components/Public";
 import Login from "./features/auth/Login";
 import DashLayout from "./components/DashLayout";
 import Welcome from "./features/auth/Welcome";
@@ -20,8 +20,8 @@ function App() {
     <main className="min-h-screen transition duration-200 bg-gray-50 dark:bg-slate-900">
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Public />} />
-          <Route path="login" element={<Login />} />
+          <Route index element={<Login />} />
+          {/* <Route path="login" element={<Login />} /> */}
 
           <Route element={<PersistLogin />}>
             <Route element={<RequireAuth allowedRoles={[...Object.values(ROLES)]} />}>
