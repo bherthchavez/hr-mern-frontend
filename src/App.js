@@ -17,7 +17,7 @@ import { ROLES } from './config/roles'
 
 function App() {
   return (
-    <main className="min-h-screen transition duration-200 bg-gray-50 dark:bg-slate-900">
+    <div className="min-h-screen transition duration-200 bg-gray-50 dark:bg-slate-900">
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Login />} />
@@ -27,6 +27,7 @@ function App() {
             <Route element={<RequireAuth allowedRoles={[...Object.values(ROLES)]} />}>
               <Route element={<Prefetch />}>
                 <Route path="dash" element={<DashLayout />}>
+                
                   <Route index element={<Welcome />} />
 
                   <Route element={<RequireAuth allowedRoles={[ROLES.Manager, ROLES.Admin]} />}>
@@ -50,7 +51,7 @@ function App() {
 
         </Route>
       </Routes>
-    </main>
+    </div>
   );
 }
 

@@ -7,7 +7,7 @@ import { useSendLogoutMutation } from "../features/auth/authApiSlice";
 
 const Navbar = (props) => {
   const [userNav, setUserNav] = useState(false);
-  const { id, name, status, avatar } = useAuth();
+  const { id, isAdmin, name, status, avatar } = useAuth();
  
   const currentURL = window.location.pathname
 
@@ -67,7 +67,7 @@ const Navbar = (props) => {
            My Dashboard
           </span>
        
-          <span
+         {isAdmin && <span
             onClick={() => navigate("/dash/users")}
             className={
              currentURL === '/dash/users' || currentURL === '/dash/users/new'
@@ -76,7 +76,7 @@ const Navbar = (props) => {
             }
           >
             Users
-          </span>
+          </span>}
         
           <span
             onClick={() => navigate("/dash/notes")}
