@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import useAuth from "../hooks/useAuth";
 import Switcher from "./Switcher";
@@ -7,10 +7,12 @@ import { useSendLogoutMutation } from "../features/auth/authApiSlice";
 
 const Navbar = (props) => {
   const [userNav, setUserNav] = useState(false);
-  const { id, name, status, avatar } = useAuth();
- 
-  const currentURL = window.location.pathname
- 
+  const { id, isAdmin, name, status, avatar } = useAuth();
+
+
+  const location = useLocation()
+
+
   let menuRef = useRef();
   const navigate = useNavigate();
 
@@ -28,24 +30,24 @@ const Navbar = (props) => {
     };
   });
 
- 
+
 
   const [sendLogout, { isLoading, isSuccess, isError, error }] =
     useSendLogoutMutation();
 
-    const clickSettings = () => {
-      navigate(`/dash/users/${id}`)
-      setUserNav(!userNav)
-    }
+  const clickSettings = () => {
+    navigate(`/dash/users/${id}`)
+    setUserNav(!userNav)
+  }
 
-    useEffect(() => {
-      if (isSuccess) navigate("/");
-      
-    }, [isSuccess, navigate]);
-    
-    if (isLoading) return <p>Logging Out...</p>;
+  useEffect(() => {
+    if (isSuccess) navigate("/");
 
-    if (isError) return <p>Error: {error.data?.message}</p>;
+  }, [isSuccess, navigate]);
+
+  if (isLoading) return <p>Logging Out...</p>;
+
+  if (isError) return <p>Error: {error.data?.message}</p>;
 
   const content = (
     <div className={`flex flex-1 items-center justify-end `}>
@@ -53,46 +55,57 @@ const Navbar = (props) => {
         aria-label="Site Nav"
         className="hidden lg:flex lg:gap-4 lg:text-xs lg:font-bold lg:uppercase lg:tracking-wide lg:text-gray-300"
       >
-      
+
+          <Link to="/dash">
+        <span
+          // onClick={() => navigate("/dash")}
+          className={
+            location.pathname === '/dash'
+              ? "cursor-pointer block h-16 border-b-4 leading-[4rem] border-current text-slate-700 dark:text-slate-400 "
+              : "cursor-pointer block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current text-slate-700 dark:text-slate-400 hover:text-slate-500"
+          }
+        >
+
+            My Dashboard
+        </span>
+          </Link>
+
+        {isAdmin &&
+
+            <Link to="/dash/users">
           <span
-            onClick={() => navigate("/dash")}
+            // onClick={() => navigate("/dash/users")}
             className={
-             currentURL === '/dash'
-                ? "cursor-pointer block h-16 border-b-4 leading-[4rem] border-current text-slate-700 dark:text-slate-400 "
-                : "cursor-pointer block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current text-slate-700 dark:text-slate-400 hover:text-slate-500"
-            }
-          >
-           My Dashboard
-          </span>
-       
-          <span
-            onClick={() => navigate("/dash/users")}
-            className={
-             currentURL === '/dash/users' || currentURL === '/dash/users/new'
+              location.pathname === '/dash/users' || location.pathname === '/dash/users/new'
                 ? "cursor-pointer block h-16 border-b-4 leading-[4rem] border-current text-slate-700 dark:text-slate-400"
                 : "cursor-pointer block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current text-slate-700 dark:text-slate-400 hover:text-slate-500"
             }
           >
-            Users
+              Users
           </span>
-        
-          <span
-            onClick={() => navigate("/dash/notes")}
-            className={
-             currentURL === '/dash/notes'
-                ? "cursor-pointer block h-16 border-b-4 leading-[4rem] border-current text-slate-700 dark:text-slate-400"
-                : "cursor-pointer block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current text-slate-700 dark:text-slate-400 hover:text-slate-500"
-            }
-          >
+            </Link>
+        }
+
+          <Link to="/dash/notes">
+        <span
+          // onClick={() => navigate("/dash/notes")}
+          className={
+            location.pathname === '/dash/notes'
+              ? "cursor-pointer block h-16 border-b-4 leading-[4rem] border-current text-slate-700 dark:text-slate-400"
+              : "cursor-pointer block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current text-slate-700 dark:text-slate-400 hover:text-slate-500"
+          }
+        >
+
             Notes
-          </span>
+        </span>
+          </Link>
       </nav>
 
       <div className="ml-8 flex items-center">
         <div className="flex items-center divide-x divide-gray-100 border-x border-gray-200 dark:border-l-gray-900 dark:border-r-gray-900">
           <span>
             <div className="flex gap-4">
-            
+
               {/* <div className="relative hidden sm:block">
                 <label className="sr-only" htmlFor="search">
                   {" "}
@@ -201,9 +214,8 @@ const Navbar = (props) => {
 
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className={`ml-4 hidden h-5 w-5 text-gray-500 transition group-hover:text-gray-700 sm:block ${
-                        userNav && "rotate-180"
-                      }`}
+                      className={`ml-4 hidden h-5 w-5 text-gray-500 transition group-hover:text-gray-700 sm:block ${userNav && "rotate-180"
+                        }`}
                       viewBox="0 0 20 20"
                       fill="currentColor"
                     >
@@ -221,12 +233,12 @@ const Navbar = (props) => {
     `}
                     >
                       <div className="py-1">
-                          <span
-                            onClick={clickSettings}
-                            className="cursor-pointer block px-4 py-2 text-sm text-gray-700 dark:text-gray-500 hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-gray-400"
-                          >
-                            Account Setting
-                          </span>
+                        <span
+                          onClick={clickSettings}
+                          className="cursor-pointer block px-4 py-2 text-sm text-gray-700 dark:text-gray-500 hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-gray-400"
+                        >
+                          Account Setting
+                        </span>
                         <span
                           onClick={sendLogout}
                           className="cursor-pointer block px-4 py-2 text-sm text-gray-700 dark:text-gray-500 hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-gray-400"

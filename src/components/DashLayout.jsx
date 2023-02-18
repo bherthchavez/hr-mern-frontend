@@ -3,16 +3,16 @@ import DashHeader from "./DashHeader";
 
 
 const DashLayout = () => {
-  const content = (
+
+
+  return (
     <>
       <DashHeader />
       <div>
         <Outlet />
       </div>
     </>
-  );
-
-  return content;
+  )
 };
 
 export default DashLayout;

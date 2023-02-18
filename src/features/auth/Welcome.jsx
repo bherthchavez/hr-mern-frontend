@@ -1,12 +1,14 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { useGetNotesQuery } from "../notes/notesApiSlice";
-import { useGetUsersQuery } from "../users/usersApiSlice";
+import { selectAllUsers } from "../users/usersApiSlice";
 import { Link } from "react-router-dom";
 
 import useAuth from "../../hooks/useAuth";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const Welcome = () => {
+
   let [time, getTime] = useState(new Date().toLocaleTimeString());
   function refreshTime() {
     getTime((time = new Date().toLocaleTimeString()));
@@ -16,6 +18,9 @@ const Welcome = () => {
 
   const dateToday = (new Date().toLocaleDateString("en-US", {year: 'numeric' , day: 'numeric' ,
   month: 'long' }))
+
+  const totalUsers = useSelector(state => selectAllUsers(state))
+
 
   const {
     data: notes,
@@ -29,26 +34,13 @@ const Welcome = () => {
     refetchOnMountOrArgChange: true,
   });
 
-  const {
-    data: users,
-    isLoading: isUsersLoading,
-    isSuccess: isUsersSuccess,
-    isError: isUsersError,
-    error: usersError,
-  } = useGetUsersQuery("usersList", {
-    pollingInterval: 15000, // refresh data every 15 seconds
-    refetchOnFocus: true,
-    refetchOnMountOrArgChange: true,
-  });
 
-
-  let contentNotes;
   let content
 
-  if (isNotesLoading) contentNotes = <p>Loading...</p>;
+  if (isNotesLoading) content = <p>Loading...</p>;
 
   if (isNotesError) {
-    contentNotes = (
+    content = (
       <p className="text-slate-900 dark:text-slate-300">
         {notesError?.data?.message}
       </p>
@@ -87,7 +79,7 @@ const Welcome = () => {
                     </dt>
 
                     <dd className="text-4xl font-bold  md:text-5xl">
-                     {users.ids.length}
+                     {totalUsers.length}
                     </dd>
                   </div>
                   </Link>
