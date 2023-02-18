@@ -21,13 +21,15 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Login />} />
+          <Route path="*" element={<Login />} />
           {/* <Route path="login" element={<Login />} /> */}
 
+          {/* Protected Routes */}
           <Route element={<PersistLogin />}>
             <Route element={<RequireAuth allowedRoles={[...Object.values(ROLES)]} />}>
               <Route element={<Prefetch />}>
                 <Route path="dash" element={<DashLayout />}>
-                
+
                   <Route index element={<Welcome />} />
 
                   <Route element={<RequireAuth allowedRoles={[ROLES.Manager, ROLES.Admin]} />}>
@@ -44,10 +46,10 @@ function App() {
                     <Route path="new" element={<NewNote />} />
                   </Route>
 
-                </Route> {/*End Dashboard*/}
+                </Route>{/* End Dash */}
               </Route>
             </Route>
-          </Route> {/* End Protected Routes */}
+          </Route>{/* End Protected Routes */}
 
         </Route>
       </Routes>
