@@ -180,7 +180,7 @@ const EditUserForm = ({ user }) => {
 
         <div className="mt-5 md:col-span-2 ">
           <form onSubmit={(e) => e.preventDefault()}>
-            <div className="shadow sm:overflow-hidden sm:rounded-md">
+            <div className="shadow overflow-hidden rounded-md">
               <div className="space-y-6 bg-white dark:bg-slate-800 px-4 py-5 sm:p-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="col-span-2 sm:col-span-1 ">
@@ -264,7 +264,7 @@ const EditUserForm = ({ user }) => {
                           htmlFor="file-upload"
                           className="ml-5 cursor-pointer text-[10px]  px-2 py-1 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
                         >
-                          <span>Replace Photo</span>
+                          <span className="whitespace-nowrap">Replace Photo</span>
 
                           <input
                             id="file-upload"

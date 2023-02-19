@@ -30,7 +30,7 @@ const User = ({ userId, search }) => {
           <td
             className={`sm:flex gap-4 whitespace-nowrap px-4 py-4 font-medium text-gray-900 dark:text-gray-300`}
           >
-         
+          
   
             <img
               alt="Man"

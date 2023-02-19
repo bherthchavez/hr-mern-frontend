@@ -15,10 +15,23 @@ const DashHeader = () => {
 
   nav ? document.body.classList.add("overflow-hidden") : document.body.classList.remove("overflow-hidden")
 
+  const [colorChange, setColorchange] = useState(false);
+  const changeNavbarColor = () =>{
+     if(window.scrollY >= 1){
+       setColorchange(true);
+     }
+     else{
+       setColorchange(false);
+     }
+  };
+  window.addEventListener('scroll', changeNavbarColor);
+
+  const classNav = colorChange ? 'z-20 fixed': null
+
   const content = (
     <header aria-label="Site Header" className="border-b dark:border-gray-600">
       <div
-        className="mx-auto flex h-16 max-w-screen-2xl items-center justify-between px-4 sm:px-6 lg:px-8"
+        className={`bg-slate-900 sm:px-8 ${classNav} w-full mx-auto border-b border-slate-800 flex h-16 shadow-gray-900 shadow-xl items-center justify-between px-4`}
       >
         <div className="flex items-center">
           <button onClick={handleNav} type="button" className="pr-2 sm:mr-4 lg:hidden dark:text-gray-400">
@@ -75,6 +88,12 @@ const DashHeader = () => {
         </ul>
 
       </div>
+      {colorChange 
+      &&
+      <div
+        className={`w-full h-16`}
+      ></div>
+      }
     </header>
   )
 
