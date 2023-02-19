@@ -3,9 +3,7 @@ import Note from "./Note";
 import Thead from "../../components/Thead";
 import Tbody from "../../components/Tbody";
 import useAuth  from "../../hooks/useAuth";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus } from "@fortawesome/free-solid-svg-icons"
-
+import { AiOutlineUserAdd } from 'react-icons/ai';
 
 const NotesList = () => {
 
@@ -59,8 +57,7 @@ const NotesList = () => {
             href="/dash/notes/new"
             className=" text-[12px] px-4 py-2 text-white dark:text-gray-300 font-medium bg-slate-500 dark:bg-slate-700 hover:bg-slate-700 dark:active:bg-slate-800 rounded-md duration-150"
           >
-            <FontAwesomeIcon icon={faPlus} className='pr-2' />
-            Add New
+            <AiOutlineUserAdd size={25} />
           </a>
         </div>
         <div className="overflow-hidden overflow-x-auto rounded-md border border-gray-200 mt-8 dark:border-gray-800">

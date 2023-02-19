@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import PageLoader from "../../components/PageLoader";
 
 const Welcome = () => {
 

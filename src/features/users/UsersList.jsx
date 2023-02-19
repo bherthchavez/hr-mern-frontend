@@ -3,11 +3,11 @@ import { useGetUsersQuery } from "./usersApiSlice";
 import User from "./User";
 import Thead from "../../components/Thead";
 import Tbody from "../../components/Tbody";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {  faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import {  useState } from "react";
 import PageLoader from "../../components/PageLoader";
+import { AiOutlineUserAdd } from 'react-icons/ai';
+
 
 const UsersList = () => {
 
@@ -53,7 +53,7 @@ const UsersList = () => {
 
         <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
           <div className="sm:flex justify-between">
-            <div className="flex">
+            <div className="flex justify-between">
               <h1 className="text-2xl font-bold text-gray-900  dark:text-gray-400">
               Employee List
               </h1>
@@ -62,15 +62,15 @@ const UsersList = () => {
 
               <span
                 onClick={() => navigate("/dash/users/new")}
+                title='Add Employee'
                 className="ml-4 block sm:hidden cursor-pointer text-sm px-3 py-2 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
               >
-                <FontAwesomeIcon icon={faPlus} className="pr-2" />
-                Add New
+                <AiOutlineUserAdd size={20} />
               </span>
             </div>
 
             <div className="sm:flex  mt-6 sm:mt-0">
-              <div className="pr-4">
+              <div className="pr-0 sm:pr-4">
                 <label htmlFor="table-search" className="sr-only">
                   Search
                 </label>
@@ -95,7 +95,7 @@ const UsersList = () => {
                   <input
                     type="text"
                     id="table-search"
-                    className="w-64 pl-10 p-2 block py-2 px-3 text-sm font-normal bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700 outline-none focus:border-gray-300  focus:shadow-sm rounded-md"
+                    className="w-full pl-10 p-2 block py-2 px-3 text-sm font-normal bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700 outline-none focus:border-gray-300  focus:shadow-sm rounded-md"
                     placeholder="Search..."
                     value={search}
                     onChange={(e) => handleSearch(e.target.value)}
@@ -103,12 +103,13 @@ const UsersList = () => {
                 </div>
               </div>
 
-              <div>
+              <div className="flex">
                 <span
                   onClick={() => navigate("/dash/users/new")}
-                  className="hidden sm:block cursor-pointer text-sm px-3 py-2 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
+                  title='Add Employee'
+                  className="hidden sm:flex cursor-pointer text-sm px-3 py-2 text-white border dark:text-gray-300 font-normal border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
                 >
-                  <FontAwesomeIcon icon={faPlus} className="pr-2" />
+                  <AiOutlineUserAdd size={20} className='mr-2' />
                   Add New
                 </span>
               </div>
@@ -123,7 +124,7 @@ const UsersList = () => {
                   <Thead thName="Title" />
                   <Thead thName="Status" />
                   <Thead thName="Roles" />
-                  <Thead thName="Edit" />
+                  <Thead thName="" />
                 </tr>
               </thead>
               <Tbody tbName={tableContent} />

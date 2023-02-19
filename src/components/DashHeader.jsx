@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { useState } from 'react';
-import { AiOutlineClose, AiOutlineMenu, } from 'react-icons/ai';
+import { AiOutlineMenu } from 'react-icons/ai';
 import { BsArrowLeftShort } from 'react-icons/bs';
 import { Link } from 'react-router-dom'
 import Navbar from './Navbar'

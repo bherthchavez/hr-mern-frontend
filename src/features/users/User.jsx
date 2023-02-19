@@ -1,9 +1,8 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { useSelector } from "react-redux";
 import { selectUserById } from "./usersApiSlice";
+import { MdEditNote } from 'react-icons/md';
 
 const User = ({ userId, search }) => {
 
@@ -83,15 +82,15 @@ const User = ({ userId, search }) => {
           </td>
   
           <td
-            className={`whitespace-nowrap px-2 py-4 font-medium text-gray-900 dark:text-gray-300 `}
+            className={`whitespace-nowrap px-4 py-4 text-gray-700 dark:text-gray-300`}
           >
-            <button
+            <span
               title="Edit User"
-              className="text-lg p-1 hover:text-slate-500"
+              className="flex justify-end hover:text-slate-500 cursor-pointer"
               onClick={handleEdit}
             >
-              <FontAwesomeIcon icon={faPenToSquare} />
-            </button>
+              <MdEditNote size={30}  />
+            </span>
         
           </td>
           

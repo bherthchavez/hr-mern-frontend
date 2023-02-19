@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
 import { useUpdateUserMutation, useDeleteUserMutation } from "./usersApiSlice";
 import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSave, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { ROLES } from "../../config/roles";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { AiOutlineEye, AiOutlineEyeInvisible, AiOutlineSave } from "react-icons/ai";
 import Image from "../../components/Image";
 import Spenner from "../../components/Spenner";
 import useAuth from "../../hooks/useAuth";
-
+import { AiOutlineUserDelete } from 'react-icons/ai';
+import { BsArrowLeftShort } from 'react-icons/bs';
 
 const USER_REGEX = /^[A-z]{3,20}$/;
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
@@ -23,7 +22,7 @@ const EditUserForm = ({ user }) => {
 
   const [
     deleteUser,
-    { isSuccess: isDelSuccess, isError: isDelError, error: delerror },
+    { isSuccess: isDelSuccess, },
   ] = useDeleteUserMutation();
 
   const navigate = useNavigate();
@@ -425,52 +424,54 @@ const EditUserForm = ({ user }) => {
                   </div>
                 </div>
               </div>
-              <div className={ `bg-gray-50 dark:bg-slate-800 px-4 py-3 text-right sm:px-6 dark:border-t dark:border-slate-700 ${btnClass}`}>
+              <div className={ `text-sm bg-gray-50 dark:bg-slate-800 px-4 py-3 text-right sm:px-6 dark:border-t dark:border-slate-700 ${btnClass}`}>
               
                 
                    { id !== user._id
-                    &&  <button
+                    &&  <span
                     className={
                       canSave
-                        ? `text-sm px-4 py-2 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
-                        : "text-sm px-4 py-2 text-white border dark:text-slate-600 font-medium border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
+                        ? `cursor-pointer flex  px-2 sm:px-4 py-2 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
+                        : "flex  px-2 sm:px-4 py-2 text-white border dark:text-slate-600 font-medium border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
                     }
                     title="Delete User"
                     disabled={!canSave}
                     onClick={onDeleteUserClicked}
                   >
-                    <FontAwesomeIcon icon={faTrashCan} className="pr-2" />
+                    <AiOutlineUserDelete size={20} className='mr-2' />
                     Delete
-                  </button>
+                  </span>
                    }           
 
                 <div className="flex items-center ">
-                {
-                
-                }
                    <div>
-                  <p
+                  <span
                     title="Cancel"
-                    onClick={() => navigate("/dash/users")}
-                    className="mx-6 cursor-pointer text-sm  px-4 py-2 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
-                  >
+                    disabled={!canSave}
+                    onClick={() => canSave && navigate("/dash/users")}
+                    className={
+                      canSave
+                        ? `cursor-pointer flex mx-6 px-2 sm:px-4 py-2 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
+                        : `flex mx-6 px-4 sm:px-4 py-2 text-white border dark:text-slate-600 font-medium border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
+                    } >
+                  <BsArrowLeftShort size={20} className='mr-2' />
                     Cancel
-                  </p>
+                  </span>
                 </div>
 
-                  <button
+                  <span
                     title="Save"
                     disabled={!canSave}
                     onClick={onSaveUserClicked}
                     className={
                       canSave
-                        ? `text-sm  px-4 py-2 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
-                        : "text-sm   px-4 py-2 text-white border dark:text-slate-600 font-medium border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
+                        ? `cursor-pointer flex px-2 sm:px-4 py-2 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
+                        : `flex px-4 sm:px-4 py-2 text-white border dark:text-slate-600 font-medium border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
                     }
                   >
-                    <FontAwesomeIcon icon={faSave} className="pr-2" />
+                    <AiOutlineSave size={20} className="mr-2" />
                     Save
-                  </button>
+                  </span>
                 </div>
               </div>
             </div>
