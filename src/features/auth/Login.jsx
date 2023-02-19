@@ -62,7 +62,7 @@ const Login = () => {
   const handlePwdInput = (e) => setPassword(e.target.value);
   const handleToggle = () => setPersist((prev) => !prev);
 
-  const errClass = errMsg ? "errmsg" : "offscreen";
+  const errClass = errMsg ? "list-disc mt-8 text-red-800 dark:text-red-300 text-xs tracking-wide" : null;
 
   if (isLoading) return <PageLoader />
 
@@ -84,10 +84,13 @@ const Login = () => {
                 <h3 className="text-gray-800 dark:text-gray-300 text-xl font-bold ">
                   Log in to your account
                 </h3>
-                <p ref={errRef} className={errClass} aria-live="assertive">
-                  {errMsg}
-                </p>
               </div>
+
+              <ul class="list-inside">
+                <li ref={errRef} className={errClass} aria-live="assertive">
+                {errMsg}
+                </li>
+              </ul>
             </div>
             <form onSubmit={handleSubmit} className="mt-8 space-y-5">
               <div>

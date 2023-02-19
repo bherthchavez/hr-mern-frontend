@@ -68,7 +68,7 @@ const NewUserForm = () => {
   const onUsernameChanged = (e) => setUsername(e.target.value)
   const onRolesChanged = (e) => setRoles(e.target.value)
   const onPasswordChanged = (e) => setPassword(e.target.value)
-  
+
 
 
   const onImageChanged = (e) => {
@@ -76,24 +76,24 @@ const NewUserForm = () => {
     setFileToBase(file);
   };
 
-  const setFileToBase = (file) =>{
+  const setFileToBase = (file) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onloadend = () =>{
+    reader.onloadend = () => {
       setDataImage(reader.result);
     }
 
-}
+  }
 
   const canSave =
     [roles, name, validUsername, validPassword, image].every(Boolean) && !isLoading;
 
   const onSaveUserClicked = async (e) => {
     e.preventDefault();
-   
+
     if (canSave) {
       setSpin(true)
-      await addNewUser({name, email, department, position, username, password, roles,  image })
+      await addNewUser({ name, email, department, position, username, password, roles, image })
     }
   };
 
@@ -117,36 +117,36 @@ const NewUserForm = () => {
     ? "text-red-600 dark:text-red-600"
     : "text-blue-700 dark:text-blue-400";
 
-    async function readImage(e, func) {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        let binaryData = e.target.result;
-        let base64String = window.btoa(binaryData);
-        func(base64String);
-      };
-  
-      let image = reader.readAsBinaryString(file);
-    
-      return image;
-    }
-  
+  async function readImage(e, func) {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      let binaryData = e.target.result;
+      let base64String = window.btoa(binaryData);
+      func(base64String);
+    };
+
+    let image = reader.readAsBinaryString(file);
+
+    return image;
+  }
+
 
   return (
     <>
       <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8 ">
         <h1 className="mb-2 text-2xl font-bold text-gray-900 sm:text-2xl dark:text-gray-200">
-          New User
+          New Employee
         </h1>
         <p className={errClass}>{error?.data?.message}</p>
 
         <div className="mt-5 md:col-span-2">
-          <form  onSubmit={onSaveUserClicked} >
+          <form onSubmit={onSaveUserClicked} >
             <div className="shadow sm:overflow-hidden sm:rounded-md">
               <div className="space-y-6 bg-white dark:bg-slate-800 px-4 py-5 sm:p-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="col-span-2 sm:col-span-1 ">
-                    
+
                     <div className="">
                       <label
                         className="block text-sm font-medium text-gray-700 dark:text-gray-200"
@@ -165,7 +165,7 @@ const NewUserForm = () => {
                         onChange={onNameChanged}
                       />
                     </div>
-                   
+
                     <div className="mt-3">
                       <label
                         className="block text-sm font-medium text-gray-700 dark:text-gray-200"
@@ -202,54 +202,54 @@ const NewUserForm = () => {
                         onChange={onDepartmentChanged}
                       />
                     </div>
-                   
+
 
                     <div className="mt-4">
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
                         Photo
                       </label>
                       <div className="mt-1 flex items-center">
-                      {imageView 
-                      ? <Image data={imageView} size="h-16 w-16" rounded="rounded-md"  />
-                      :  <span className="inline-block h-16 w-16 overflow-hidden rounded-md bg-gray-100">
-                          <svg
-                            className="h-full w-full text-gray-300"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-                          </svg>
-                        </span>
-                      }
+                        {imageView
+                          ? <Image data={imageView} size="h-16 w-16" rounded="rounded-md" />
+                          : <span className="inline-block h-16 w-16 overflow-hidden rounded-md bg-gray-100">
+                            <svg
+                              className="h-full w-full text-gray-300"
+                              fill="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                          </span>
+                        }
 
                         <label
-                              htmlFor="file-upload"
-                              className="ml-5 cursor-pointer text-[10px]  px-2 py-1 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
-                            >
+                          htmlFor="file-upload"
+                          className="ml-5 cursor-pointer text-[10px]  px-2 py-1 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
+                        >
 
-                              <span>Upload Photo</span>
+                          <span>Upload Photo</span>
 
-                              <input
-                                id="file-upload"
-                                name="image"
-                                type="file"
-                                className="sr-only"
-                                accept="image/png, image/jpeg"
-                                onChange={event => {
-                                  readImage(event, setImage)
-                                  onImageChanged(event)
-                                  }}
-                              />
-                            </label>
-                            <p className="text-xs text-gray-500 ml-3">
-                            JPG, JPEG, PNG up to 10MB
-                          </p>
+                          <input
+                            id="file-upload"
+                            name="image"
+                            type="file"
+                            className="sr-only"
+                            accept="image/png, image/jpeg"
+                            onChange={event => {
+                              readImage(event, setImage)
+                              onImageChanged(event)
+                            }}
+                          />
+                        </label>
+                        <p className="text-xs text-gray-500 ml-3">
+                          JPG, JPEG, PNG up to 10MB
+                        </p>
                       </div>
                     </div>
                   </div>
                   <div className=" col-span-2 sm:col-span-1">
 
-                  <div className="">
+                    <div className="">
                       <label
                         className="block text-sm font-medium text-gray-700 dark:text-gray-200"
                         htmlFor="position"
@@ -287,28 +287,28 @@ const NewUserForm = () => {
                         {options}
                       </select>
                     </div>
-                  
-                  <div className="mt-3">
-                    <label
-                      htmlFor="username"
-                      className={`block text-sm font-medium text-gray-700 dark:text-gray-200`}
-                    >
-                      Username{" "}
-                      <span className="nowrap text-[11px] text-red-600 dark:text-red-400">
-                        {!validUsername ? "3-20 letters" : ""}
-                      </span>
-                    </label>
 
-                    <input
-                      className={`w-full mt-1 px-3 py-2 text-sm font-normal  border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md ${validUserClass}`}
-                      id="username"
-                      name="username"
-                      type="text"
-                      autoComplete="false"
-                      value={username}
-                      onChange={onUsernameChanged}
-                    />
-                  </div>
+                    <div className="mt-3">
+                      <label
+                        htmlFor="username"
+                        className={`block text-sm font-medium text-gray-700 dark:text-gray-200`}
+                      >
+                        Username{" "}
+                        <span className="nowrap text-[11px] text-red-600 dark:text-red-400">
+                          {!validUsername ? "3-20 letters" : ""}
+                        </span>
+                      </label>
+
+                      <input
+                        className={`w-full mt-1 px-3 py-2 text-sm font-normal  border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md ${validUserClass}`}
+                        id="username"
+                        name="username"
+                        type="text"
+                        autoComplete="false"
+                        value={username}
+                        onChange={onUsernameChanged}
+                      />
+                    </div>
 
                     <div className="mt-3">
                       <label
@@ -355,6 +355,13 @@ const NewUserForm = () => {
 
                       {/* <i onClick={togglePasswordVisiblity}>{eye}</i>{" "} */}
                     </div>
+                    {spin
+                      &&
+                      <div className="mt-6 flex text-gray-400 justify-end">
+                        <Spenner />
+                        <p>Saving.... </p>
+                      </div>
+                    }
                   </div>
                 </div>
               </div>
@@ -369,20 +376,20 @@ const NewUserForm = () => {
                   </button>
                 </div>
                 <div className="flex items-center">
-                {spin && <Spenner />}
-                  
-                <button
-                  title="Save"
-                  disabled={!canSave}
-                  className={
-                    canSave
-                      ? `text-sm px-4 py-2 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
-                      : "text-sm px-4 py-2 text-white border dark:text-slate-600 font-medium border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
-                  }
-                >
-                  <FontAwesomeIcon icon={faSave} className="pr-2" />
-                  Save
-                </button>
+                  {/* {spin && <Spenner />} */}
+
+                  <button
+                    title="Save"
+                    disabled={!canSave}
+                    className={
+                      canSave
+                        ? `text-sm px-4 py-2 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
+                        : "text-sm px-4 py-2 text-white border dark:text-slate-600 font-medium border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
+                    }
+                  >
+                    <FontAwesomeIcon icon={faSave} className="pr-2" />
+                    Save
+                  </button>
                 </div>
               </div>
             </div>

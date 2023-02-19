@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {  faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import {  useState } from "react";
+import PageLoader from "../../components/PageLoader";
 
 const UsersList = () => {
 
@@ -30,7 +31,7 @@ const UsersList = () => {
 
   let content;
 
-  if (isLoading) content = <p>Loading...</p>;
+  if (isLoading) content = <PageLoader />
 
   if (isError) {
     content = <p className="errmsg">{error?.data?.message}</p>;
@@ -54,7 +55,7 @@ const UsersList = () => {
           <div className="sm:flex justify-between">
             <div className="flex">
               <h1 className="text-2xl font-bold text-gray-900  dark:text-gray-400">
-                Users List
+              Employee List
               </h1>
 
 

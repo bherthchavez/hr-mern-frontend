@@ -48,9 +48,9 @@ const Navbar = () => {
 
   if (isLoading) return (
     <div className="flex text-gray-800 dark:text-gray-300 text-sm">
-    <Spenner />
-    <p>Logging Out...</p>
-  </div>
+      <Spenner />
+      <p>Logging Out...</p>
+    </div>
   )
 
   if (isError) return <p>Error: {error.data?.message}</p>;
@@ -62,53 +62,53 @@ const Navbar = () => {
         className="hidden lg:flex lg:gap-4 lg:text-xs lg:font-bold lg:uppercase lg:tracking-wide lg:text-gray-300"
       >
 
-          <Link to="/dash">
-        <span
-          // onClick={() => navigate("/dash")}
-          className={
-            location.pathname === '/dash'
-              ? "cursor-pointer block h-16 border-b-4 leading-[4rem] border-current text-slate-700 dark:text-slate-400 "
-              : "cursor-pointer block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current text-slate-700 dark:text-slate-400 hover:text-slate-500"
-          }
-        >
+        <Link to="/dash">
+          <span
+            // onClick={() => navigate("/dash")}
+            className={
+              location.pathname === '/dash'
+                ? "cursor-pointer block h-16 border-b-4 leading-[4rem] border-current text-slate-700 dark:text-slate-400 "
+                : "cursor-pointer block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current text-slate-700 dark:text-slate-400 hover:text-slate-500"
+            }
+          >
 
-            My Dashboard
-        </span>
-          </Link>
+            Dashboard
+          </span>
+        </Link>
 
         {isAdmin &&
 
-            <Link to="/dash/users">
+          <Link to="/dash/users">
+            <span
+              // onClick={() => navigate("/dash/users")}
+              className={
+                location.pathname === '/dash/users' || location.pathname === '/dash/users/new'
+                  ? "cursor-pointer block h-16 border-b-4 leading-[4rem] border-current text-slate-700 dark:text-slate-400"
+                  : "cursor-pointer block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current text-slate-700 dark:text-slate-400 hover:text-slate-500"
+              }
+            >
+              Employees
+            </span>
+          </Link>
+        }
+
+        <Link to="/dash/notes">
           <span
-            // onClick={() => navigate("/dash/users")}
+            // onClick={() => navigate("/dash/notes")}
             className={
-              location.pathname === '/dash/users' || location.pathname === '/dash/users/new'
+              location.pathname === '/dash/notes'
                 ? "cursor-pointer block h-16 border-b-4 leading-[4rem] border-current text-slate-700 dark:text-slate-400"
                 : "cursor-pointer block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current text-slate-700 dark:text-slate-400 hover:text-slate-500"
             }
           >
-              Users
+
+          Task List
           </span>
-            </Link>
-        }
-
-          <Link to="/dash/notes">
-        <span
-          // onClick={() => navigate("/dash/notes")}
-          className={
-            location.pathname === '/dash/notes'
-              ? "cursor-pointer block h-16 border-b-4 leading-[4rem] border-current text-slate-700 dark:text-slate-400"
-              : "cursor-pointer block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current text-slate-700 dark:text-slate-400 hover:text-slate-500"
-          }
-        >
-
-            Notes
-        </span>
-          </Link>
+        </Link>
       </nav>
 
       <div className="ml-8 flex items-center">
-        <div className="flex items-center divide-x divide-gray-100 border-x border-gray-200 dark:border-l-gray-900 dark:border-r-gray-900">
+        <div className="flex items-center divide-x divide-gray-100 border-gray-200 dark:border-l-gray-900 dark:border-r-gray-900">
           <span>
             <div className="flex gap-4">
 
@@ -194,7 +194,7 @@ const Navbar = () => {
               </a>
 
               <div
-                className="inline-flex bg-white dark:bg-slate-900 border dark:border-none rounded-md "
+                className="inline-flex bg-white dark:bg-slate-900 rounded-full "
                 ref={menuRef}
               >
                 <div className="relative">
@@ -220,7 +220,7 @@ const Navbar = () => {
 
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className={`ml-4 hidden h-5 w-5 text-gray-500 transition group-hover:text-gray-700 sm:block ${userNav && "rotate-180"
+                      className={`mx-2 hidden h-5 w-5 text-gray-500 transition group-hover:text-gray-700 sm:block ${userNav && "rotate-180"
                         }`}
                       viewBox="0 0 20 20"
                       fill="currentColor"

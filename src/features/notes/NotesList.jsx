@@ -52,7 +52,7 @@ const NotesList = () => {
       <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="flex justify-between">
           <h1 className="text-2xl font-bold text-gray-900  dark:text-gray-400">
-            Note List
+           Task List
           </h1>
 
           <a

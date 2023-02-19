@@ -43,6 +43,7 @@ const EditUserForm = ({ user }) => {
   const [image, setDataImage] = useState();
 
   const [spin, setSpin] = useState(false);
+  const [spinText, setSpinText] = useState('');
 
   const [passwordShown, setPasswordShown] = useState(false);
   const togglePasswordVisiblity = () => {
@@ -95,6 +96,7 @@ const EditUserForm = ({ user }) => {
 
   const onSaveUserClicked = async (e) => {
     if (password) {
+      setSpinText('Saving...')
       setSpin(true);
       await updateUser({
         id: user.id,
@@ -109,12 +111,14 @@ const EditUserForm = ({ user }) => {
         image,
       });
     } else {
+      setSpinText('Saving...')
       setSpin(true);
       await updateUser({ id: user.id, name, email, department, position, username, roles, active, image });
     }
   };
 
   const onDeleteUserClicked = async () => {
+    setSpinText('Deleting...')
     setSpin(true);
     await deleteUser({ id: user.id });
   };
@@ -172,6 +176,7 @@ const EditUserForm = ({ user }) => {
           : 'Edit User'
          } 
         </h1>
+        
         <p className={errClass}>{error?.data?.message}</p>
 
         <div className="mt-5 md:col-span-2 ">
@@ -407,6 +412,14 @@ const EditUserForm = ({ user }) => {
                       </div>
                     </div>
                     }
+               
+                {spin 
+                && 
+                  <div className="mt-6 flex text-gray-400 justify-end"> 
+                <Spenner />
+                <p>{spinText} </p>
+                </div> 
+                }
 
 
                   </div>
@@ -431,13 +444,15 @@ const EditUserForm = ({ user }) => {
                   </button>
                    }           
 
-                <div className="flex justify-end">
-                {spin && <Spenner />}
+                <div className="flex items-center ">
+                {
+                
+                }
                    <div>
                   <p
                     title="Cancel"
                     onClick={() => navigate("/dash/users")}
-                    className="mr-6 cursor-pointer text-sm  px-4 py-2 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
+                    className="mx-6 cursor-pointer text-sm  px-4 py-2 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
                   >
                     Cancel
                   </p>

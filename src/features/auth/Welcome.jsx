@@ -117,7 +117,7 @@ const Welcome = () => {
               <Link to="/dash/users">
                 <div className="flex flex-col shadow-md bg-slate-200 dark:bg-slate-800 rounded-lg border border-none dark:border-gray-800 px-4 py-8 text-center text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-gray-400">
                   <dt className="order-last text-sm  font-medium ">
-                    Total Users
+                    Total Employees
                   </dt>
 
                   <dd className="text-4xl font-bold  md:text-5xl">
@@ -130,7 +130,7 @@ const Welcome = () => {
                 <Link to="/dash/notes">
                   <div className="flex flex-col shadow-md bg-slate-200 dark:bg-slate-800 rounded-lg border border-none dark:border-gray-800 px-4 py-8 text-center text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-gray-400">
                     <dt className="order-last text-sm font-medium ">
-                      Total Notes
+                      Total Tasks
                     </dt>
                     <dd className="text-4xl font-bold  md:text-5xl">
                       {notesIds.length}
@@ -141,7 +141,7 @@ const Welcome = () => {
                 <Link to="/dash/notes">
                 <div className="flex flex-col shadow-md bg-slate-200 dark:bg-slate-800 rounded-lg border border-none dark:border-gray-800 px-4 py-8 text-center text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-gray-400">
                   <dt className="order-last text-sm  font-medium">
-                    Total Notes Open
+                    Total Task Open
                   </dt>
 
                   <dd className="text-4xl font-bold md:text-5xl">
