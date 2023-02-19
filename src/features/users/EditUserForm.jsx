@@ -431,14 +431,14 @@ const EditUserForm = ({ user }) => {
                     &&  <span
                     className={
                       canSave
-                        ? `cursor-pointer flex  px-2 sm:px-4 py-2 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
-                        : "flex  px-2 sm:px-4 py-2 text-white border dark:text-slate-600 font-medium border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
+                        ? `cursor-pointer flex  px-3 sm:px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
+                        : "flex  px-3 sm:px-4 py-2 text-white border dark:text-slate-600 border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
                     }
                     title="Delete User"
                     disabled={!canSave}
                     onClick={onDeleteUserClicked}
                   >
-                    <AiOutlineUserDelete size={20} className='mr-2' />
+                    <AiOutlineUserDelete size={20} className='mr-1 sm:mr-2' />
                     Delete
                   </span>
                    }           
@@ -451,10 +451,10 @@ const EditUserForm = ({ user }) => {
                     onClick={() => canSave && navigate("/dash/users")}
                     className={
                       canSave
-                        ? `cursor-pointer flex mx-6 px-2 sm:px-4 py-2 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
-                        : `flex mx-6 px-4 sm:px-4 py-2 text-white border dark:text-slate-600 font-medium border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
+                        ? `cursor-pointer flex mx-6 px-3 sm:px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
+                        : `flex mx-6 px-3 sm:px-4 py-2 text-white border dark:text-slate-600 border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
                     } >
-                  <BsArrowLeftShort size={20} className='mr-2' />
+                  <BsArrowLeftShort size={20} className='mr-1 sm:mr-2' />
                     Cancel
                   </span>
                 </div>
@@ -465,11 +465,11 @@ const EditUserForm = ({ user }) => {
                     onClick={onSaveUserClicked}
                     className={
                       canSave
-                        ? `cursor-pointer flex px-2 sm:px-4 py-2 text-white border dark:text-gray-300 font-medium border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
-                        : `flex px-4 sm:px-4 py-2 text-white border dark:text-slate-600 font-medium border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
+                        ? `cursor-pointer flex px-3 sm:px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
+                        : `flex px-3 sm:px-4 py-2 text-white border dark:text-slate-600 border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
                     }
                   >
-                    <AiOutlineSave size={20} className="mr-2" />
+                    <AiOutlineSave size={20} className="mr-1 sm:mr-2" />
                     Save
                   </span>
                 </div>

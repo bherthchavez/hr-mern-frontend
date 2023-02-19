@@ -46,13 +46,13 @@ const DashHeader = () => {
             <p onClick={handleNav} className='cursor-pointer  flex items-center'>
               {<BsArrowLeftShort size={30} />}
             </p>
-            <Link to='/dash' smooth={true} duration={500}>
+            <Link to='/dash'>
               <h1 onClick={handleNav} className='text-xl mr-4 cursor-pointer'>HR</h1>
             </Link>
           </div>
 
 
-          <Link to='/dash' smooth={true} duration={500}>
+          <Link to='/dash'>
             <li onClick={handleNav} className='p-4 flex justify-center  cursor-pointer text-slate-700 dark:text-slate-300 border-b border-b-gray-600'>
               Dashboard
             </li>
@@ -60,13 +60,13 @@ const DashHeader = () => {
 
 
 
-          <Link to='/dash/users' smooth={true} duration={500}>
+          <Link to='/dash/users'>
             <li onClick={handleNav} className='p-4 flex justify-center  cursor-pointer text-slate-700 dark:text-slate-300 border-b border-b-gray-600'>
               Employees
             </li>
           </Link>
 
-          <Link to='/dash/notes' smooth={true} duration={500}>
+          <Link to='/dash/notes'>
             <li onClick={handleNav} className='p-4 flex justify-center  cursor-pointer text-slate-700 dark:text-slate-300 border-b border-b-gray-600'>
               Task List
             </li>
