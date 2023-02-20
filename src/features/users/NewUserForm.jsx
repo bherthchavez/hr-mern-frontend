@@ -366,17 +366,18 @@ const NewUserForm = () => {
                   </div>
                 </div>
               </div>
+
               <div className="flex text-sm justify-between bg-gray-50 dark:bg-slate-800 px-4 py-3 text-right sm:px-6 dark:border-t dark:border-slate-700">
                 <div>
                   <span
-                     title="Cancel"
+                    title="Cancel"
                     onClick={() => !btnCancel && navigate("/dash/users")}
                     className={
                       !btnCancel
                         ? `cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
                         : `flex px-4 py-2 text-white border dark:text-slate-600 border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
                     } >
-                     <BsArrowLeftShort size={20} className='mr-2' />
+                    <BsArrowLeftShort size={20} className='mr-2' />
                     Cancel
                   </span>
                 </div>
@@ -385,7 +386,7 @@ const NewUserForm = () => {
 
                   <button
                     title="Save"
-                    onClick={() =>  setBtnCancel(!btnCancel)}
+                    onClick={() => setBtnCancel(!btnCancel)}
                     disabled={!canSave}
                     className={
                       canSave
@@ -393,11 +394,12 @@ const NewUserForm = () => {
                         : "flex px-4 py-2 text-white border dark:text-slate-600 border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
                     }
                   >
-                  <AiOutlineSave size={20} className="mr-2" />
+                    <AiOutlineSave size={20} className="mr-2" />
                     Save
                   </button>
                 </div>
               </div>
+
             </div>
           </form>
         </div>
