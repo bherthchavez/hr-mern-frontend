@@ -6,6 +6,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible, AiOutlineSave } from "react-icons/
 import Image from "../../components/Image";
 import Spenner from "../../components/Spenner";
 import { BsArrowLeftShort } from 'react-icons/bs';
+import Thead from "../../components/Thead";
 
 const USER_REGEX = /^[A-z]{3,20}$/;
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
@@ -356,6 +357,35 @@ const NewUserForm = () => {
 
                       {/* <i onClick={togglePasswordVisiblity}>{eye}</i>{" "} */}
                     </div>
+                    
+                    {/* <div className="mt-4 space-y-4">
+                    
+                      <div className="flex items-start">
+                        <div className="flex h-5 items-center">
+                          <input
+                            id="user-active"
+                            name="user-active"
+                            type="checkbox"
+                            checked={true}
+                            onChange={e => console.log('yow')}
+                            className="h-3 w-3 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                          />
+                        </div>
+                        <div className="ml-2 text-sm">
+                          <label
+                            htmlFor="user-active"
+                            className="font-medium text-gray-700 dark:text-gray-300"
+                          >
+                            Add Documents Info
+                          </label>
+                        </div>
+                      </div>
+                    </div> */}
+
+                                 
+                    
+
+
                     {spin
                       &&
                       <div className="mt-6 flex text-gray-400 justify-end">
@@ -364,7 +394,11 @@ const NewUserForm = () => {
                       </div>
                     }
                   </div>
+
                 </div>
+
+                
+
               </div>
 
               <div className="flex text-sm justify-between bg-gray-50 dark:bg-slate-800 px-4 py-3 text-right sm:px-6 dark:border-t dark:border-slate-700">

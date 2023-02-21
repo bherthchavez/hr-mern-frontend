@@ -86,7 +86,7 @@ const Login = () => {
                 </h3>
               </div>
 
-              <ul class="list-inside">
+              <ul className="list-inside">
                 <li ref={errRef} className={errClass} aria-live="assertive">
                 {errMsg}
                 </li>

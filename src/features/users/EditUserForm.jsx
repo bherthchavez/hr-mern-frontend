@@ -170,10 +170,7 @@ const EditUserForm = ({ user }) => {
     <>
       <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8 ">
         <h1 className="mb-2 text-2xl font-bold text-gray-900 sm:text-2xl dark:text-gray-200 ">
-         {id === user._id 
-         ? 'Accounting Setting'
-          : 'Edit User'
-         } 
+         {id === user._id  ? 'Account Setting' : 'Edit User' } 
         </h1>
         
         <p className={errClass}>{error?.data?.message}</p>
@@ -424,7 +421,7 @@ const EditUserForm = ({ user }) => {
                   </div>
                 </div>
               </div>
-              <div className={ `text-sm bg-gray-50 dark:bg-slate-800 px-4 py-3 text-right sm:px-6 dark:border-t dark:border-slate-700 ${btnClass}`}>
+              <div className={ `flex justify-end text-sm bg-gray-50 dark:bg-slate-800 px-4 py-3 text-right sm:px-6 dark:border-t dark:border-slate-700 ${btnClass}`}>
               
                 
                    { id !== user._id
@@ -451,7 +448,7 @@ const EditUserForm = ({ user }) => {
                     onClick={() => canSave && navigate("/dash/users")}
                     className={
                       canSave
-                        ? `cursor-pointer flex mx-6 px-3 sm:px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
+                        ? `cursor-pointer flex mr-6 px-3 sm:px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
                         : `flex mx-6 px-3 sm:px-4 py-2 text-white border dark:text-slate-600 border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
                     } >
                   <BsArrowLeftShort size={20} className='mr-1 sm:mr-2' />
