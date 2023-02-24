@@ -6,8 +6,10 @@ import { AiOutlineEye, AiOutlineEyeInvisible, AiOutlineSave } from "react-icons/
 import Image from "../../components/Image";
 import Spenner from "../../components/Spenner";
 import { BsArrowLeftShort } from 'react-icons/bs';
+import { MdDelete } from 'react-icons/md';
+import { RiAddFill } from 'react-icons/ri';
 import Thead from "../../components/Thead";
-
+import AddTableRow from "./AddTableRow";
 const USER_REGEX = /^[A-z]{3,20}$/;
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
 
@@ -20,23 +22,23 @@ const NewUserForm = () => {
 
   const navigate = useNavigate();
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [department, setDepartment] = useState("");
-  const [position, setPosition] = useState("");
-  const [username, setUsername] = useState("");
-  const [validUsername, setValidUsername] = useState(false);
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [department, setDepartment] = useState("")
+  const [position, setPosition] = useState("")
+  const [username, setUsername] = useState("")
+  const [validUsername, setValidUsername] = useState(false)
   const [password, setPassword] = useState("");
-  const [validPassword, setValidPassword] = useState(false);
-  const [roles, setRoles] = useState("");
-
-  const [imageView, setImage] = useState("");
-  const [image, setDataImage] = useState();
+  const [validPassword, setValidPassword] = useState(false)
+  const [roles, setRoles] = useState("")
+  const [imageView, setImage] = useState("")
+  const [image, setDataImage] = useState()
   const [spin, setSpin] = useState(false)
+  const [passwordShown, setPasswordShown] = useState(false)
+  const [addDocs, setAddDocs] = useState(false)
 
-  const [passwordShown, setPasswordShown] = useState(false);
   const togglePasswordVisiblity = () => {
-    setPasswordShown(passwordShown ? false : true);
+    setPasswordShown(passwordShown ? false : true)
   };
 
   useEffect(() => {
@@ -354,20 +356,18 @@ const NewUserForm = () => {
                           onChange={onPasswordChanged}
                         />
                       </div>
-
-                      {/* <i onClick={togglePasswordVisiblity}>{eye}</i>{" "} */}
                     </div>
-                    
-                    {/* <div className="mt-4 space-y-4">
-                    
+
+                    <div className="mt-4 space-y-4">
+
                       <div className="flex items-start">
                         <div className="flex h-5 items-center">
                           <input
                             id="user-active"
                             name="user-active"
                             type="checkbox"
-                            checked={true}
-                            onChange={e => console.log('yow')}
+                            checked={addDocs}
+                            onChange={e => setAddDocs(!addDocs)}
                             className="h-3 w-3 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                           />
                         </div>
@@ -380,11 +380,7 @@ const NewUserForm = () => {
                           </label>
                         </div>
                       </div>
-                    </div> */}
-
-                                 
-                    
-
+                    </div>
 
                     {spin
                       &&
@@ -394,13 +390,133 @@ const NewUserForm = () => {
                       </div>
                     }
                   </div>
-
                 </div>
 
-                
+                {/* document files */}
+                {addDocs &&
+                  <div>
+                    <div className="overflow-x-auto rounded-md border min-w-full dark:border-gray-700 border-gray-200">
+                      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm leading-normal">
+                        <thead className="bg-gray-100 dark:bg-gray-800 ">
+                          <tr>
+                            <Thead thName="" />
+                            <Thead thName="Document Name" />
+                            <Thead thName="Document No" />
+                            <Thead thName="Issue Date" />
+                            <Thead thName="Expiry Date" />
+                            <Thead thName="Attachment" />
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y dark:bg-slate-800 divide-gray-200 dark:divide-gray-700 ">
+                          <tr>
+                            <td className={`whitespace-nowrap px-2 py-2 font-medium text-gray-500 `}>
+                              <span
+                                title="Delete"
+                                onClick={() => !btnCancel && navigate("/dash/users")}
+                                className="cursor-pointer flex px-1 py-1 justify-center   hover:bg-gray-200 dark:hover:bg-gray-900 dark:active:bg-slate-800 rounded-full duration-150" >
+                                <MdDelete size={25} className='' /></span>
+                            </td>
+                            <td
+                              className={`whitespace-nowrap px-2 py-2 font-medium text-gray-900 dark:text-gray-300 `}
+                            >
+                              <div className="flex-nowrap">
+                                <input
+                                  className={` mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
 
+                                  name="doc_name"
+                                  type="text"
+                                  autoComplete="off"
+                                  required
+                                  onChange={onNameChanged}
+                                />
+
+                              </div>
+                            </td>
+                            <td
+                              className={`whitespace-nowrap px-2 py-2 font-medium text-gray-900 dark:text-gray-300`}
+                            >
+                              <div className="flex-nowrap">
+                                <input
+                                  className={` mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
+
+                                  name="doc_name"
+                                  type="text"
+                                  autoComplete="off"
+                                  required
+                                  onChange={onNameChanged}
+                                />
+
+                              </div>
+                            </td>
+                            <td
+                              className={`whitespace-nowrap px-2 py-2 font-medium text-gray-900 dark:text-gray-300`}
+                            >
+                              <div className="flex-nowrap">
+                                <input
+                                  className={`mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
+
+                                  name="doc_name"
+                                  type="date"
+                                  autoComplete="off"
+                                  required
+                                  onChange={onNameChanged}
+                                />
+
+                              </div>
+                            </td>
+                            <td
+                              className={`whitespace-nowrap px-2 py-2 font-medium text-gray-900 dark:text-gray-300`}
+                            >
+                              <div className="flex-nowrap">
+                                <input
+                                  className={` mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
+
+                                  name="doc_name"
+                                  type="date"
+                                  autoComplete="off"
+                                  required
+                                // onChange={onNameChanged}
+                                />
+
+                              </div>
+                            </td>
+                            <td
+                              className={`whitespace-nowrap px-2 py-2 font-medium text-gray-900 dark:text-gray-300`}
+                            >
+                              <div className="flex-nowrap">
+                                <input
+                                  className={` mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
+
+                                  name="doc_name"
+                                  type="file"
+                                  autoComplete="off"
+                                  required
+                                  onChange={onNameChanged}
+                                />
+
+                              </div>
+                            </td>
+
+
+                          </tr>
+                        </tbody>
+
+
+                      </table>
+                    </div>
+                    <div className="font-normal text-sm  w-32 h-15 p-2 mt-2 whitespace-nowrap px-2 py-2 text-gray-500">
+                      <span
+                        title="Add Row"
+                        onClick={() => !btnCancel && navigate("/dash/users")}
+                        className="cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150" >
+                        <RiAddFill size={20} className='mr-2' />Add Row</span>
+                    </div>
+                    {/* <AddTableRow /> */}
+                  </div>
+                }
               </div>
 
+              {/* Footer */}
               <div className="flex text-sm justify-between bg-gray-50 dark:bg-slate-800 px-4 py-3 text-right sm:px-6 dark:border-t dark:border-slate-700">
                 <div>
                   <span
