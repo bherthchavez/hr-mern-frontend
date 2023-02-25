@@ -37,6 +37,41 @@ const NewUserForm = () => {
   const [passwordShown, setPasswordShown] = useState(false)
   const [addDocs, setAddDocs] = useState(false)
 
+  const [rows, setRows] = useState([{}]);
+  const columnsArray = ["Document Name", "Document No", "Issue Date", "Expiry Date", "Attachment"]; // pass columns here dynamically
+
+  const handleRemoveSpecificRow = (idx) => {
+    const tempRows = [...rows]; // to avoid  direct state mutation
+    tempRows.splice(idx, 1);
+    setRows(tempRows);
+  };
+
+  console.log(image)
+
+  const updateState = (e) => {
+    let prope = e.target.attributes.column.value; // the custom column attribute
+    let index = e.target.attributes.index.value; // index of state array -rows
+    
+    let fieldValue  = e.target.value; // value
+
+
+    const tempRows = [...rows]; // avoid direct state mutation
+    const tempObj = rows[index]; // copy state object at index to a temporary object
+    tempObj[prope] = fieldValue; // modify temporary object
+
+    // return object to rows` clone
+    tempRows[index] = tempObj;
+    setRows(tempRows); // update state
+  };
+  const handleAddRow = () => {
+    const item = {};
+    setRows([...rows, item]);
+  };
+
+  const postResults = () => {
+    console.log(rows); // there you go, do as you please
+  };
+
   const togglePasswordVisiblity = () => {
     setPasswordShown(passwordShown ? false : true)
   };
@@ -400,105 +435,92 @@ const NewUserForm = () => {
                         <thead className="bg-gray-100 dark:bg-gray-800 ">
                           <tr>
                             <Thead thName="" />
-                            <Thead thName="Document Name" />
-                            <Thead thName="Document No" />
-                            <Thead thName="Issue Date" />
-                            <Thead thName="Expiry Date" />
-                            <Thead thName="Attachment" />
+                            {columnsArray.map((column, index) => (
+                              <Thead thName={column} key={index} />
+                            ))}
                           </tr>
                         </thead>
                         <tbody className="divide-y dark:bg-slate-800 divide-gray-200 dark:divide-gray-700 ">
-                          <tr>
-                            <td className={`whitespace-nowrap px-2 py-2 font-medium text-gray-500 `}>
-                              <span
-                                title="Delete"
-                                onClick={() => !btnCancel && navigate("/dash/users")}
-                                className="cursor-pointer flex px-1 py-1 justify-center   hover:bg-gray-200 dark:hover:bg-gray-900 dark:active:bg-slate-800 rounded-full duration-150" >
-                                <MdDelete size={25} className='' /></span>
-                            </td>
-                            <td
-                              className={`whitespace-nowrap px-2 py-2 font-medium text-gray-900 dark:text-gray-300 `}
-                            >
-                              <div className="flex-nowrap">
-                                <input
-                                  className={` mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
+                          {rows.map((item, idx) => (
+                            <tr key={idx}>
 
-                                  name="doc_name"
-                                  type="text"
-                                  autoComplete="off"
-                                  required
-                                  onChange={onNameChanged}
-                                />
+                              <td className={`whitespace-nowrap px-2 py-2 font-medium text-gray-500 `}>
+                                <span
+                                  title="Delete"
+                                  onClick={() => handleRemoveSpecificRow(idx)}
+                                  className="cursor-pointer flex px-1 py-1 justify-center   hover:bg-gray-200 dark:hover:bg-gray-900 dark:active:bg-slate-800 rounded-full duration-150" >
+                                  <MdDelete size={25} className='' /></span>
+                              </td>
 
-                              </div>
-                            </td>
-                            <td
-                              className={`whitespace-nowrap px-2 py-2 font-medium text-gray-900 dark:text-gray-300`}
-                            >
-                              <div className="flex-nowrap">
-                                <input
-                                  className={` mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
+                              {columnsArray.map((column, index) => (
 
-                                  name="doc_name"
-                                  type="text"
-                                  autoComplete="off"
-                                  required
-                                  onChange={onNameChanged}
-                                />
+                                <td className={`flex-nowrap whitespace-nowrap px-2 py-2 font-medium text-gray-900 dark:text-gray-300 `} key={index}>
+                                  {console.log(column, rows[idx][column])}
+                                  {index === 0 &&
+                                    <input
+                                      className={` mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
+                                      type="text"
+                                      column={column}
+                                      value={rows[idx][column]}
+                                      index={idx}
+                                      onChange={(e) => updateState(e)}
+                                    />
 
-                              </div>
-                            </td>
-                            <td
-                              className={`whitespace-nowrap px-2 py-2 font-medium text-gray-900 dark:text-gray-300`}
-                            >
-                              <div className="flex-nowrap">
-                                <input
-                                  className={`mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
+                                  }
+                                  {index === 1 &&
+                                    <input
+                                      className={` mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
+                                      type="text"
+                                      column={column}
+                                      value={rows[idx][column]}
+                                      index={idx}
+                                      onChange={(e) => updateState(e)}
+                                    />
 
-                                  name="doc_name"
-                                  type="date"
-                                  autoComplete="off"
-                                  required
-                                  onChange={onNameChanged}
-                                />
+                                  }
 
-                              </div>
-                            </td>
-                            <td
-                              className={`whitespace-nowrap px-2 py-2 font-medium text-gray-900 dark:text-gray-300`}
-                            >
-                              <div className="flex-nowrap">
-                                <input
-                                  className={` mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
+                                  {index === 2 &&
+                                    <input
+                                      className={` mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
+                                      type="date"
+                                      column={column}
+                                      value={rows[idx][column]}
+                                      index={idx}
+                                      onChange={(e) => updateState(e)}
+                                    />
+                                  }
+                                  {
+                                    index === 3 &&
+                                    <input
+                                      className={` mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
+                                      type="date"
+                                      column={column}
+                                      value={rows[idx][column]}
+                                      index={idx}
+                                      onChange={(e) => updateState(e)}
+                                    />
+                                  }
+                                  {index === 4 &&
+                                    <input
+                                      className={` mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
+                                      type="file"
+                                      column={column}
+                                      value={rows[idx][column]}
+                                      index={idx}
+                                      onChange={(e) => updateState(e)}
+                                    />
 
-                                  name="doc_name"
-                                  type="date"
-                                  autoComplete="off"
-                                  required
-                                // onChange={onNameChanged}
-                                />
+                                  }
 
-                              </div>
-                            </td>
-                            <td
-                              className={`whitespace-nowrap px-2 py-2 font-medium text-gray-900 dark:text-gray-300`}
-                            >
-                              <div className="flex-nowrap">
-                                <input
-                                  className={` mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
-
-                                  name="doc_name"
-                                  type="file"
-                                  autoComplete="off"
-                                  required
-                                  onChange={onNameChanged}
-                                />
-
-                              </div>
-                            </td>
+                                </td>
 
 
-                          </tr>
+                              ))}
+
+                            </tr>
+
+                          ))}
+
                         </tbody>
 
 
@@ -507,11 +529,15 @@ const NewUserForm = () => {
                     <div className="font-normal text-sm  w-32 h-15 p-2 mt-2 whitespace-nowrap px-2 py-2 text-gray-500">
                       <span
                         title="Add Row"
-                        onClick={() => !btnCancel && navigate("/dash/users")}
+                        onClick={handleAddRow}
                         className="cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150" >
                         <RiAddFill size={20} className='mr-2' />Add Row</span>
+                      <span
+                        title="Add Row"
+                        onClick={postResults}
+                        className="cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150" >Show Data</span>
                     </div>
-                    {/* <AddTableRow /> */}
+
                   </div>
                 }
               </div>
@@ -552,6 +578,7 @@ const NewUserForm = () => {
 
             </div>
           </form>
+          {/* <AddTableRow /> */}
         </div>
       </div>
     </>

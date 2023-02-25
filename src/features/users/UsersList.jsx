@@ -4,7 +4,7 @@ import User from "./User";
 import Thead from "../../components/Thead";
 import Tbody from "../../components/Tbody";
 import { useNavigate } from "react-router-dom";
-import {  useState } from "react";
+import { useState } from "react";
 import PageLoader from "../../components/PageLoader";
 import { AiOutlineUserAdd } from 'react-icons/ai';
 
@@ -12,7 +12,9 @@ import { AiOutlineUserAdd } from 'react-icons/ai';
 const UsersList = () => {
 
   const [search, setsearch] = useState("");
-  
+  const columnsArray = ["NAME", "TITLE", "STATUS", "ROLES"];
+
+
 
   const navigate = useNavigate();
   const {
@@ -26,8 +28,8 @@ const UsersList = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
-  
- 
+
+
 
   let content;
 
@@ -37,16 +39,16 @@ const UsersList = () => {
     content = <p className="errmsg">{error?.data?.message}</p>;
   }
 
-  
+
   const handleSearch = (text) => {
-     setsearch(text);
-   };
+    setsearch(text);
+  };
 
 
   if (isSuccess) {
     const { ids } = users;
     const tableContent = ids?.length && ids.map((userId) => <User key={userId} userId={userId} search={search} />)
-  
+
 
     content = (
       <>
@@ -55,7 +57,7 @@ const UsersList = () => {
           <div className="sm:flex justify-between">
             <div className="flex justify-between">
               <h1 className="text-2xl font-bold text-gray-900  dark:text-gray-400">
-              Employee List
+                Employee List
               </h1>
 
 
@@ -120,10 +122,9 @@ const UsersList = () => {
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm leading-normal">
               <thead className="bg-gray-100 dark:bg-gray-800 ">
                 <tr>
-                  <Thead thName="Name" />
-                  <Thead thName="Title" />
-                  <Thead thName="Status" />
-                  <Thead thName="Roles" />
+                  {columnsArray.map((column, index) => (
+                    <Thead thName={column} key={index} />
+                  ))}
                   <Thead thName="" />
                 </tr>
               </thead>
