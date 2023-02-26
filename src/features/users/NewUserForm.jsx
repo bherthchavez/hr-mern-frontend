@@ -37,7 +37,7 @@ const NewUserForm = () => {
   const [passwordShown, setPasswordShown] = useState(false)
   const [addDocs, setAddDocs] = useState(false)
 
-  const [rows, setRows] = useState([{}]);
+  const [rows, setRows] = useState([]);
   const columnsArray = ["Document Name", "Document No", "Issue Date", "Expiry Date", "Attachment"]; // pass columns here dynamically
 
   const handleRemoveSpecificRow = (idx) => {
@@ -46,29 +46,85 @@ const NewUserForm = () => {
     setRows(tempRows);
   };
 
-  console.log(image)
+  const handleRemoveAllRow = () => {
+   const item = [{
+    Document_Name: '',
+    Document_No: '',
+    Issue_Date: '',
+    Expiry_Date: '',
+    Attachment: { fileName: '', data: '' }
+  }];
+
+  if (!addDocs) {
+    setAddDocs(!addDocs)
+    setRows(item);
+  }else{
+    setAddDocs(!addDocs)
+    setRows([])
+  }
+  };
+
+
+  const modifyRows = ()=>{
+    const tempData = []
+    rows.forEach((data, index)=>{
+
+      // console.log(data.Attachment.data)
+      const item = {
+        Document_Name: data.Document_Name,
+        Document_No: data.Document_No,
+        Issue_Date: data.Issue_Date,
+        Expiry_Date: data.Expiry_Date,
+        Attachment:  data.Attachment.data }
+
+        tempData.push(item)
+  })
+  console.log(tempData)
+  setRows(tempData)
+  }
 
   const updateState = (e) => {
     let prope = e.target.attributes.column.value; // the custom column attribute
     let index = e.target.attributes.index.value; // index of state array -rows
-    
-    let fieldValue  = e.target.value; // value
-
+    let fieldValue = e.target.value; // value
 
     const tempRows = [...rows]; // avoid direct state mutation
     const tempObj = rows[index]; // copy state object at index to a temporary object
-    tempObj[prope] = fieldValue; // modify temporary object
+    
+    if(prope === 'Attachment') {
+      const reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
+      reader.onloadend = () => {
+        tempObj[prope].data= reader.result;
+      }
 
+     tempObj[prope].fileName = fieldValue
+    }else{
+
+      tempObj[prope] = fieldValue; // modify temporary object
+    }
+    
+   
     // return object to rows` clone
     tempRows[index] = tempObj;
-    setRows(tempRows); // update state
+   setRows(tempRows); // update state
+
   };
+
+
   const handleAddRow = () => {
-    const item = {};
+    const item = {
+      Document_Name: '',
+      Document_No: '',
+      Issue_Date: '',
+      Expiry_Date: '',
+      Attachment: { fileName: '', data: '' }
+    };
     setRows([...rows, item]);
   };
 
   const postResults = () => {
+    modifyRows()
     console.log(rows); // there you go, do as you please
   };
 
@@ -108,8 +164,6 @@ const NewUserForm = () => {
   const onRolesChanged = (e) => setRoles(e.target.value)
   const onPasswordChanged = (e) => setPassword(e.target.value)
 
-
-
   const onImageChanged = (e) => {
     const file = e.target.files[0]
     setFileToBase(file);
@@ -127,12 +181,15 @@ const NewUserForm = () => {
   const canSave =
     [roles, name, validUsername, validPassword, image].every(Boolean) && !isLoading;
 
+   
+
   const onSaveUserClicked = async (e) => {
     e.preventDefault();
 
     if (canSave) {
       setSpin(true)
-      await addNewUser({ name, email, department, position, username, password, roles, image })
+      modifyRows()
+      await addNewUser({ name, email, department, position, username, password, roles, image, rows })
     }
   };
 
@@ -169,6 +226,7 @@ const NewUserForm = () => {
 
     return image;
   }
+
 
 
   return (
@@ -402,7 +460,7 @@ const NewUserForm = () => {
                             name="user-active"
                             type="checkbox"
                             checked={addDocs}
-                            onChange={e => setAddDocs(!addDocs)}
+                            onChange={handleRemoveAllRow}
                             className="h-3 w-3 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                           />
                         </div>
@@ -444,6 +502,7 @@ const NewUserForm = () => {
                           {rows.map((item, idx) => (
                             <tr key={idx}>
 
+
                               <td className={`whitespace-nowrap px-2 py-2 font-medium text-gray-500 `}>
                                 <span
                                   title="Delete"
@@ -452,18 +511,18 @@ const NewUserForm = () => {
                                   <MdDelete size={25} className='' /></span>
                               </td>
 
-                              {columnsArray.map((column, index) => (
+                              {Object.keys(item).map((key, index) => (
 
                                 <td className={`flex-nowrap whitespace-nowrap px-2 py-2 font-medium text-gray-900 dark:text-gray-300 `} key={index}>
-                                  {console.log(column, rows[idx][column])}
                                   {index === 0 &&
                                     <input
                                       className={` mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
                                       type="text"
-                                      column={column}
-                                      value={rows[idx][column]}
+                                      column={key}
+                                      value={item[key]}
                                       index={idx}
                                       onChange={(e) => updateState(e)}
+                                      required
                                     />
 
                                   }
@@ -471,10 +530,11 @@ const NewUserForm = () => {
                                     <input
                                       className={` mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
                                       type="text"
-                                      column={column}
-                                      value={rows[idx][column]}
+                                      column={key}
+                                      value={item[key]}
                                       index={idx}
                                       onChange={(e) => updateState(e)}
+                                      required
                                     />
 
                                   }
@@ -483,10 +543,11 @@ const NewUserForm = () => {
                                     <input
                                       className={` mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
                                       type="date"
-                                      column={column}
-                                      value={rows[idx][column]}
+                                      column={key}
+                                      value={item[key]}
                                       index={idx}
                                       onChange={(e) => updateState(e)}
+                                      required
                                     />
                                   }
                                   {
@@ -494,28 +555,34 @@ const NewUserForm = () => {
                                     <input
                                       className={` mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
                                       type="date"
-                                      column={column}
-                                      value={rows[idx][column]}
+                                      column={key}
+                                      value={item[key]}
                                       index={idx}
                                       onChange={(e) => updateState(e)}
+                                      required
                                     />
                                   }
                                   {index === 4 &&
-                                    <input
-                                      className={` mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
-                                      type="file"
-                                      column={column}
-                                      value={rows[idx][column]}
-                                      index={idx}
-                                      onChange={(e) => updateState(e)}
-                                    />
+                                    Object.keys(item[key]).map((keys, indexs) => (
+                                      indexs === 0 &&
+                                      <input
+                                        key={indexs}
+                                        className={` mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
+                                        type="file"
+                                        column={key}
+                                        value={item[key][keys]}
+                                        index={idx}
+                                        onChange={(e) => updateState(e)}
+                                        required
+                                      />
+                                   
 
+                                    ))
                                   }
 
                                 </td>
-
-
                               ))}
+
 
                             </tr>
 
