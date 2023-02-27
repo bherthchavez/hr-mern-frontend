@@ -38,6 +38,7 @@ const NewUserForm = () => {
   const [addDocs, setAddDocs] = useState(false)
 
   const [rows, setRows] = useState([]);
+  // const [userDocs, setUserDocs] = useState([]);
   const columnsArray = ["Document Name", "Document No", "Issue Date", "Expiry Date", "Attachment"]; // pass columns here dynamically
 
   const handleRemoveSpecificRow = (idx) => {
@@ -47,41 +48,22 @@ const NewUserForm = () => {
   };
 
   const handleRemoveAllRow = () => {
-   const item = [{
-    Document_Name: '',
-    Document_No: '',
-    Issue_Date: '',
-    Expiry_Date: '',
-    Attachment: { fileName: '', data: '' }
-  }];
+    const item = [{
+      Document_Name: '',
+      Document_No: '',
+      Issue_Date: '',
+      Expiry_Date: '',
+      Attachment: { fileName: '', data: '' }
+    }];
 
-  if (!addDocs) {
-    setAddDocs(!addDocs)
-    setRows(item);
-  }else{
-    setAddDocs(!addDocs)
-    setRows([])
-  }
+    if (!addDocs) {
+      setAddDocs(!addDocs)
+      setRows(item);
+    } else {
+      setAddDocs(!addDocs)
+    }
   };
 
-
-  const modifyRows = ()=>{
-    const tempData = []
-    rows.forEach((data, index)=>{
-
-      // console.log(data.Attachment.data)
-      const item = {
-        Document_Name: data.Document_Name,
-        Document_No: data.Document_No,
-        Issue_Date: data.Issue_Date,
-        Expiry_Date: data.Expiry_Date,
-        Attachment:  data.Attachment.data }
-
-        tempData.push(item)
-  })
-  console.log(tempData)
-  setRows(tempData)
-  }
 
   const updateState = (e) => {
     let prope = e.target.attributes.column.value; // the custom column attribute
@@ -90,24 +72,24 @@ const NewUserForm = () => {
 
     const tempRows = [...rows]; // avoid direct state mutation
     const tempObj = rows[index]; // copy state object at index to a temporary object
-    
-    if(prope === 'Attachment') {
+
+    if (prope === 'Attachment') {
       const reader = new FileReader();
       reader.readAsDataURL(e.target.files[0]);
       reader.onloadend = () => {
-        tempObj[prope].data= reader.result;
+        tempObj[prope].data = reader.result;
       }
 
-     tempObj[prope].fileName = fieldValue
-    }else{
+      tempObj[prope].fileName = fieldValue
+    } else {
 
       tempObj[prope] = fieldValue; // modify temporary object
     }
-    
-   
+
+
     // return object to rows` clone
     tempRows[index] = tempObj;
-   setRows(tempRows); // update state
+    setRows(tempRows); // update state
 
   };
 
@@ -124,7 +106,6 @@ const NewUserForm = () => {
   };
 
   const postResults = () => {
-    modifyRows()
     console.log(rows); // there you go, do as you please
   };
 
@@ -152,6 +133,8 @@ const NewUserForm = () => {
       setImage("");
       setDataImage();
       setSpin(false)
+      setAddDocs(false)
+      setRows([])
       navigate("/dash/users");
     }
   }, [isSuccess, navigate]);
@@ -181,15 +164,27 @@ const NewUserForm = () => {
   const canSave =
     [roles, name, validUsername, validPassword, image].every(Boolean) && !isLoading;
 
-   
-
   const onSaveUserClicked = async (e) => {
     e.preventDefault();
 
+
     if (canSave) {
+      const userDocs = []
+      if(addDocs){
+        rows.forEach((data, index) => {
+          const item = {
+            Document_Name: data.Document_Name,
+            Document_No: data.Document_No,
+            Issue_Date: data.Issue_Date,
+            Expiry_Date: data.Expiry_Date,
+            Attachment: data.Attachment.data
+          }
+          userDocs.push(item)
+        })
+      }
       setSpin(true)
-      modifyRows()
-      await addNewUser({ name, email, department, position, username, password, roles, image, rows })
+      console.log({ name, email, department, position, username, password, roles, image, userDocs })
+      await addNewUser({ name, email, department, position, username, password, roles, image, userDocs })
     }
   };
 
@@ -575,7 +570,7 @@ const NewUserForm = () => {
                                         onChange={(e) => updateState(e)}
                                         required
                                       />
-                                   
+
 
                                     ))
                                   }
