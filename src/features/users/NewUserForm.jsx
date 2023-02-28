@@ -9,7 +9,6 @@ import { BsArrowLeftShort } from 'react-icons/bs';
 import { MdDelete } from 'react-icons/md';
 import { RiAddFill } from 'react-icons/ri';
 import Thead from "../../components/Thead";
-import AddTableRow from "./AddTableRow";
 const USER_REGEX = /^[A-z]{3,20}$/;
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
 
@@ -33,7 +32,6 @@ const NewUserForm = () => {
   const [roles, setRoles] = useState("")
   const [imageView, setImage] = useState("")
   const [image, setDataImage] = useState()
-  const [spin, setSpin] = useState(false)
   const [passwordShown, setPasswordShown] = useState(false)
   const [addDocs, setAddDocs] = useState(false)
 
@@ -105,9 +103,9 @@ const NewUserForm = () => {
     setRows([...rows, item]);
   };
 
-  const postResults = () => {
-    console.log(rows); // there you go, do as you please
-  };
+  // const postResults = () => {
+  //   console.log(rows); // there you go, do as you please
+  // };
 
   const togglePasswordVisiblity = () => {
     setPasswordShown(passwordShown ? false : true)
@@ -118,24 +116,23 @@ const NewUserForm = () => {
   }, [username]);
 
   useEffect(() => {
-    setValidPassword(PWD_REGEX.test(password));
+    setValidPassword(PWD_REGEX.test(password))
   }, [password]);
 
   useEffect(() => {
     if (isSuccess) {
-      setName("");
-      setEmail("");
-      setDepartment("");
-      setPosition("");
-      setUsername("");
-      setPassword("");
-      setRoles("");
-      setImage("");
-      setDataImage();
-      setSpin(false)
+      setName("")
+      setEmail("")
+      setDepartment("")
+      setPosition("")
+      setUsername("")
+      setPassword("")
+      setRoles("")
+      setImage("")
+      setDataImage()
       setAddDocs(false)
       setRows([])
-      navigate("/dash/users");
+      navigate("/dash/users")
     }
   }, [isSuccess, navigate]);
 
@@ -153,24 +150,25 @@ const NewUserForm = () => {
   };
 
   const setFileToBase = (file) => {
-    const reader = new FileReader();
+    const reader = new FileReader()
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-      setDataImage(reader.result);
+      setDataImage(reader.result)
     }
 
   }
+
 
   const canSave =
     [roles, name, validUsername, validPassword, image].every(Boolean) && !isLoading;
 
   const onSaveUserClicked = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
 
     if (canSave) {
       const userDocs = []
-      if(addDocs){
+      if (addDocs) {
         rows.forEach((data, index) => {
           const item = {
             Document_Name: data.Document_Name,
@@ -182,8 +180,7 @@ const NewUserForm = () => {
           userDocs.push(item)
         })
       }
-      setSpin(true)
-      console.log({ name, email, department, position, username, password, roles, image, userDocs })
+      // console.log({ name, email, department, position, username, password, roles, image, userDocs })
       await addNewUser({ name, email, department, position, username, password, roles, image, userDocs })
     }
   };
@@ -469,21 +466,13 @@ const NewUserForm = () => {
                         </div>
                       </div>
                     </div>
-
-                    {spin
-                      &&
-                      <div className="mt-6 flex text-gray-400 justify-end">
-                        <Spenner />
-                        <p>Saving.... </p>
-                      </div>
-                    }
                   </div>
                 </div>
 
                 {/* document files */}
                 {addDocs &&
-                  <div>
-                    <div className="overflow-x-auto rounded-md border min-w-full dark:border-gray-700 border-gray-200">
+                  <div className="">
+                    <div className="mt-6 overflow-x-auto rounded-md border min-w-full dark:border-gray-700 border-gray-200">
                       <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm leading-normal">
                         <thead className="bg-gray-100 dark:bg-gray-800 ">
                           <tr>
@@ -564,6 +553,8 @@ const NewUserForm = () => {
                                         key={indexs}
                                         className={` mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
                                         type="file"
+                                        accept="image/png, image/jpeg, application/pdf"
+
                                         column={key}
                                         value={item[key][keys]}
                                         index={idx}
@@ -594,14 +585,20 @@ const NewUserForm = () => {
                         onClick={handleAddRow}
                         className="cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150" >
                         <RiAddFill size={20} className='mr-2' />Add Row</span>
-                      <span
+                      {/* <span
                         title="Add Row"
                         onClick={postResults}
-                        className="cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150" >Show Data</span>
+                        className="cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150" >Show Data</span> */}
                     </div>
 
                   </div>
                 }
+                {isLoading &&
+                      <div className="mt-6 flex text-gray-400 justify-end">
+                        <Spenner />
+                        <p>Saving.... </p>
+                      </div>
+                    }
               </div>
 
               {/* Footer */}

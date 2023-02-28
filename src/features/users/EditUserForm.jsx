@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useUpdateUserMutation, useDeleteUserMutation } from "./usersApiSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ROLES } from "../../config/roles";
 import { AiOutlineEye, AiOutlineEyeInvisible, AiOutlineSave } from "react-icons/ai";
 import Image from "../../components/Image";
@@ -8,13 +8,21 @@ import Spenner from "../../components/Spenner";
 import useAuth from "../../hooks/useAuth";
 import { AiOutlineUserDelete } from 'react-icons/ai';
 import { BsArrowLeftShort } from 'react-icons/bs';
+import { MdDelete } from 'react-icons/md';
+import { RiAddFill } from 'react-icons/ri';
+import { BiDownload } from 'react-icons/bi';
+import Thead from "../../components/Thead";
+import fileDownload from "js-file-download";
+import axios from "axios";
 
 const USER_REGEX = /^[A-z]{3,20}$/;
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
 
 const EditUserForm = ({ user }) => {
+ 
 
   const { id } = useAuth(); //current user id
+
 
 
   const [updateUser, { isLoading, isSuccess, isError, error }] =
@@ -22,7 +30,7 @@ const EditUserForm = ({ user }) => {
 
   const [
     deleteUser,
-    { isSuccess: isDelSuccess, },
+    { isSuccess: isDelSuccess, isLoading: isDelLoading, },
   ] = useDeleteUserMutation();
 
   const navigate = useNavigate();
@@ -31,20 +39,76 @@ const EditUserForm = ({ user }) => {
   const [email, setEmail] = useState(user.email);
   const [department, setDepartment] = useState(user.department);
   const [position, setPosition] = useState(user.position);
-  const [username, setUsername] = useState(user.username);
-  const [validUsername, setValidUsername] = useState(false);
-  const [password, setPassword] = useState("");
-  const [validPassword, setValidPassword] = useState(false);
-  const [roles, setRoles] = useState(user.roles);
-  const [active, setActive] = useState(user.active);
-
-  const [imageView, setImage] = useState("");
+  const [username, setUsername] = useState(user.username)
+  const [validUsername, setValidUsername] = useState(false)
+  const [password, setPassword] = useState("")
+  const [validPassword, setValidPassword] = useState(false)
+  const [roles, setRoles] = useState(user.roles)
+  const [active, setActive] = useState(user.active)
+  const [imageView, setImage] = useState("")
   const [image, setDataImage] = useState();
+  const [spinText, setSpinText] = useState('')
+  const [passwordShown, setPasswordShown] = useState(false)
 
-  const [spin, setSpin] = useState(false);
-  const [spinText, setSpinText] = useState('');
 
-  const [passwordShown, setPasswordShown] = useState(false);
+  const [rows, setRows] = useState(user.documents)
+  const columnsArray = ["Document Name", "Document No", "Issue Date", "Expiry Date"]; // pass columns here dynamically
+
+  const handleDownload = async (url, filename) => {
+   await axios
+      .get(url, {
+        responseType: "blob"
+      })
+      .then((res) => {
+        
+        fileDownload(res.data, filename);
+      });
+  };
+
+
+  const handleRemoveSpecificRow = (idx) => {
+    const tempRows = [...rows] // to avoid  direct state mutation
+    tempRows.splice(idx, 1)
+    setRows(tempRows)
+  }
+
+  const updateState = (e) => {
+    let prope = e.target.attributes.column.value; // the custom column attribute
+    let index = e.target.attributes.index.value; // index of state array -rows
+    let fieldValue = e.target.value; // value
+
+    const tempRows = [...rows]; // avoid direct state mutation
+    const tempObj = rows[index]; // copy state object at index to a temporary object
+
+    if (prope === 'Attachment') {
+      const reader = new FileReader()
+      reader.readAsDataURL(e.target.files[0])
+      reader.onloadend = () => {
+        tempObj[prope].data = reader.result
+      }
+
+      tempObj[prope].fileName = fieldValue
+    } else {
+
+      tempObj[prope] = fieldValue; // modify temporary object
+    }
+
+    // return object to rows` clone
+    tempRows[index] = tempObj
+    setRows(tempRows); // update state
+  }
+  const handleAddRow = () => {
+    const item = {
+      Document_Name: '',
+      Document_No: '',
+      Issue_Date: '',
+      Expiry_Date: '',
+      Attachment: { fileName: '', data: '' }
+    };
+    setRows([...rows, item])
+  }
+
+
   const togglePasswordVisiblity = () => {
     setPasswordShown(passwordShown ? false : true);
   };
@@ -67,7 +131,6 @@ const EditUserForm = ({ user }) => {
       setPassword("");
       setRoles("");
       setDataImage();
-      setSpin(false);
       navigate("/dash/users");
     }
   }, [isSuccess, isDelSuccess, navigate]);
@@ -96,12 +159,11 @@ const EditUserForm = ({ user }) => {
   const onSaveUserClicked = async (e) => {
     if (password) {
       setSpinText('Saving...')
-      setSpin(true);
       await updateUser({
         id: user.id,
-        name, 
-        email, 
-        department, 
+        name,
+        email,
+        department,
         position,
         username,
         password,
@@ -111,14 +173,12 @@ const EditUserForm = ({ user }) => {
       });
     } else {
       setSpinText('Saving...')
-      setSpin(true);
       await updateUser({ id: user.id, name, email, department, position, username, roles, active, image });
     }
   };
 
   const onDeleteUserClicked = async () => {
     setSpinText('Deleting...')
-    setSpin(true);
     await deleteUser({ id: user.id });
   };
 
@@ -170,9 +230,9 @@ const EditUserForm = ({ user }) => {
     <>
       <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8 ">
         <h1 className="mb-2 text-2xl font-bold text-gray-900 sm:text-2xl dark:text-gray-200 ">
-         {id === user._id  ? 'Account Setting' : 'Edit User' } 
+          {id === user._id ? 'Account Setting' : 'Edit User'}
         </h1>
-        
+
         <p className={errClass}>{error?.data?.message}</p>
 
         <div className="mt-5 md:col-span-2 ">
@@ -281,7 +341,7 @@ const EditUserForm = ({ user }) => {
                       </div>
                     </div>
 
-                    
+
                   </div>
                   <div className="col-span-2 sm:col-span-1">
                     <div className="">
@@ -384,48 +444,122 @@ const EditUserForm = ({ user }) => {
                         />
                       </div>
                     </div>
-                    { id !== user._id
-                    && <div className="mt-4 space-y-4">
-                      <div className="flex items-start">
-                        <div className="mr-2 text-sm">
-                          <label
-                            htmlFor="user-active"
-                            className="font-medium text-gray-700 dark:text-gray-300"
-                          >
-                            Active
-                          </label>
-                        </div>
-                        <div className="flex h-5 items-center">
-                          <input
-                            id="user-active"
-                            name="user-active"
-                            type="checkbox"
-                            checked={active}
-                            onChange={onActiveChanged}
-                            className="h-3 w-3 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                          />
+                    {id !== user._id
+                      && <div className="mt-4 space-y-4">
+                        <div className="flex items-start">
+                          <div className="mr-2 text-sm">
+                            <label
+                              htmlFor="user-active"
+                              className="font-medium text-gray-700 dark:text-gray-300"
+                            >
+                              Active
+                            </label>
+                          </div>
+                          <div className="flex h-5 items-center">
+                            <input
+                              id="user-active"
+                              name="user-active"
+                              type="checkbox"
+                              checked={active}
+                              onChange={onActiveChanged}
+                              className="h-3 w-3 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            />
+                          </div>
                         </div>
                       </div>
-                    </div>
                     }
-               
-                {spin 
-                && 
-                  <div className="mt-6 flex text-gray-400 justify-end"> 
-                <Spenner />
-                <p>{spinText} </p>
-                </div> 
-                }
+
+                    {isDelLoading
+                      &&
+                      <div className="mt-6 flex text-gray-400 justify-end">
+                        <Spenner />
+                        <p>{spinText} </p>
+                      </div>
+                    }
 
 
                   </div>
                 </div>
+
+                <div className="">
+                  <div className="mt-6 overflow-x-auto rounded-md border min-w-full dark:border-gray-700 border-gray-200">
+                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm leading-normal">
+                      <thead className="bg-gray-50 dark:bg-gray-800 ">
+                        <tr>
+                          {columnsArray.map((column, index) => (
+                            <Thead thName={column} key={index} />
+                          ))}
+                          <Thead thName="" />
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y dark:bg-slate-800 divide-gray-200 dark:divide-gray-700 ">
+                        {rows.map((item, idx) => (
+                          <tr className="hover:bg-slate-200 dark:hover:bg-slate-700" key={idx}>
+
+                            { console.log((item.document_url, item.document_cloud_id+'.'+item.document_format))}
+
+                            <td className={`flex-nowrap whitespace-nowrap px-4 py-4 font-medium text-gray-900 dark:text-gray-300 `} >
+                              {item.document_name}
+                            </td>
+                            <td className={`flex-nowrap whitespace-nowrap px-4 py-4 font-medium text-gray-900 dark:text-gray-300 `} >
+                              {item.document_no}
+                            </td>
+                            <td className={`flex-nowrap whitespace-nowrap px-4 py-4 font-medium text-gray-900 dark:text-gray-300 `} >
+                              {item.issue_date}
+                            </td>
+                            <td className={`flex-nowrap whitespace-nowrap px-4 py-4 font-medium text-gray-900 dark:text-gray-300 `} >
+                              {item.expiry_date}
+                            </td>
+                            <td className={`whitespace-nowrap px-4 py-4 font-medium text-gray-500 `}>
+                              <div className="flex justify-end gap-2">
+
+                                <a
+                                href={`https://res.cloudinary.com/demo/image/upload/fl_attachment/v1677265086/${item.document_cloud_id}.${item.document_format}`}
+                                  title="Download"
+                                  // onClick={() => {
+                                  //   handleDownload(item.document_url, item.document_cloud_id+'.'+item.document_format);
+                                  // }}
+                                  className="cursor-pointer flex px-1 py-1 justify-center   hover:bg-gray-200 dark:hover:bg-gray-900 dark:active:bg-slate-800 rounded-full duration-150" >
+                                  <BiDownload size={25} className='' />
+                                </a>
+                                <span
+                                  title="Delete"
+                                  onClick={() => handleRemoveSpecificRow(idx)}
+                                  className="cursor-pointer flex px-1 py-1 justify-center   hover:bg-gray-200 dark:hover:bg-gray-900 dark:active:bg-slate-800 rounded-full duration-150" >
+                                  <MdDelete size={25} className='' /></span>
+                              </div>
+                            </td>
+
+                          </tr>
+
+                        ))}
+
+                      </tbody>
+
+                    </table>
+                  </div>
+                  <div className="font-normal text-sm  w-32 h-15 p-2 mt-2 whitespace-nowrap px-2 py-2 text-gray-500">
+                    <span
+                      title="Add Row"
+                      onClick={handleAddRow}
+                      className="cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150" >
+                      <RiAddFill size={20} className='mr-2' />Add Row</span>
+                    {/* <span
+                        title="Add Row"
+                        onClick={postResults}
+                        className="cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150" >Show Data</span> */}
+                  </div>
+
+                </div>
+
               </div>
-              <div className={ `flex justify-end text-sm bg-gray-50 dark:bg-slate-800 px-4 py-3 text-right sm:px-6 dark:border-t dark:border-slate-700 ${btnClass}`}>
-              
-                
-                   { id !== user._id
-                    &&  <span
+
+              {/*footer  */}
+              <div className={`flex justify-end text-sm bg-gray-50 dark:bg-slate-800 px-4 py-3 text-right sm:px-6 dark:border-t dark:border-slate-700 ${btnClass}`}>
+
+
+                {id !== user._id
+                  && <span
                     className={
                       canSave
                         ? `cursor-pointer flex  px-3 sm:px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
@@ -438,23 +572,23 @@ const EditUserForm = ({ user }) => {
                     <AiOutlineUserDelete size={20} className='mr-1 sm:mr-2' />
                     Delete
                   </span>
-                   }           
+                }
 
                 <div className="flex items-center ">
-                   <div>
-                  <span
-                    title="Cancel"
-                    disabled={!canSave}
-                    onClick={() => canSave && navigate("/dash/users")}
-                    className={
-                      canSave
-                        ? `cursor-pointer flex mr-6 px-3 sm:px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
-                        : `flex mx-6 px-3 sm:px-4 py-2 text-white border dark:text-slate-600 border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
-                    } >
-                  <BsArrowLeftShort size={20} className='mr-1 sm:mr-2' />
-                    Cancel
-                  </span>
-                </div>
+                  <div>
+                    <span
+                      title="Cancel"
+                      disabled={!canSave}
+                      onClick={() => canSave && navigate("/dash/users")}
+                      className={
+                        canSave
+                          ? `cursor-pointer flex mr-6 px-3 sm:px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
+                          : `flex mx-6 px-3 sm:px-4 py-2 text-white border dark:text-slate-600 border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
+                      } >
+                      <BsArrowLeftShort size={20} className='mr-1 sm:mr-2' />
+                      Cancel
+                    </span>
+                  </div>
 
                   <span
                     title="Save"
