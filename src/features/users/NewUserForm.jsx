@@ -235,7 +235,6 @@ const NewUserForm = () => {
               <div className="space-y-6 bg-white dark:bg-slate-800 px-4 py-5 sm:p-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="col-span-2 sm:col-span-1 ">
-
                     <div className="">
                       <label
                         className="block text-sm font-medium text-gray-700 dark:text-gray-200"
@@ -579,17 +578,19 @@ const NewUserForm = () => {
 
                       </table>
                     </div>
-                    <div className="font-normal text-sm  w-32 h-15 p-2 mt-2 whitespace-nowrap px-2 py-2 text-gray-500">
-                      <span
-                        title="Add Row"
-                        onClick={handleAddRow}
-                        className="cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150" >
-                        <RiAddFill size={20} className='mr-2' />Add Row</span>
-                      {/* <span
+                    <div className="font-normal text-xs  w-40 h-12 p-2 mt-2 whitespace-nowrap px-2 py-2 text-gray-500">
+                    <span
+                      title="Add Row"
+                      onClick={handleAddRow}
+                      className="cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150" 
+                      disabled={!canSave}>
+                      
+                      <RiAddFill size={16} className='mr-2' />Add Document</span>
+                    {/* <span
                         title="Add Row"
                         onClick={postResults}
                         className="cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150" >Show Data</span> */}
-                    </div>
+                  </div>
 
                   </div>
                 }

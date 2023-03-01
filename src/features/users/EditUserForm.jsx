@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useUpdateUserMutation, useDeleteUserMutation } from "./usersApiSlice";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ROLES } from "../../config/roles";
 import { AiOutlineEye, AiOutlineEyeInvisible, AiOutlineSave } from "react-icons/ai";
 import Image from "../../components/Image";
@@ -12,18 +12,13 @@ import { MdDelete } from 'react-icons/md';
 import { RiAddFill } from 'react-icons/ri';
 import { BiDownload } from 'react-icons/bi';
 import Thead from "../../components/Thead";
-import fileDownload from "js-file-download";
-import axios from "axios";
 
 const USER_REGEX = /^[A-z]{3,20}$/;
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
 
 const EditUserForm = ({ user }) => {
- 
 
   const { id } = useAuth(); //current user id
-
-
 
   const [updateUser, { isLoading, isSuccess, isError, error }] =
     useUpdateUserMutation();
@@ -50,21 +45,10 @@ const EditUserForm = ({ user }) => {
   const [spinText, setSpinText] = useState('')
   const [passwordShown, setPasswordShown] = useState(false)
 
-
-  const [rows, setRows] = useState(user.documents)
+  const [rows, setRows] = useState(user?.documents)
   const columnsArray = ["Document Name", "Document No", "Issue Date", "Expiry Date"]; // pass columns here dynamically
 
-  const handleDownload = async (url, filename) => {
-   await axios
-      .get(url, {
-        responseType: "blob"
-      })
-      .then((res) => {
-        
-        fileDownload(res.data, filename);
-      });
-  };
-
+  console.log(rows)
 
   const handleRemoveSpecificRow = (idx) => {
     const tempRows = [...rows] // to avoid  direct state mutation
@@ -97,6 +81,7 @@ const EditUserForm = ({ user }) => {
     tempRows[index] = tempObj
     setRows(tempRows); // update state
   }
+
   const handleAddRow = () => {
     const item = {
       Document_Name: '',
@@ -217,9 +202,7 @@ const EditUserForm = ({ user }) => {
       let base64String = window.btoa(binaryData);
       func(base64String);
     };
-
     let image = reader.readAsBinaryString(file);
-
     return image;
   }
 
@@ -230,7 +213,7 @@ const EditUserForm = ({ user }) => {
     <>
       <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8 ">
         <h1 className="mb-2 text-2xl font-bold text-gray-900 sm:text-2xl dark:text-gray-200 ">
-          {id === user._id ? 'Account Setting' : 'Edit User'}
+          {id === user._id ? 'Account Setting' : 'Edit Employee'}
         </h1>
 
         <p className={errClass}>{error?.data?.message}</p>
@@ -295,7 +278,6 @@ const EditUserForm = ({ user }) => {
                         onChange={onDepartmentChanged}
                       />
                     </div>
-
                     <div className="mt-4">
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
                         Photo
@@ -340,8 +322,6 @@ const EditUserForm = ({ user }) => {
                         </p>
                       </div>
                     </div>
-
-
                   </div>
                   <div className="col-span-2 sm:col-span-1">
                     <div className="">
@@ -468,19 +448,8 @@ const EditUserForm = ({ user }) => {
                         </div>
                       </div>
                     }
-
-                    {isDelLoading
-                      &&
-                      <div className="mt-6 flex text-gray-400 justify-end">
-                        <Spenner />
-                        <p>{spinText} </p>
-                      </div>
-                    }
-
-
                   </div>
                 </div>
-
                 <div className="">
                   <div className="mt-6 overflow-x-auto rounded-md border min-w-full dark:border-gray-700 border-gray-200">
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm leading-normal">
@@ -495,9 +464,6 @@ const EditUserForm = ({ user }) => {
                       <tbody className="divide-y dark:bg-slate-800 divide-gray-200 dark:divide-gray-700 ">
                         {rows.map((item, idx) => (
                           <tr className="hover:bg-slate-200 dark:hover:bg-slate-700" key={idx}>
-
-                            { console.log((item.document_url, item.document_cloud_id+'.'+item.document_format))}
-
                             <td className={`flex-nowrap whitespace-nowrap px-4 py-4 font-medium text-gray-900 dark:text-gray-300 `} >
                               {item.document_name}
                             </td>
@@ -514,11 +480,8 @@ const EditUserForm = ({ user }) => {
                               <div className="flex justify-end gap-2">
 
                                 <a
-                                href={`https://res.cloudinary.com/demo/image/upload/fl_attachment/v1677265086/${item.document_cloud_id}.${item.document_format}`}
+                                  href={`https://res.cloudinary.com/drqzvquzr/image/upload/fl_attachment:${item.document_name}_${user.name}/v1677265086/${item.document_cloud_id}.${item.document_format}`}
                                   title="Download"
-                                  // onClick={() => {
-                                  //   handleDownload(item.document_url, item.document_cloud_id+'.'+item.document_format);
-                                  // }}
                                   className="cursor-pointer flex px-1 py-1 justify-center   hover:bg-gray-200 dark:hover:bg-gray-900 dark:active:bg-slate-800 rounded-full duration-150" >
                                   <BiDownload size={25} className='' />
                                 </a>
@@ -531,26 +494,28 @@ const EditUserForm = ({ user }) => {
                             </td>
 
                           </tr>
-
                         ))}
-
                       </tbody>
-
                     </table>
                   </div>
-                  <div className="font-normal text-sm  w-32 h-15 p-2 mt-2 whitespace-nowrap px-2 py-2 text-gray-500">
+                  <div className="font-normal text-xs  w-40 h-12 p-2 mt-2 whitespace-nowrap px-2 py-2 text-gray-500">
                     <span
                       title="Add Row"
                       onClick={handleAddRow}
-                      className="cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150" >
-                      <RiAddFill size={20} className='mr-2' />Add Row</span>
-                    {/* <span
-                        title="Add Row"
-                        onClick={postResults}
-                        className="cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150" >Show Data</span> */}
-                  </div>
+                      className="cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150"
+                      disabled={!canSave}>
 
+                      <RiAddFill size={16} className='mr-2' />Add Document</span>
+                  </div>
                 </div>
+
+                {isDelLoading
+                  &&
+                  <div className="mt-6 flex text-gray-400 justify-end">
+                    <Spenner />
+                    <p>{spinText} </p>
+                  </div>
+                }
 
               </div>
 
