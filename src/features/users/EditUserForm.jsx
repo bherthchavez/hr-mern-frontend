@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useUpdateUserMutation, useDeleteUserMutation } from "./usersApiSlice";
 import { useNavigate } from "react-router-dom";
 import { ROLES } from "../../config/roles";
-import { AiOutlineEye, AiOutlineEyeInvisible, AiOutlineSave } from "react-icons/ai";
+import { AiOutlineCloseCircle, AiOutlineEye, AiOutlineEyeInvisible, AiOutlineSave } from "react-icons/ai";
 import Image from "../../components/Image";
 import Spenner from "../../components/Spenner";
 import useAuth from "../../hooks/useAuth";
@@ -11,6 +11,7 @@ import { BsArrowLeftShort } from 'react-icons/bs';
 import { MdDelete } from 'react-icons/md';
 import { RiAddFill } from 'react-icons/ri';
 import { BiDownload } from 'react-icons/bi';
+import { RiAttachment2 } from 'react-icons/ri';
 import Thead from "../../components/Thead";
 
 const USER_REGEX = /^[A-z]{3,20}$/;
@@ -45,14 +46,45 @@ const EditUserForm = ({ user }) => {
   const [spinText, setSpinText] = useState('')
   const [passwordShown, setPasswordShown] = useState(false)
 
-  const [rows, setRows] = useState(user?.documents)
-  const columnsArray = ["Document Name", "Document No", "Issue Date", "Expiry Date"]; // pass columns here dynamically
+  const userDocs = []
+  if (user?.documents) {
+    user.documents.forEach((data, index) => {
+      const item = {
+        document_name: data.document_name,
+        document_no: data.document_no,
+        issue_date: data.issue_date,
+        expiry_date: data.expiry_date,
+        attachment: {
+          fileName: '',
+          data: ''
+        },
+        document_id: data.document_cloud_id,
+        document_format: data.document_format,
+        document_url: data.document_url
+      }
+      userDocs.push(item)
+    })
+  }
+
+  const [rows, setRows] = useState(userDocs)
+
+
+  const columnsArray = ["Actions", "Document Name", "Document No", "Issue Date", "Expiry Date", "Attachment"]; // pass columns here dynamically
 
   console.log(rows)
 
   const handleRemoveSpecificRow = (idx) => {
     const tempRows = [...rows] // to avoid  direct state mutation
     tempRows.splice(idx, 1)
+    setRows(tempRows)
+  }
+  const handleRemoveSpecificFile = (idx) => {
+    const tempRows = [...rows]; // avoid direct state mutation
+    const tempObj = rows[idx]; // copy state object at index to a temporary object
+    tempObj.document_id =""
+    tempRows[idx] = tempObj
+
+    
     setRows(tempRows)
   }
 
@@ -63,6 +95,8 @@ const EditUserForm = ({ user }) => {
 
     const tempRows = [...rows]; // avoid direct state mutation
     const tempObj = rows[index]; // copy state object at index to a temporary object
+    console.log(tempObj)
+   
 
     if (prope === 'Attachment') {
       const reader = new FileReader()
@@ -76,10 +110,15 @@ const EditUserForm = ({ user }) => {
 
       tempObj[prope] = fieldValue; // modify temporary object
     }
+    console.log(tempObj[prope].data )
+    console.log(tempObj[prope].fileName )
 
+    // console.log(tempObj)
     // return object to rows` clone
-    tempRows[index] = tempObj
-    setRows(tempRows); // update state
+    // tempRows[index] = tempObj
+
+    
+    // setRows(tempRows); // update state
   }
 
   const handleAddRow = () => {
@@ -458,43 +497,132 @@ const EditUserForm = ({ user }) => {
                           {columnsArray.map((column, index) => (
                             <Thead thName={column} key={index} />
                           ))}
-                          <Thead thName="" />
                         </tr>
                       </thead>
                       <tbody className="divide-y dark:bg-slate-800 divide-gray-200 dark:divide-gray-700 ">
                         {rows.map((item, idx) => (
                           <tr className="hover:bg-slate-200 dark:hover:bg-slate-700" key={idx}>
-                            <td className={`flex-nowrap whitespace-nowrap px-4 py-4 font-medium text-gray-900 dark:text-gray-300 `} >
-                              {item.document_name}
-                            </td>
-                            <td className={`flex-nowrap whitespace-nowrap px-4 py-4 font-medium text-gray-900 dark:text-gray-300 `} >
-                              {item.document_no}
-                            </td>
-                            <td className={`flex-nowrap whitespace-nowrap px-4 py-4 font-medium text-gray-900 dark:text-gray-300 `} >
-                              {item.issue_date}
-                            </td>
-                            <td className={`flex-nowrap whitespace-nowrap px-4 py-4 font-medium text-gray-900 dark:text-gray-300 `} >
-                              {item.expiry_date}
-                            </td>
-                            <td className={`whitespace-nowrap px-4 py-4 font-medium text-gray-500 `}>
-                              <div className="flex justify-end gap-2">
 
-                                <a
-                                  href={`https://res.cloudinary.com/drqzvquzr/image/upload/fl_attachment:${item.document_name}_${user.name}/v1677265086/${item.document_cloud_id}.${item.document_format}`}
-                                  title="Download"
-                                  className="cursor-pointer flex px-1 py-1 justify-center   hover:bg-gray-200 dark:hover:bg-gray-900 dark:active:bg-slate-800 rounded-full duration-150" >
-                                  <BiDownload size={25} className='' />
-                                </a>
+                            <td className={`whitespace-nowrap px-4 py-4 font-medium text-gray-500 `}>
+                              <div className="flex justify-center gap-1">
                                 <span
                                   title="Delete"
                                   onClick={() => handleRemoveSpecificRow(idx)}
                                   className="cursor-pointer flex px-1 py-1 justify-center   hover:bg-gray-200 dark:hover:bg-gray-900 dark:active:bg-slate-800 rounded-full duration-150" >
                                   <MdDelete size={25} className='' /></span>
+                                {item?.document_id &&
+                                  <a
+                                    href={`https://res.cloudinary.com/drqzvquzr/image/upload/fl_attachment:${item.document_name}_${user.name}/v1677265086/${item.document_id}.${item.document_format}`}
+                                    title="Download"
+                                    className="cursor-pointer flex px-1 py-1 justify-center   hover:bg-gray-200 dark:hover:bg-gray-900 dark:active:bg-slate-800 rounded-full duration-150" >
+                                    <BiDownload size={25} className='' />
+                                  </a>
+                                }
                               </div>
                             </td>
 
+                            {Object.keys(item).map((key, index) => (
+                              index <= 4 &&
+                              <td className={`flex-nowrap whitespace-nowrap px-4 py-4 font-medium text-gray-900 dark:text-gray-300 `} key={index}>
+                                {index === 0 &&
+                                  <input
+                                    className={` mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
+                                    type="text"
+                                    column={key}
+                                    value={item[key]}
+                                    index={idx}
+                                    onChange={(e) => updateState(e)}
+                                    required
+                                  />
+
+                                }
+                                {index === 1 &&
+                                  <input
+                                    className={` mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
+                                    type="text"
+                                    column={key}
+                                    value={item[key]}
+                                    index={idx}
+                                    onChange={(e) => updateState(e)}
+                                    required
+                                  />
+
+                                }
+
+                                {index === 2 &&
+                                  <input
+                                    className={` mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
+                                    type="date"
+                                    column={key}
+                                    value={item[key]}
+                                    index={idx}
+                                    onChange={(e) => updateState(e)}
+                                    required
+                                  />
+                                }
+                                {
+                                  index === 3 &&
+                                  <input
+                                    className={` mt-1 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
+                                    type="date"
+                                    column={key}
+                                    value={item[key]}
+                                    index={idx}
+                                    onChange={(e) => updateState(e)}
+                                    required
+                                  />
+                                }
+                                {index === 4 &&
+                                  Object.keys(item[key]).map((keys, indexs) => (
+                                    (indexs === 0 &&
+                                      (!item?.document_id ?
+                                        <input
+                                          key={indexs}
+                                          className={` mt-1 w-52 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
+                                          type="file"
+                                          accept="image/png, image/jpeg, application/pdf"
+
+                                          column={key}
+                                          value={item[key][keys]}
+                                          index={idx}
+                                          onChange={(e) => updateState(e)}
+                                          required
+                                        />
+                                        : 
+                                          <div className=" flex items-center  font-normal text-xs w-auto h-12 p-2 mt-2 whitespace-nowrap px-2 py-2" key={indexs}>
+                                            <a
+                                              href={`https://res.cloudinary.com/drqzvquzr/image/upload/fl_attachment:${item.document_name}_${user.name}/v1677265086/${item.document_id}.${item.document_format}`}
+                                              title="Download"
+                                              className="underline cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150"
+                                              disabled={!canSave}>
+
+                                              <RiAttachment2 size={16} className='mr-2' />
+                                              {`${item.document_name}_${user.name}.${item.document_format}`}
+                                              <span
+                                                title="Delete"
+                                              
+                                                className="cursor-pointer flex justify-center   hover:bg-gray-200 dark:hover:bg-gray-900 dark:active:bg-slate-800 rounded-full duration-150" >
+                                              </span>
+                                            </a>
+                                            <span
+                                              title="Replace"
+                                              className="cursor-pointer ml-1"
+                                              onClick={() => handleRemoveSpecificFile(idx)}
+                                              >
+      
+                                              <AiOutlineCloseCircle size={22} className=' flex text-center' />
+                                            </span>
+                                          </div>
+                                      ))
+                                  ))
+                                }
+
+                              </td>
+
+                            ))}
                           </tr>
-                        ))}
+                        ))
+                        }
                       </tbody>
                     </table>
                   </div>
