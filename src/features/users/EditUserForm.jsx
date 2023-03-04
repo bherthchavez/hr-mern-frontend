@@ -58,9 +58,11 @@ const EditUserForm = ({ user }) => {
           fileName: '',
           data: ''
         },
-        document_id: data.document_cloud_id,
-        document_format: data.document_format,
-        document_url: data.document_url
+        cloud_info: {
+          id: data.document_cloud_id,
+          format: data.document_format,
+          url: data.document_url
+        }
       }
       userDocs.push(item)
     })
@@ -81,10 +83,10 @@ const EditUserForm = ({ user }) => {
   const handleRemoveSpecificFile = (idx) => {
     const tempRows = [...rows]; // avoid direct state mutation
     const tempObj = rows[idx]; // copy state object at index to a temporary object
-    tempObj.document_id =""
+    tempObj.cloud_info = {}
     tempRows[idx] = tempObj
 
-    
+
     setRows(tempRows)
   }
 
@@ -95,14 +97,12 @@ const EditUserForm = ({ user }) => {
 
     const tempRows = [...rows]; // avoid direct state mutation
     const tempObj = rows[index]; // copy state object at index to a temporary object
-    console.log(tempObj)
-   
 
-    if (prope === 'Attachment') {
-      const reader = new FileReader()
-      reader.readAsDataURL(e.target.files[0])
+    if (prope === 'attachment') {
+      const reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
       reader.onloadend = () => {
-        tempObj[prope].data = reader.result
+        tempObj[prope].data = reader.result;
       }
 
       tempObj[prope].fileName = fieldValue
@@ -110,24 +110,22 @@ const EditUserForm = ({ user }) => {
 
       tempObj[prope] = fieldValue; // modify temporary object
     }
-    console.log(tempObj[prope].data )
-    console.log(tempObj[prope].fileName )
 
-    // console.log(tempObj)
+
     // return object to rows` clone
-    // tempRows[index] = tempObj
+    tempRows[index] = tempObj;
+    setRows(tempRows); // update state
 
-    
-    // setRows(tempRows); // update state
-  }
+  };
 
   const handleAddRow = () => {
     const item = {
-      Document_Name: '',
-      Document_No: '',
-      Issue_Date: '',
-      Expiry_Date: '',
-      Attachment: { fileName: '', data: '' }
+      document_name: '',
+      document_no: '',
+      issue_date: '',
+      expiry_date: '',
+      attachment: { fileName: '', data: '' },
+      cloud_info: {}
     };
     setRows([...rows, item])
   }
@@ -181,23 +179,45 @@ const EditUserForm = ({ user }) => {
   };
 
   const onSaveUserClicked = async (e) => {
+
+    const userDocs = []
+    if(rows){
+        rows.forEach((data, index) => {
+          const item = {
+            Document_Name: data.document_name,
+            Document_No: data.document_no,
+            Issue_Date: data.issue_date,
+            Expiry_Date: data.expiry_date,
+            Attachment: data.attachment.data,
+            Cloud_Format:  data.cloud_info.format ,
+            Cloud_ID:  data.cloud_info.id ,
+            Cloud_URL:  data.cloud_info.url ,
+          }
+          userDocs.push(item)
+        })
+    }
+     console.log(rows.length, userDocs)
+      console.log({ name, email, department, position, username, password, roles, image, userDocs })
+
     if (password) {
-      setSpinText('Saving...')
-      await updateUser({
-        id: user.id,
-        name,
-        email,
-        department,
-        position,
-        username,
-        password,
-        roles,
-        active,
-        image,
-      });
+      // setSpinText('Saving...')
+      // await updateUser({
+      //   id: user.id,
+      //   name,
+      //   email,
+      //   department,
+      //   position,
+      //   username,
+      //   password,
+      //   roles,
+      //   active,
+      //   image,
+      //   userDocs
+      // });
+
     } else {
-      setSpinText('Saving...')
-      await updateUser({ id: user.id, name, email, department, position, username, roles, active, image });
+      // setSpinText('Saving...')
+      // await updateUser({ id: user.id, name, email, department, position, username, roles, active, image, userDocs });
     }
   };
 
@@ -575,7 +595,8 @@ const EditUserForm = ({ user }) => {
                                 {index === 4 &&
                                   Object.keys(item[key]).map((keys, indexs) => (
                                     (indexs === 0 &&
-                                      (!item?.document_id ?
+                                     
+                                      (!item?.cloud_info.id ?
                                         <input
                                           key={indexs}
                                           className={` mt-1 w-52 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
@@ -588,31 +609,31 @@ const EditUserForm = ({ user }) => {
                                           onChange={(e) => updateState(e)}
                                           required
                                         />
-                                        : 
-                                          <div className=" flex items-center  font-normal text-xs w-auto h-12 p-2 mt-2 whitespace-nowrap px-2 py-2" key={indexs}>
-                                            <a
-                                              href={`https://res.cloudinary.com/drqzvquzr/image/upload/fl_attachment:${item.document_name}_${user.name}/v1677265086/${item.document_id}.${item.document_format}`}
-                                              title="Download"
-                                              className="underline cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150"
-                                              disabled={!canSave}>
+                                        :
+                                        <div className=" flex items-center  font-normal text-xs w-auto h-12 p-2 mt-2 whitespace-nowrap px-2 py-2" key={indexs}>
+                                          <a
+                                            href={`https://res.cloudinary.com/drqzvquzr/image/upload/fl_attachment:${item.document_name}_${user.name}/v1677265086/${item.cloud_info.id}.${item.cloud_info.format}`}
+                                            title="Download"
+                                            className="underline cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150"
+                                            disabled={!canSave}>
 
-                                              <RiAttachment2 size={16} className='mr-2' />
-                                              {`${item.document_name}_${user.name}.${item.document_format}`}
-                                              <span
-                                                title="Delete"
-                                              
-                                                className="cursor-pointer flex justify-center   hover:bg-gray-200 dark:hover:bg-gray-900 dark:active:bg-slate-800 rounded-full duration-150" >
-                                              </span>
-                                            </a>
+                                            <RiAttachment2 size={16} className='mr-2' />
+                                            {`${item.document_name}_${user.name}.${item.cloud_info.format}`}
                                             <span
-                                              title="Replace"
-                                              className="cursor-pointer ml-1"
-                                              onClick={() => handleRemoveSpecificFile(idx)}
-                                              >
-      
-                                              <AiOutlineCloseCircle size={22} className=' flex text-center' />
+                                              title="Delete"
+
+                                              className="cursor-pointer flex justify-center   hover:bg-gray-200 dark:hover:bg-gray-900 dark:active:bg-slate-800 rounded-full duration-150" >
                                             </span>
-                                          </div>
+                                          </a>
+                                          <span
+                                            title="Replace"
+                                            className="cursor-pointer ml-1"
+                                            onClick={() => handleRemoveSpecificFile(idx)}
+                                          >
+
+                                            <AiOutlineCloseCircle size={22} className=' flex text-center' />
+                                          </span>
+                                        </div>
                                       ))
                                   ))
                                 }
@@ -637,12 +658,13 @@ const EditUserForm = ({ user }) => {
                   </div>
                 </div>
 
-                {isDelLoading
-                  &&
+                {isDelLoading || isLoading
+                  ?
                   <div className="mt-6 flex text-gray-400 justify-end">
                     <Spenner />
                     <p>{spinText} </p>
                   </div>
+                  : null
                 }
 
               </div>
