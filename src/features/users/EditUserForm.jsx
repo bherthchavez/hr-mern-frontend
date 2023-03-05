@@ -71,7 +71,7 @@ const EditUserForm = ({ user }) => {
   const [rows, setRows] = useState(userDocs)
 
 
-  const columnsArray = ["Actions", "Document Name", "Document No", "Issue Date", "Expiry Date", "Attachment"]; // pass columns here dynamically
+  const columnsArray = ["", "Document Name", "Document No", "Issue Date", "Expiry Date", "Attachment"]; // pass columns here dynamically
 
   console.log(rows)
 
@@ -200,24 +200,24 @@ const EditUserForm = ({ user }) => {
       console.log({ name, email, department, position, username, password, roles, image, userDocs })
 
     if (password) {
-      // setSpinText('Saving...')
-      // await updateUser({
-      //   id: user.id,
-      //   name,
-      //   email,
-      //   department,
-      //   position,
-      //   username,
-      //   password,
-      //   roles,
-      //   active,
-      //   image,
-      //   userDocs
-      // });
+      setSpinText('Saving...')
+      await updateUser({
+        id: user.id,
+        name,
+        email,
+        department,
+        position,
+        username,
+        password,
+        roles,
+        active,
+        image,
+        userDocs
+      });
 
     } else {
-      // setSpinText('Saving...')
-      // await updateUser({ id: user.id, name, email, department, position, username, roles, active, image, userDocs });
+      setSpinText('Saving...')
+      await updateUser({ id: user.id, name, email, department, position, username, roles, active, image, userDocs });
     }
   };
 
@@ -523,22 +523,13 @@ const EditUserForm = ({ user }) => {
                         {rows.map((item, idx) => (
                           <tr className="hover:bg-slate-200 dark:hover:bg-slate-700" key={idx}>
 
-                            <td className={`whitespace-nowrap px-4 py-4 font-medium text-gray-500 `}>
-                              <div className="flex justify-center gap-1">
+                            <td className={`whitespace-nowrap px-1 py-1 font-medium text-gray-500 `}>
                                 <span
                                   title="Delete"
                                   onClick={() => handleRemoveSpecificRow(idx)}
                                   className="cursor-pointer flex px-1 py-1 justify-center   hover:bg-gray-200 dark:hover:bg-gray-900 dark:active:bg-slate-800 rounded-full duration-150" >
                                   <MdDelete size={25} className='' /></span>
-                                {item?.document_id &&
-                                  <a
-                                    href={`https://res.cloudinary.com/drqzvquzr/image/upload/fl_attachment:${item.document_name}_${user.name}/v1677265086/${item.document_id}.${item.document_format}`}
-                                    title="Download"
-                                    className="cursor-pointer flex px-1 py-1 justify-center   hover:bg-gray-200 dark:hover:bg-gray-900 dark:active:bg-slate-800 rounded-full duration-150" >
-                                    <BiDownload size={25} className='' />
-                                  </a>
-                                }
-                              </div>
+                             
                             </td>
 
                             {Object.keys(item).map((key, index) => (
