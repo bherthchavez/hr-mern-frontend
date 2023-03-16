@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import { useState, useEffect } from "react";
 import { useUpdateUserMutation, useDeleteUserMutation } from "./usersApiSlice";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +11,6 @@ import { AiOutlineUserDelete } from 'react-icons/ai';
 import { BsArrowLeftShort } from 'react-icons/bs';
 import { MdDelete } from 'react-icons/md';
 import { RiAddFill } from 'react-icons/ri';
-import { BiDownload } from 'react-icons/bi';
 import { RiAttachment2 } from 'react-icons/ri';
 import Thead from "../../components/Thead";
 
@@ -46,9 +46,10 @@ const EditUserForm = ({ user }) => {
   const [spinText, setSpinText] = useState('')
   const [passwordShown, setPasswordShown] = useState(false)
 
+
   const userDocs = []
   if (user?.documents) {
-    user.documents.forEach((data, index) => {
+    user.documents.forEach((data) => {
       const item = {
         document_name: data.document_name,
         document_no: data.document_no,
@@ -70,7 +71,6 @@ const EditUserForm = ({ user }) => {
 
   const [rows, setRows] = useState(userDocs)
 
-
   const columnsArray = ["", "Document Name", "Document No", "Issue Date", "Expiry Date", "Attachment"]; // pass columns here dynamically
 
   console.log(rows)
@@ -83,7 +83,11 @@ const EditUserForm = ({ user }) => {
   const handleRemoveSpecificFile = (idx) => {
     const tempRows = [...rows]; // avoid direct state mutation
     const tempObj = rows[idx]; // copy state object at index to a temporary object
-    tempObj.cloud_info = {}
+    tempObj.cloud_info = {
+      id: tempObj.cloud_info.id,
+      format: '',
+      url: ''
+    }
     tempRows[idx] = tempObj
 
 
@@ -98,19 +102,34 @@ const EditUserForm = ({ user }) => {
     const tempRows = [...rows]; // avoid direct state mutation
     const tempObj = rows[index]; // copy state object at index to a temporary object
 
+
+
     if (prope === 'attachment') {
-      const reader = new FileReader();
-      reader.readAsDataURL(e.target.files[0]);
-      reader.onloadend = () => {
-        tempObj[prope].data = reader.result;
+
+      const file = e.target.files[0]
+      if (file) {
+        if (file.size < 10385760) {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onloadend = () => {
+            tempObj[prope].data = reader.result
+          }
+
+          tempObj[prope].fileName = fieldValue
+        } else {
+          alert("The file size is too large. Maximum 10MB only. Please select again.")
+          tempObj[prope].data = ''
+          tempObj[prope].fileName = ''
+        }
+      } else {
+        tempObj[prope].data = ''
+        tempObj[prope].fileName = ''
       }
 
-      tempObj[prope].fileName = fieldValue
     } else {
 
       tempObj[prope] = fieldValue; // modify temporary object
     }
-
 
     // return object to rows` clone
     tempRows[index] = tempObj;
@@ -181,23 +200,23 @@ const EditUserForm = ({ user }) => {
   const onSaveUserClicked = async (e) => {
 
     const userDocs = []
-    if(rows){
-        rows.forEach((data, index) => {
-          const item = {
-            Document_Name: data.document_name,
-            Document_No: data.document_no,
-            Issue_Date: data.issue_date,
-            Expiry_Date: data.expiry_date,
-            Attachment: data.attachment.data,
-            Cloud_Format:  data.cloud_info.format ,
-            Cloud_ID:  data.cloud_info.id ,
-            Cloud_URL:  data.cloud_info.url ,
-          }
-          userDocs.push(item)
-        })
+    if (rows) {
+      rows.forEach((data) => {
+        const item = {
+          Document_Name: data.document_name,
+          Document_No: data.document_no,
+          Issue_Date: data.issue_date,
+          Expiry_Date: data.expiry_date,
+          Attachment: data.attachment.data,
+          Cloud_Format: data.cloud_info.format,
+          Cloud_ID: data.cloud_info.id,
+          Cloud_URL: data.cloud_info.url,
+        }
+        userDocs.push(item)
+      })
     }
-     console.log(rows.length, userDocs)
-      console.log({ name, email, department, position, username, password, roles, image, userDocs })
+    console.log(rows.length, userDocs)
+    console.log({ name, email, department, position, username, password, roles, image, userDocs })
 
     if (password) {
       setSpinText('Saving...')
@@ -235,12 +254,32 @@ const EditUserForm = ({ user }) => {
     );
   });
 
+  // Check All Docs if empty
+  const isDocsEmpty = rows.every(obj => {
+    for (let prop in obj) {
+      if (prop === 'cloud_info') {
+        if (obj[prop]?.format === '' && obj.attachment.fileName === '') {
+          return false;
+        } else if (obj[prop]?.format === undefined && obj.attachment.fileName === '') {
+          return false;
+        }
+
+      } else if (prop !== 'cloud_info' || prop !== 'attachment') {
+        if (!obj[prop]) {
+          return false;
+        }
+      }
+    }
+    return true;
+  });
+
+
   let canSave;
   if (password) {
     canSave =
-      [roles, validUsername, validPassword].every(Boolean) && !isLoading;
+      [roles, validUsername, validPassword].every(Boolean) && !isLoading && isDocsEmpty;
   } else {
-    canSave = [roles, validUsername].every(Boolean) && !isLoading;
+    canSave = [roles, validUsername].every(Boolean) && !isLoading && isDocsEmpty;
   }
 
   const errClass = isError
@@ -267,6 +306,7 @@ const EditUserForm = ({ user }) => {
 
   const btnClass = id !== user._id ? 'flex justify-between' : null;
 
+  console.log(isDelLoading, isLoading, canSave)
 
   const content = (
     <>
@@ -524,12 +564,12 @@ const EditUserForm = ({ user }) => {
                           <tr className="hover:bg-slate-200 dark:hover:bg-slate-700" key={idx}>
 
                             <td className={`whitespace-nowrap px-1 py-1 font-medium text-gray-500 `}>
-                                <span
-                                  title="Delete"
-                                  onClick={() => handleRemoveSpecificRow(idx)}
-                                  className="cursor-pointer flex px-1 py-1 justify-center   hover:bg-gray-200 dark:hover:bg-gray-900 dark:active:bg-slate-800 rounded-full duration-150" >
-                                  <MdDelete size={25} className='' /></span>
-                             
+                              <span
+                                title="Delete"
+                                onClick={() => handleRemoveSpecificRow(idx)}
+                                className="cursor-pointer flex px-1 py-1 justify-center   hover:bg-gray-200 dark:hover:bg-gray-900 dark:active:bg-slate-800 rounded-full duration-150" >
+                                <MdDelete size={25} className='' /></span>
+
                             </td>
 
                             {Object.keys(item).map((key, index) => (
@@ -586,8 +626,8 @@ const EditUserForm = ({ user }) => {
                                 {index === 4 &&
                                   Object.keys(item[key]).map((keys, indexs) => (
                                     (indexs === 0 &&
-                                     
-                                      (!item?.cloud_info.id ?
+
+                                      (!item?.cloud_info.url ?
                                         <input
                                           key={indexs}
                                           className={` mt-1 w-52 px-3 py-2 text-sm font-normal text-gray-900 dark:text-gray-100 border dark:focus:border border-gray-200 dark:border-gray-800  dark:focus:border-gray-700  dark:bg-slate-900 outline-none focus:border-gray-300  focus:shadow-sm rounded-md`}
@@ -641,9 +681,13 @@ const EditUserForm = ({ user }) => {
                   <div className="font-normal text-xs  w-40 h-12 p-2 mt-2 whitespace-nowrap px-2 py-2 text-gray-500">
                     <span
                       title="Add Row"
-                      onClick={handleAddRow}
-                      className="cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150"
-                      disabled={!canSave}>
+                      onClick={!isLoading ? handleAddRow : undefined}
+                      className={
+                        !isLoading 
+                        ? `cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150`
+                        : ` flex px-4 py-2 text-white border dark:text-slate-600 border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150`
+                      }
+                      disabled={!isLoading}>
 
                       <RiAddFill size={16} className='mr-2' />Add Document</span>
                   </div>
@@ -662,18 +706,16 @@ const EditUserForm = ({ user }) => {
 
               {/*footer  */}
               <div className={`flex justify-end text-sm bg-gray-50 dark:bg-slate-800 px-4 py-3 text-right sm:px-6 dark:border-t dark:border-slate-700 ${btnClass}`}>
-
-
                 {id !== user._id
                   && <span
                     className={
-                      canSave
+                      !isLoading
                         ? `cursor-pointer flex  px-3 sm:px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
                         : "flex  px-3 sm:px-4 py-2 text-white border dark:text-slate-600 border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
                     }
                     title="Delete User"
-                    disabled={!canSave}
-                    onClick={onDeleteUserClicked}
+                    disabled={!isLoading}
+                    onClick={() => !isLoading ? onDeleteUserClicked : undefined}
                   >
                     <AiOutlineUserDelete size={20} className='mr-1 sm:mr-2' />
                     Delete
@@ -684,10 +726,10 @@ const EditUserForm = ({ user }) => {
                   <div>
                     <span
                       title="Cancel"
-                      disabled={!canSave}
-                      onClick={() => canSave && navigate("/dash/users")}
+                      disabled={!isLoading}
+                      onClick={()=> !isLoading ? navigate("/dash/users") : undefined}
                       className={
-                        canSave
+                       !isLoading
                           ? `cursor-pointer flex mr-6 px-3 sm:px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
                           : `flex mx-6 px-3 sm:px-4 py-2 text-white border dark:text-slate-600 border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
                       } >
@@ -699,7 +741,7 @@ const EditUserForm = ({ user }) => {
                   <span
                     title="Save"
                     disabled={!canSave}
-                    onClick={onSaveUserClicked}
+                    onClick={canSave ? onSaveUserClicked : undefined}
                     className={
                       canSave
                         ? `cursor-pointer flex px-3 sm:px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
