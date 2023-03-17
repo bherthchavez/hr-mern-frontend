@@ -26,7 +26,7 @@ const User = ({ userId, search }) => {
       const handleEdit = () => navigate(`/dash/users/${userId}`);
 
       return (
-        <tr>
+        <tr onClick={handleEdit} className="hover:bg-slate-200 dark:hover:bg-[#151e30] cursor-pointer">
           <td
             className={`sm:flex gap-4 whitespace-nowrap px-4 py-4 font-medium text-gray-900 dark:text-gray-300`}
           >

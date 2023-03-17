@@ -13,6 +13,7 @@ import { MdDelete } from 'react-icons/md';
 import { RiAddFill } from 'react-icons/ri';
 import { RiAttachment2 } from 'react-icons/ri';
 import Thead from "../../components/Thead";
+import ToastNotification from "../../components/ToastNotification";
 
 const USER_REGEX = /^[A-z]{3,20}$/;
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
@@ -73,7 +74,7 @@ const EditUserForm = ({ user }) => {
 
   const columnsArray = ["", "Document Name", "Document No", "Issue Date", "Expiry Date", "Attachment"]; // pass columns here dynamically
 
-  console.log(rows)
+ 
 
   const handleRemoveSpecificRow = (idx) => {
     const tempRows = [...rows] // to avoid  direct state mutation
@@ -172,6 +173,7 @@ const EditUserForm = ({ user }) => {
       setPassword("");
       setRoles("");
       setDataImage();
+      <ToastNotification msg={`User updated Successfully.`} />
       navigate("/dash/users");
     }
   }, [isSuccess, isDelSuccess, navigate]);
@@ -241,8 +243,12 @@ const EditUserForm = ({ user }) => {
   };
 
   const onDeleteUserClicked = async () => {
-    setSpinText('Deleting...')
-    await deleteUser({ id: user.id });
+
+    if(!isLoading){
+      setSpinText('Deleting...')
+      await deleteUser({ id: user.id });
+    }
+
   };
 
   const options = Object.values(ROLES).map((role) => {
@@ -306,7 +312,6 @@ const EditUserForm = ({ user }) => {
 
   const btnClass = id !== user._id ? 'flex justify-between' : null;
 
-  console.log(isDelLoading, isLoading, canSave)
 
   const content = (
     <>
@@ -446,7 +451,7 @@ const EditUserForm = ({ user }) => {
                         htmlFor="country"
                         className="block text-sm font-medium text-gray-700 dark:text-gray-200"
                       >
-                        roles
+                        Roles
                       </label>
                       <select
                         id="roles"
@@ -561,7 +566,7 @@ const EditUserForm = ({ user }) => {
                       </thead>
                       <tbody className="divide-y dark:bg-slate-800 divide-gray-200 dark:divide-gray-700 ">
                         {rows.map((item, idx) => (
-                          <tr className="hover:bg-slate-200 dark:hover:bg-slate-700" key={idx}>
+                          <tr  key={idx}>
 
                             <td className={`whitespace-nowrap px-1 py-1 font-medium text-gray-500 `}>
                               <span
@@ -653,16 +658,16 @@ const EditUserForm = ({ user }) => {
                                             <span
                                               title="Delete"
 
-                                              className="cursor-pointer flex justify-center   hover:bg-gray-200 dark:hover:bg-gray-900 dark:active:bg-slate-800 rounded-full duration-150" >
+                                              className="cursor-pointer flex justify-center hover:bg-gray-200 dark:hover:bg-gray-900 dark:active:bg-slate-800 rounded-full duration-150" >
                                             </span>
                                           </a>
                                           <span
                                             title="Replace"
-                                            className="cursor-pointer ml-1"
+                                            className="cursor-pointer ml-1 "
                                             onClick={() => handleRemoveSpecificFile(idx)}
                                           >
 
-                                            <AiOutlineCloseCircle size={22} className=' flex text-center' />
+                                            <AiOutlineCloseCircle size={22} className=' flex text-center text-slate-400 hover:text-slate-600 dark:text-slate-600 hover:dark:text-slate-500' />
                                           </span>
                                         </div>
                                       ))
@@ -681,13 +686,13 @@ const EditUserForm = ({ user }) => {
                   <div className="font-normal text-xs  w-40 h-12 p-2 mt-2 whitespace-nowrap px-2 py-2 text-gray-500">
                     <span
                       title="Add Row"
-                      onClick={!isLoading ? handleAddRow : undefined}
+                      onClick={!isLoading && !isDelLoading ? handleAddRow : undefined}
                       className={
-                        !isLoading 
+                        !isLoading && !isDelLoading 
                         ? `cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150`
                         : ` flex px-4 py-2 text-white border dark:text-slate-600 border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150`
                       }
-                      disabled={!isLoading}>
+                      disabled={!isLoading && !isDelLoading}>
 
                       <RiAddFill size={16} className='mr-2' />Add Document</span>
                   </div>
@@ -709,13 +714,13 @@ const EditUserForm = ({ user }) => {
                 {id !== user._id
                   && <span
                     className={
-                      !isLoading
-                        ? `cursor-pointer flex  px-3 sm:px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
+                      !isLoading || isDelLoading
+                        ? `cursor-pointer flex  px-3 sm:px-4 py-2 text-red-700 border dark:text-red-500 border-red-300 dark:border-red-800  hover:bg-gray-200 dark:hover:bg-gray-900 dark:active:bg-slate-800 rounded-md duration-150`
                         : "flex  px-3 sm:px-4 py-2 text-white border dark:text-slate-600 border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
                     }
                     title="Delete User"
-                    disabled={!isLoading}
-                    onClick={() => !isLoading ? onDeleteUserClicked : undefined}
+                    disabled={!isLoading || !isDelLoading}
+                    onClick={ onDeleteUserClicked}
                   >
                     <AiOutlineUserDelete size={20} className='mr-1 sm:mr-2' />
                     Delete
@@ -726,10 +731,10 @@ const EditUserForm = ({ user }) => {
                   <div>
                     <span
                       title="Cancel"
-                      disabled={!isLoading}
-                      onClick={()=> !isLoading ? navigate("/dash/users") : undefined}
+                      disabled={!isLoading && !isDelLoading}
+                      onClick={()=> !isLoading && !isDelLoading ? navigate("/dash/users") : undefined}
                       className={
-                       !isLoading
+                       !isLoading && !isDelLoading
                           ? `cursor-pointer flex mr-6 px-3 sm:px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
                           : `flex mx-6 px-3 sm:px-4 py-2 text-white border dark:text-slate-600 border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
                       } >
@@ -741,9 +746,9 @@ const EditUserForm = ({ user }) => {
                   <span
                     title="Save"
                     disabled={!canSave}
-                    onClick={canSave ? onSaveUserClicked : undefined}
+                    onClick={canSave && !isDelLoading ? onSaveUserClicked : undefined}
                     className={
-                      canSave
+                      canSave && !isDelLoading
                         ? `cursor-pointer flex px-3 sm:px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
                         : `flex px-3 sm:px-4 py-2 text-white border dark:text-slate-600 border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
                     }

@@ -5,6 +5,7 @@ import useAuth from "../hooks/useAuth";
 import Switcher from "./Switcher";
 import { useSendLogoutMutation } from "../features/auth/authApiSlice";
 import Spenner from "./Spenner";
+import ToastNotification from "./ToastNotification";
 
 const Navbar = () => {
   const [userNav, setUserNav] = useState(false);
@@ -56,6 +57,7 @@ const Navbar = () => {
   if (isError) return <p>Error: {error.data?.message}</p>;
 
   const content = (
+    <>
     <div className={`flex flex-1 items-center justify-end `}>
       <nav
         aria-label="Site Nav"
@@ -261,6 +263,8 @@ const Navbar = () => {
         </div>
       </div>
     </div>
+      <ToastNotification />
+    </>
   );
 
   return content;

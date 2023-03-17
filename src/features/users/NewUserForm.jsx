@@ -59,6 +59,7 @@ const NewUserForm = () => {
       setRows(item);
     } else {
       setAddDocs(!addDocs)
+      setRows([]);
     }
   };
 
@@ -72,13 +73,22 @@ const NewUserForm = () => {
     const tempObj = rows[index]; // copy state object at index to a temporary object
 
     if (prope === 'Attachment') {
-      const reader = new FileReader();
-      reader.readAsDataURL(e.target.files[0]);
-      reader.onloadend = () => {
-        tempObj[prope].data = reader.result;
+      const file = e.target.files[0]
+      if (file) {
+
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+          tempObj[prope].data = reader.result;
+        }
+
+        tempObj[prope].fileName = fieldValue
+
+      } else {
+        tempObj[prope].data = ''
+        tempObj[prope].fileName = ''
       }
 
-      tempObj[prope].fileName = fieldValue
     } else {
 
       tempObj[prope] = fieldValue; // modify temporary object
@@ -103,9 +113,6 @@ const NewUserForm = () => {
     setRows([...rows, item]);
   };
 
-  // const postResults = () => {
-  //   console.log(rows); // there you go, do as you please
-  // };
 
   const togglePasswordVisiblity = () => {
     setPasswordShown(passwordShown ? false : true)
@@ -159,8 +166,25 @@ const NewUserForm = () => {
   }
 
 
+  // Check All Docs if empty
+  const isDocsEmpty = rows.every(obj => {
+    for (let prop in obj) {
+      if (prop === 'Attachment') {
+        if (obj.Attachment.fileName === '') {
+          return false;
+        }
+
+      } else if (prop !== 'Attachment') {
+        if (!obj[prop]) {
+          return false;
+        }
+      }
+    }
+    return true;
+  });
+
   const canSave =
-    [roles, name, validUsername, validPassword, image].every(Boolean) && !isLoading;
+    [roles, name, validUsername, validPassword, image].every(Boolean) && !isLoading && !rows.length && isDocsEmpty;
 
   const onSaveUserClicked = async (e) => {
     e.preventDefault()
@@ -224,6 +248,9 @@ const NewUserForm = () => {
   return (
     <>
       <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8 ">
+      <div className="notification-box flex flex-col items-center justify-center fixed w-full z-50 p-3">
+   Notification container
+</div>
         <h1 className="mb-2 text-2xl font-bold text-gray-900 sm:text-2xl dark:text-gray-200">
           New Employee
         </h1>
@@ -579,27 +606,27 @@ const NewUserForm = () => {
                       </table>
                     </div>
                     <div className="font-normal text-xs  w-40 h-12 p-2 mt-2 whitespace-nowrap px-2 py-2 text-gray-500">
-                    <span
-                      title="Add Row"
-                      onClick={handleAddRow}
-                      className="cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150" 
-                      disabled={!canSave}>
-                      
-                      <RiAddFill size={16} className='mr-2' />Add Document</span>
-                    {/* <span
+                      <span
+                        title="Add Row"
+                        onClick={handleAddRow}
+                        className="cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150"
+                        disabled={!canSave}>
+
+                        <RiAddFill size={16} className='mr-2' />Add Document</span>
+                      {/* <span
                         title="Add Row"
                         onClick={postResults}
                         className="cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150" >Show Data</span> */}
-                  </div>
+                    </div>
 
                   </div>
                 }
                 {isLoading &&
-                      <div className="mt-6 flex text-gray-400 justify-end">
-                        <Spenner />
-                        <p>Saving.... </p>
-                      </div>
-                    }
+                  <div className="mt-6 flex text-gray-400 justify-end">
+                    <Spenner />
+                    <p>Saving.... </p>
+                  </div>
+                }
               </div>
 
               {/* Footer */}
