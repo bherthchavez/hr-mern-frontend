@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 
-const ToastNotification = ({ msg }) => {
+const ToastNotification = ({ active, msgContent }) => {
 
-    console.log(msg)
+    console.log(active, msgContent)
 
-    const [nav, setNav] = useState(msg ? true : false);
+    const [nav, setNav] = useState(active);
 
     const handleNav = () => {
       setNav(!nav);
@@ -12,7 +12,7 @@ const ToastNotification = ({ msg }) => {
 
     const content = (
         <aside
-        className={nav ? `fixed top-4 right-[-100%] ease-in-out duration-300 z-50 flex items-center justify-center gap-4 rounded-lg bg-black px-5 py-3 text-white`: `fixed top-20 right-4 z-50 flex ease-in-out duration-300 items-center justify-center gap-4 rounded-lg bg-black px-5 py-3 text-white`}
+        className={!nav ? `fixed top-20 right-[-100%] ease-in-out duration-300 z-50 flex items-center justify-center gap-4 rounded-lg bg-black px-5 py-3 text-white`: `fixed top-20 right-4 z-50 flex ease-in-out duration-300 items-center justify-center gap-4 rounded-lg bg-black px-5 py-3 text-white`}
       >
         <a
           href="/new-thing"
@@ -20,7 +20,7 @@ const ToastNotification = ({ msg }) => {
           rel="noreferrer"
           className="text-sm font-medium hover:opacity-75"
         >
-          {msg}
+          {msgContent}
         </a>
       
         <button onClick={handleNav}  className="rounded bg-white/20 p-1 hover:bg-white/10">

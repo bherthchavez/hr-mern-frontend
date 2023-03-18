@@ -14,14 +14,14 @@ import Prefetch from "./features/auth/Prefetch";
 import PersistLogin from './features/auth/PersistLogin';
 import RequireAuth from "./features/auth/RequireAuth";
 import { ROLES } from './config/roles'
-
+import { ToastProvider } from 'react-toast-notifications';
 function App() {
   return (
     <div className="min-h-screen transition duration-200 bg-gray-50 dark:bg-slate-900">
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Login />} />
-         
+
           {/* <Route path="login" element={<Login />} /> */}
 
           {/* Protected Routes */}
@@ -29,14 +29,35 @@ function App() {
             <Route element={<RequireAuth allowedRoles={[...Object.values(ROLES)]} />}>
               <Route element={<Prefetch />}>
                 <Route path="dash" element={<DashLayout />}>
-                
+
                   <Route index element={<Welcome />} />
 
                   <Route element={<RequireAuth allowedRoles={[ROLES.Manager, ROLES.Admin]} />}>
                     <Route path="users">
-                      <Route index element={<UsersList />} />
-                      <Route path=":id" element={<EditUser />} />
-                      <Route path="new" element={<NewUserForm />} />
+
+                      <Route index element={
+                        <ToastProvider autoDismiss
+                          autoDismissTimeout={6000}
+                          placement="bottom-center">
+                          <UsersList />
+                        </ToastProvider>} />
+
+                      <Route path=":id" element={
+                        <ToastProvider autoDismiss
+                          autoDismissTimeout={6000}
+                          placement="bottom-center">
+                          <EditUser />
+                        </ToastProvider>} />
+
+                      <Route path="new" element={
+                    
+                      <ToastProvider autoDismiss
+                          autoDismissTimeout={6000}
+                          placement="bottom-center">
+                           <NewUserForm />
+                        </ToastProvider>} />
+                    
+                    
                     </Route>
                   </Route>
 

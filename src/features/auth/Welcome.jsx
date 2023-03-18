@@ -100,7 +100,6 @@ const Welcome = () => {
 
 
     content = (
-      // <PageLoader />
       <div aria-label="Page Header" className="">
         <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
           <div className="mt-2">

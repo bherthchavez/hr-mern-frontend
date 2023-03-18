@@ -9,10 +9,14 @@ import { BsArrowLeftShort } from 'react-icons/bs';
 import { MdDelete } from 'react-icons/md';
 import { RiAddFill } from 'react-icons/ri';
 import Thead from "../../components/Thead";
+import { useToasts } from 'react-toast-notifications';
+
 const USER_REGEX = /^[A-z]{3,20}$/;
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
 
 const NewUserForm = () => {
+  
+  const { addToast } = useToasts();
 
   const [btnCancel, setBtnCancel] = useState(false)
 
@@ -205,8 +209,15 @@ const NewUserForm = () => {
         })
       }
       // console.log({ name, email, department, position, username, password, roles, image, userDocs })
-      await addNewUser({ name, email, department, position, username, password, roles, image, userDocs })
+    const result =  await addNewUser({ name, email, department, position, username, password, roles, image, userDocs })
+    console.log(result)
+    if (result?.error) {
+      addToast(result.error.error, { appearance: 'error' });
+
+    } else {
+      addToast(result.data.message, { appearance: 'success' });
     }
+  }
   };
 
 
@@ -248,9 +259,6 @@ const NewUserForm = () => {
   return (
     <>
       <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8 ">
-      <div className="notification-box flex flex-col items-center justify-center fixed w-full z-50 p-3">
-   Notification container
-</div>
         <h1 className="mb-2 text-2xl font-bold text-gray-900 sm:text-2xl dark:text-gray-200">
           New Employee
         </h1>

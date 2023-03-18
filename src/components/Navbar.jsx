@@ -5,7 +5,6 @@ import useAuth from "../hooks/useAuth";
 import Switcher from "./Switcher";
 import { useSendLogoutMutation } from "../features/auth/authApiSlice";
 import Spenner from "./Spenner";
-import ToastNotification from "./ToastNotification";
 
 const Navbar = () => {
   const [userNav, setUserNav] = useState(false);
@@ -263,7 +262,7 @@ const Navbar = () => {
         </div>
       </div>
     </div>
-      <ToastNotification />
+      
     </>
   );
 

@@ -13,12 +13,15 @@ import { MdDelete } from 'react-icons/md';
 import { RiAddFill } from 'react-icons/ri';
 import { RiAttachment2 } from 'react-icons/ri';
 import Thead from "../../components/Thead";
-import ToastNotification from "../../components/ToastNotification";
+import { useToasts } from 'react-toast-notifications';
+
 
 const USER_REGEX = /^[A-z]{3,20}$/;
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
 
 const EditUserForm = ({ user }) => {
+
+  const { addToast } = useToasts();
 
   const { id } = useAuth(); //current user id
 
@@ -74,7 +77,7 @@ const EditUserForm = ({ user }) => {
 
   const columnsArray = ["", "Document Name", "Document No", "Issue Date", "Expiry Date", "Attachment"]; // pass columns here dynamically
 
- 
+
 
   const handleRemoveSpecificRow = (idx) => {
     const tempRows = [...rows] // to avoid  direct state mutation
@@ -173,10 +176,10 @@ const EditUserForm = ({ user }) => {
       setPassword("");
       setRoles("");
       setDataImage();
-      <ToastNotification msg={`User updated Successfully.`} />
       navigate("/dash/users");
     }
   }, [isSuccess, isDelSuccess, navigate]);
+
 
   const onNameChanged = (e) => setName(e.target.value);
   const onEmailChanged = (e) => setEmail(e.target.value)
@@ -217,12 +220,10 @@ const EditUserForm = ({ user }) => {
         userDocs.push(item)
       })
     }
-    console.log(rows.length, userDocs)
-    console.log({ name, email, department, position, username, password, roles, image, userDocs })
 
     if (password) {
       setSpinText('Saving...')
-      await updateUser({
+      const result = await updateUser({
         id: user.id,
         name,
         email,
@@ -235,18 +236,31 @@ const EditUserForm = ({ user }) => {
         image,
         userDocs
       });
+      if (result) {
+        addToast(result.data.message, { appearance: 'success' });
+      }
 
     } else {
       setSpinText('Saving...')
-      await updateUser({ id: user.id, name, email, department, position, username, roles, active, image, userDocs });
+      const result = await updateUser({ id: user.id, name, email, department, position, username, roles, active, image, userDocs });
+      if (result) {
+        addToast(result.data.message, { appearance: 'success' });
+      }
     }
   };
 
   const onDeleteUserClicked = async () => {
 
-    if(!isLoading){
+    if (!isLoading) {
       setSpinText('Deleting...')
-      await deleteUser({ id: user.id });
+      const result = await deleteUser({ id: user.id })
+      console.log(result)
+      if (result?.error) {
+        addToast(result.error, { appearance: 'error' });
+
+      } else {
+        addToast(result.data, { appearance: 'success' });
+      }
     }
 
   };
@@ -315,11 +329,11 @@ const EditUserForm = ({ user }) => {
 
   const content = (
     <>
+
       <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8 ">
         <h1 className="mb-2 text-2xl font-bold text-gray-900 sm:text-2xl dark:text-gray-200 ">
           {id === user._id ? 'Account Setting' : 'Edit Employee'}
         </h1>
-
         <p className={errClass}>{error?.data?.message}</p>
 
         <div className="mt-5 md:col-span-2 ">
@@ -566,7 +580,7 @@ const EditUserForm = ({ user }) => {
                       </thead>
                       <tbody className="divide-y dark:bg-slate-800 divide-gray-200 dark:divide-gray-700 ">
                         {rows.map((item, idx) => (
-                          <tr  key={idx}>
+                          <tr key={idx}>
 
                             <td className={`whitespace-nowrap px-1 py-1 font-medium text-gray-500 `}>
                               <span
@@ -688,9 +702,9 @@ const EditUserForm = ({ user }) => {
                       title="Add Row"
                       onClick={!isLoading && !isDelLoading ? handleAddRow : undefined}
                       className={
-                        !isLoading && !isDelLoading 
-                        ? `cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150`
-                        : ` flex px-4 py-2 text-white border dark:text-slate-600 border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150`
+                        !isLoading && !isDelLoading
+                          ? `cursor-pointer flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150`
+                          : ` flex px-4 py-2 text-white border dark:text-slate-600 border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-full duration-150`
                       }
                       disabled={!isLoading && !isDelLoading}>
 
@@ -720,7 +734,7 @@ const EditUserForm = ({ user }) => {
                     }
                     title="Delete User"
                     disabled={!isLoading || !isDelLoading}
-                    onClick={ onDeleteUserClicked}
+                    onClick={onDeleteUserClicked}
                   >
                     <AiOutlineUserDelete size={20} className='mr-1 sm:mr-2' />
                     Delete
@@ -732,9 +746,9 @@ const EditUserForm = ({ user }) => {
                     <span
                       title="Cancel"
                       disabled={!isLoading && !isDelLoading}
-                      onClick={()=> !isLoading && !isDelLoading ? navigate("/dash/users") : undefined}
+                      onClick={() => !isLoading && !isDelLoading ? navigate("/dash/users") : undefined}
                       className={
-                       !isLoading && !isDelLoading
+                        !isLoading && !isDelLoading
                           ? `cursor-pointer flex mr-6 px-3 sm:px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
                           : `flex mx-6 px-3 sm:px-4 py-2 text-white border dark:text-slate-600 border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
                       } >
