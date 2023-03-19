@@ -1,6 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout";
-// import Public from "./components/Public";
 import Login from "./features/auth/Login";
 import DashLayout from "./components/DashLayout";
 import Welcome from "./features/auth/Welcome";
@@ -14,7 +13,10 @@ import Prefetch from "./features/auth/Prefetch";
 import PersistLogin from './features/auth/PersistLogin';
 import RequireAuth from "./features/auth/RequireAuth";
 import { ROLES } from './config/roles'
-import { ToastProvider } from 'react-toast-notifications';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 function App() {
   return (
     <div className="min-h-screen transition duration-200 bg-gray-50 dark:bg-slate-900">
@@ -35,29 +37,14 @@ function App() {
                   <Route element={<RequireAuth allowedRoles={[ROLES.Manager, ROLES.Admin]} />}>
                     <Route path="users">
 
-                      <Route index element={
-                        <ToastProvider autoDismiss
-                          autoDismissTimeout={6000}
-                          placement="bottom-center">
-                          <UsersList />
-                        </ToastProvider>} />
+                      <Route index element={<> <ToastContainer /> <UsersList /></>} />
 
-                      <Route path=":id" element={
-                        <ToastProvider autoDismiss
-                          autoDismissTimeout={6000}
-                          placement="bottom-center">
-                          <EditUser />
-                        </ToastProvider>} />
+                      <Route path=":id" element={<> <ToastContainer /><EditUser /> </>} />
 
-                      <Route path="new" element={
-                    
-                      <ToastProvider autoDismiss
-                          autoDismissTimeout={6000}
-                          placement="bottom-center">
-                           <NewUserForm />
-                        </ToastProvider>} />
-                    
-                    
+                      <Route path="new" element={<> <ToastContainer /><NewUserForm /> </>} />
+
+
+
                     </Route>
                   </Route>
 

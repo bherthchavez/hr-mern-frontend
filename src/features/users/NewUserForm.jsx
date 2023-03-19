@@ -9,14 +9,14 @@ import { BsArrowLeftShort } from 'react-icons/bs';
 import { MdDelete } from 'react-icons/md';
 import { RiAddFill } from 'react-icons/ri';
 import Thead from "../../components/Thead";
-import { useToasts } from 'react-toast-notifications';
+import {  toast } from 'react-toastify';
+
 
 const USER_REGEX = /^[A-z]{3,20}$/;
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
 
 const NewUserForm = () => {
   
-  const { addToast } = useToasts();
 
   const [btnCancel, setBtnCancel] = useState(false)
 
@@ -210,12 +210,29 @@ const NewUserForm = () => {
       }
       // console.log({ name, email, department, position, username, password, roles, image, userDocs })
     const result =  await addNewUser({ name, email, department, position, username, password, roles, image, userDocs })
-    console.log(result)
     if (result?.error) {
-      addToast(result.error.error, { appearance: 'error' });
+      toast.error(result.error.error,{
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: localStorage.theme,
+        })
 
     } else {
-      addToast(result.data.message, { appearance: 'success' });
+      toast.success(result.data.message,{
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: localStorage.theme,
+        })
     }
   }
   };

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useUpdateUserMutation, useDeleteUserMutation } from "./usersApiSlice";
 import { useNavigate } from "react-router-dom";
 import { ROLES } from "../../config/roles";
-import { AiOutlineCloseCircle, AiOutlineEye, AiOutlineEyeInvisible, AiOutlineSave } from "react-icons/ai";
+import { AiOutlineCloseCircle, AiOutlineEye, AiOutlineEyeInvisible, AiOutlineSave, AiOutlineWarning } from "react-icons/ai";
 import Image from "../../components/Image";
 import Spenner from "../../components/Spenner";
 import useAuth from "../../hooks/useAuth";
@@ -12,8 +12,9 @@ import { BsArrowLeftShort } from 'react-icons/bs';
 import { MdDelete } from 'react-icons/md';
 import { RiAddFill } from 'react-icons/ri';
 import { RiAttachment2 } from 'react-icons/ri';
-import Thead from "../../components/Thead";
-import { useToasts } from 'react-toast-notifications';
+import Thead from "../../components/Thead"
+import { toast } from 'react-toastify';
+import Modal from "../../components/Modal";
 
 
 const USER_REGEX = /^[A-z]{3,20}$/;
@@ -21,7 +22,6 @@ const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
 
 const EditUserForm = ({ user }) => {
 
-  const { addToast } = useToasts();
 
   const { id } = useAuth(); //current user id
 
@@ -49,7 +49,16 @@ const EditUserForm = ({ user }) => {
   const [image, setDataImage] = useState();
   const [spinText, setSpinText] = useState('')
   const [passwordShown, setPasswordShown] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+
+  const handleModalOpen = () => {
+    setIsModalOpen(true)
+  }
+
+  const handleModalClose = () => {
+    setIsModalOpen(false)
+  }
 
   const userDocs = []
   if (user?.documents) {
@@ -237,14 +246,32 @@ const EditUserForm = ({ user }) => {
         userDocs
       });
       if (result) {
-        addToast(result.data.message, { appearance: 'success' });
+        toast.success(result.data.message, {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: localStorage.theme,
+        });
       }
 
     } else {
       setSpinText('Saving...')
       const result = await updateUser({ id: user.id, name, email, department, position, username, roles, active, image, userDocs });
       if (result) {
-        addToast(result.data.message, { appearance: 'success' });
+        toast.success(result.data.message, {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: localStorage.theme,
+        });
       }
     }
   };
@@ -252,15 +279,36 @@ const EditUserForm = ({ user }) => {
   const onDeleteUserClicked = async () => {
 
     if (!isLoading) {
+      setIsModalOpen(false)
       setSpinText('Deleting...')
       const result = await deleteUser({ id: user.id })
       console.log(result)
       if (result?.error) {
-        addToast(result.error, { appearance: 'error' });
+        toast.error(result.error, {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: localStorage.theme,
+        });
 
       } else {
-        addToast(result.data, { appearance: 'success' });
+        toast.success(result.data, {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: localStorage.theme,
+        });
       }
+    
+
     }
 
   };
@@ -329,6 +377,13 @@ const EditUserForm = ({ user }) => {
 
   const content = (
     <>
+      <Modal isOpen={isModalOpen} onClose={handleModalClose} onOk={onDeleteUserClicked}>
+        <div className="bg-white dark:bg-gray-700 p-4">
+          <h2 className="text-lg font-bold mb-4 text-gray-800 dark:text-gray-300"><AiOutlineWarning size={50} className="m-auto text-red-600" /></h2>
+          <h2 className="text-lg font-bold mb-4 text-gray-800 dark:text-gray-300">{name}</h2>
+          <p className=" text-gray-800 dark:text-gray-400">Do you really want to delete this Employee?</p>
+        </div>
+      </Modal>
 
       <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8 ">
         <h1 className="mb-2 text-2xl font-bold text-gray-900 sm:text-2xl dark:text-gray-200 ">
@@ -734,7 +789,7 @@ const EditUserForm = ({ user }) => {
                     }
                     title="Delete User"
                     disabled={!isLoading || !isDelLoading}
-                    onClick={onDeleteUserClicked}
+                    onClick={handleModalOpen}
                   >
                     <AiOutlineUserDelete size={20} className='mr-1 sm:mr-2' />
                     Delete
@@ -776,6 +831,7 @@ const EditUserForm = ({ user }) => {
           </form>
         </div>
       </div>
+
     </>
   );
 
