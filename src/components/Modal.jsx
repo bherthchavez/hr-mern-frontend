@@ -34,7 +34,7 @@ function Modal({ isOpen, onClose, onOk, children }) {
             </button>
             <button
               type="button"
-              className="h-9 w-full  inline-flex justify-center rounded-md border border-transparent shadow-sm px-3 py-1 bg-red-700 text-base font-medium text-white hover:bg-red-800   sm:ml-3  sm:text-sm"
+              className="h-9 w-full flex justify-center items-center rounded-md border border-transparent shadow-sm px-3 sm:px-4 py-1 bg-red-700 text-base text-white hover:bg-red-800"
               onClick={onOk}
             >
               Yes
