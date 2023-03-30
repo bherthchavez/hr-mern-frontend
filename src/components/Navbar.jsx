@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { useLocation, useNavigate, Link } from "react-router-dom";
+import { useLocation, useNavigate, Link, useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import useAuth from "../hooks/useAuth";
 import Switcher from "./Switcher";
@@ -9,13 +9,11 @@ import Spenner from "./Spenner";
 const Navbar = () => {
   const [userNav, setUserNav] = useState(false);
   const { id, isAdmin, name, status, avatar } = useAuth();
-
-
   const location = useLocation()
-
-
+  const param = useParams()
   let menuRef = useRef();
   const navigate = useNavigate();
+
 
 
   useEffect(() => {
@@ -83,7 +81,7 @@ const Navbar = () => {
             <span
               // onClick={() => navigate("/dash/users")}
               className={
-                location.pathname === '/dash/users' || location.pathname === '/dash/users/new'
+                location.pathname === '/dash/users' || location.pathname === '/dash/users/new' || param.id
                   ? "cursor-pointer block h-16 border-b-4 leading-[4rem] border-current text-slate-700 dark:text-slate-400"
                   : "cursor-pointer block h-16 border-b-4 border-transparent leading-[4rem] hover:border-current text-slate-700 dark:text-slate-400 hover:text-slate-500"
               }
