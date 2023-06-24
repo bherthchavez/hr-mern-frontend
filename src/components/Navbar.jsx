@@ -91,7 +91,7 @@ const Navbar = () => {
           </Link>
         }
 
-        <Link to="/dash/notes">
+        {/* <Link to="/dash/notes">
           <span
             // onClick={() => navigate("/dash/notes")}
             className={
@@ -103,7 +103,7 @@ const Navbar = () => {
 
           Task List
           </span>
-        </Link>
+        </Link> */}
       </nav>
 
       <div className="ml-8 flex items-center">

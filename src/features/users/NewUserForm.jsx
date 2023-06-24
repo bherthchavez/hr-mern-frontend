@@ -9,14 +9,14 @@ import { BsArrowLeftShort } from 'react-icons/bs';
 import { MdDelete } from 'react-icons/md';
 import { RiAddFill } from 'react-icons/ri';
 import Thead from "../../components/Thead";
-import {  toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 
 const USER_REGEX = /^[A-z]{3,20}$/;
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
 
 const NewUserForm = () => {
-  
+
 
   const [btnCancel, setBtnCancel] = useState(false)
 
@@ -174,7 +174,7 @@ const NewUserForm = () => {
   const isDocsEmpty = rows.every(obj => {
     for (let prop in obj) {
       if (prop === 'Attachment') {
-        if (obj.Attachment.fileName === '') {
+        if (obj.Attachment.fileName === '' && obj.Attachment.data === '') {
           return false;
         }
 
@@ -188,7 +188,7 @@ const NewUserForm = () => {
   });
 
   const canSave =
-    [roles, name, validUsername, validPassword, image].every(Boolean) && !isLoading && !rows.length && isDocsEmpty;
+    [roles, name, validUsername, validPassword, image].every(Boolean) && !isLoading && rows.length >= 0 && isDocsEmpty;
 
   const onSaveUserClicked = async (e) => {
     e.preventDefault()
@@ -208,33 +208,32 @@ const NewUserForm = () => {
           userDocs.push(item)
         })
       }
-      // console.log({ name, email, department, position, username, password, roles, image, userDocs })
-    const result =  await addNewUser({ name, email, department, position, username, password, roles, image, userDocs })
-    if (result?.error) {
-      toast.error(result.error.error,{
-        position: "bottom-left",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: localStorage.theme,
+      const result = await addNewUser({ name, email, department, position, username, password, roles, image, userDocs })
+      if (result?.error) {
+        toast.error(result.error.error, {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: localStorage.theme,
         })
 
-    } else {
-      toast.success(result.data.message,{
-        position: "bottom-left",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: localStorage.theme,
+      } else {
+        toast.success(result.data.message, {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: localStorage.theme,
         })
+      }
     }
-  }
   };
 
 
@@ -676,10 +675,11 @@ const NewUserForm = () => {
                     title="Save"
                     onClick={() => setBtnCancel(!btnCancel)}
                     disabled={!canSave}
+                    type="submit"
                     className={
                       canSave
-                        ? `flex px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
-                        : "flex px-4 py-2 text-white border dark:text-slate-600 border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150"
+                        ? `cursor-pointer flex px-3 sm:px-4 py-2 text-white border dark:text-gray-300 border-gray-200 dark:border-slate-600 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
+                        : `flex px-3 sm:px-4 py-2 text-white border dark:text-slate-600 border-gray-200 dark:border-slate-700 bg-gray-400 dark:bg-gray-800 hover:bg-gray-400 dark:hover:bg-gray-800 dark:active:bg-slate-800 rounded-md duration-150`
                     }
                   >
                     <AiOutlineSave size={20} className="mr-2" />

@@ -132,7 +132,7 @@ const Welcome = () => {
                   </Link>
 
 
-                  <Link to="/dash/notes">
+                  {/* <Link to="/dash/notes"> */}
                     <div className="flex flex-col bg-white dark:bg-slate-800 rounded-md shadow-sm border-gray-200 dark:border-gray-800 px-4 py-8 text-center text-gray-800 dark:text-gray-200 hover:text-gray-500 dark:hover:text-gray-400">
                       <dt className="order-last text-s text-gray-500 dark:text-gray-400">
                         Total Tasks
@@ -145,9 +145,8 @@ const Welcome = () => {
                         </div>
                       </dd>
                     </div>
-                  </Link>
+                  {/* </Link> */}
 
-                  <Link to="/dash/notes">
                     <div className="flex flex-col bg-white dark:bg-slate-800 rounded-md shadow-sm border-gray-200 dark:border-gray-800 px-4 py-8 text-center text-gray-800 dark:text-gray-200 hover:text-gray-500 dark:hover:text-gray-400">
                       <dt className="order-last text-sm text-gray-500 dark:text-gray-400">
                         Total Task Open
@@ -160,7 +159,6 @@ const Welcome = () => {
                         </div>
                       </dd>
                     </div>
-                  </Link>
 
 
                 </dl>
